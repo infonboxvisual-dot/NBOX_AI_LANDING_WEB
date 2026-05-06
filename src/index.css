@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #fcfcfc;
+  --surface: #ffffff;
+  --surface-dim: #f5f5f5;
+  --surface-variant: #e0e0e0;
+  --surface-container: #f0f0f0;
+  --surface-container-low: #f7f7f7;
+  --surface-container-high: #ebebeb;
+  --surface-container-highest: #e5e5e5;
+  
+  --on-surface: #0a0a0a;
+  --on-surface-variant: #525252;
+  
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 122, 47, 0.2);
+  --kinetic-glow: rgba(255, 122, 47, 0.15);
+  --scrollbar-track: rgba(0, 0, 0, 0.05);
+}
+
+.dark {
+  --background: #050505;
+  --surface: #0d0d0d;
+  --surface-dim: #121212;
+  --surface-variant: #262626;
+  --surface-container: #171717;
+  --surface-container-low: #0f0f0f;
+  --surface-container-high: #202020;
+  --surface-container-highest: #2b2b2b;
+  
+  --on-surface: #f5f5f5;
+  --on-surface-variant: #a3a3a3;
+  
+  --glass-bg: rgba(13, 13, 13, 0.8);
+  --glass-border: rgba(255, 122, 47, 0.1);
+  --kinetic-glow: rgba(255, 122, 47, 0.1);
+  --scrollbar-track: rgba(255, 255, 255, 0.05);
+}
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-headline: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-primary: #ff7a2f;
+  --color-primary-dim: #f66700;
+  --color-primary-fixed: #ff7a2f;
+  --color-primary-fixed-dim: #f66700;
+  --color-primary-container: #ff7a2f;
+  
+  --color-secondary: #ff7a2f;
+  --color-secondary-dim: #f66700;
+  
+  --color-tertiary: #ff7a2f;
+  
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-variant: var(--surface-variant);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  
+  --color-on-primary: #ffffff;
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    transition: background-color 0.3s ease;
+  }
+  body {
+    @apply bg-background text-on-surface font-sans font-light antialiased transition-colors duration-300;
+  }
+}
+
+@layer components {
+  .logos-carousel {
+    @apply w-full overflow-hidden py-12 relative;
+  }
+
+  .logos-track {
+    @apply flex w-fit animate-marquee;
+  }
+
+  .logo-item {
+    @apply flex-shrink-0 px-12 md:px-20 filter grayscale opacity-30 transition-all duration-500 hover:grayscale-0 hover:opacity-100;
+  }
+
+  .logo-item img {
+    @apply h-12 md:h-16 w-auto object-contain;
+  }
+}
+
+@theme {
+  --animate-marquee: marquee 60s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+}
+
+.perspective-grid {
+  perspective: 1000px;
+}
+
+.rotate-y-tilt {
+  transform: rotateY(-15deg) rotateX(10deg);
+}
+
+.kinetic-gradient {
+  background: radial-gradient(circle at 50% -20%, var(--kinetic-glow) 0%, rgba(14, 14, 14, 0) 60%);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #ff7a2f;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+}
+
+.orange-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.orange-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+}
+
+.orange-scrollbar::-webkit-scrollbar-thumb {
+  background: #FF7A2F;
+  border-radius: 10px;
+}
+
+.orange-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #ff8c4d;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #f66700;
+}
+
