@@ -69,7 +69,7 @@ const ServiceItem: React.FC<{ service: Service; onOpenDetails: (id: number | nul
 
       <div className="flex-grow space-y-8">
         <div className="space-y-6">
-          <h2 className="text-2xl md:text-4xl font-headline font-black text-on-surface tracking-tight uppercase">
+          <h2 className="whitespace-normal break-words text-[clamp(1.35rem,2.2vw,2.75rem)] font-headline font-black uppercase tracking-tight leading-none text-on-surface">
             {service.title}
           </h2>
           
@@ -130,11 +130,11 @@ const ServiceDetailsModal = ({ service, onClose, t }: { service: Service | null;
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="p-8 md:p-12 border-b border-on-surface/5 bg-on-surface/5">
+          <div className="p-8 md:p-12 bg-on-surface/5">
             <div className="flex justify-between items-start">
               <div className="space-y-2">
                 <p className="text-primary font-headline font-black uppercase text-sm tracking-[0.2em]">D. {t('services.details.title')}</p>
-                <h3 className="text-3xl md:text-4xl font-headline font-black uppercase tracking-tighter text-on-surface">
+                <h3 className="whitespace-normal break-words text-[clamp(1.55rem,2.7vw,2.65rem)] font-headline font-black uppercase tracking-tighter leading-none text-on-surface">
                   {service.title.split('. ')[1]}
                 </h3>
               </div>
@@ -282,18 +282,26 @@ const Services = () => {
   const currentService = services.find(s => s.id === selectedServiceId) || null;
 
   return (
-    <div className="min-h-screen bg-background pt-8 md:pt-12 pb-20 px-6">
+    <div className="editorial-grid min-h-screen bg-background px-6 pb-20 pt-8 md:px-6 md:pb-20 md:pt-12">
       <div className="max-w-7xl mx-auto px-6 md:px-8 text-center mb-8 md:mb-12">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          <h1 className="text-3xl md:text-6xl font-headline font-black uppercase tracking-tighter text-on-surface">
+          <h1 className="whitespace-normal break-words text-[clamp(1.45rem,3.6vw,4rem)] font-headline font-black uppercase tracking-tighter leading-none text-on-surface">
             {language === 'vi' ? (
-              <>DỊCH VỤ AI KIẾN TRÚC & <span className="italic">BẤT ĐỘNG SẢN</span></>
+              <>
+                DỊCH VỤ AI KIẾN TRÚC &
+                <br />
+                <span className="block text-primary font-headline font-black">BẤT ĐỘNG SẢN</span>
+              </>
             ) : (
-              <>AI ARCHITECTURE & <span className="italic">REAL ESTATE</span> SERVICES</>
+              <>
+                AI ARCHITECTURE &
+                <br />
+                <span className="block text-primary font-headline font-black">REAL ESTATE SERVICES</span>
+              </>
             )}
           </h1>
           <p className="text-on-surface-variant text-base md:text-xl max-w-3xl mx-auto font-medium leading-relaxed">

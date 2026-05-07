@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import gsap from 'gsap';
 import { useLanguage } from '../context/LanguageContext';
+import VillaSketchHero from '../components/VillaSketchHero';
 import Services from './Services';
 import Partners from './Partners';
 import Academy from './Academy';
@@ -8,6 +10,33 @@ import Workspace from './Workspace';
 
 export default function Home() {
   const { t, language } = useLanguage();
+  const heroSectionRef = useRef<HTMLElement | null>(null);
+  const heroCopyRef = useRef<HTMLDivElement | null>(null);
+  const heroVisualRef = useRef<HTMLDivElement | null>(null);
+
+  const heroSketchCopy = useMemo(() => {
+    if (language === 'vi') {
+      return {
+        eyebrow: 'AUTO SKETCH / VILLA FORM STUDY',
+        title: 'BIỆT THỰ\nĐƯỢC VẼ TỰ ĐỘNG',
+        caption: 'Từ khối nhà đến đường nét kiến trúc, sketch được dựng ngay trong hero để truyền tải ý tưởng trước khi render.',
+      };
+    }
+
+    return {
+      eyebrow: 'AUTO SKETCH / VILLA FORM STUDY',
+      title: 'VILLA\nAUTO-DRAWN',
+      caption:
+        'From soft, hazy sketch lines to a polished villa vision, the hero transforms the drawing into crisp architecture as the final render fades in.',
+    };
+  }, [language]);
+
+  useEffect(() => {
+    // Intentionally disabled: scroll-triggered hero shrink/zoom
+    // caused jank and layout shift on mobile.
+    // Keep transforms static for smoother scroll.
+    gsap.set([heroCopyRef.current, heroVisualRef.current], { clearProps: 'transform,opacity,willChange' });
+  }, []);
 
   const demoCategories = [
     { 
@@ -256,37 +285,38 @@ export default function Home() {
   return (
     <main className="overflow-hidden scroll-smooth">
       {/* Hero Section */}
-      <section id="home" className="relative pt-12 md:pt-20 pb-20 md:pb-32 px-6 md:px-8">
+      <section ref={heroSectionRef} id="home" className="editorial-grid relative overflow-hidden px-6 pb-20 pt-12 md:px-8 md:pb-32 md:pt-20">
         <div className="absolute top-[-5%] right-[-5%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-primary/10 blur-[100px] md:blur-[120px] rounded-full"></div>
         <div className="absolute bottom-[-5%] left-[-5%] w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-secondary/5 blur-[80px] md:blur-[100px] rounded-full"></div>
         
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-12 items-center lg:grid-cols-[1.05fr_0.95fr] md:gap-16">
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative z-10"
+            ref={heroCopyRef}
+            className="relative z-10 max-w-3xl"
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-headline font-extrabold uppercase tracking-tighter leading-[1.1] mb-6 bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent break-words whitespace-pre-line">
+            <h1 className="mb-6 break-words whitespace-pre-line text-3xl font-headline font-extrabold uppercase leading-[1.05] tracking-tighter text-on-surface sm:text-4xl md:text-5xl lg:text-6xl">
               {language === 'vi' ? (
                 <>NBOX AI -<br/><span className="italic">HỆ SINH THÁI</span></>
               ) : (
                 <>NBOX AI -<br/>ARCHITECTURAL <span className="italic">ECOSYSTEM</span></>
               )}
             </h1>
-            <p className="text-on-surface-variant text-base md:text-lg lg:text-xl max-w-lg mb-8 md:mb-10 font-sans leading-relaxed">
+            <p className="mb-10 max-w-xl text-base leading-relaxed text-on-surface-variant md:text-lg lg:text-xl font-sans">
               {t('home.hero.desc')}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="grid max-w-xl gap-4 sm:grid-cols-2">
               <button 
                 onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-primary text-on-primary px-8 py-4 rounded-lg font-headline font-extrabold uppercase tracking-widest shadow-[0_0_40px_rgba(255,122,47,0.4)] text-center"
+                className="rounded-xl bg-primary px-8 py-4 text-center font-headline font-extrabold uppercase tracking-widest text-on-primary shadow-[0_0_40px_rgba(203,123,62,0.28)] transition-transform hover:scale-[1.01]"
               >
                 {language === 'vi' ? 'XEM DỊCH VỤ' : 'VIEW SERVICES'}
               </button>
               <button 
                 onClick={() => document.getElementById('design-in-action')?.scrollIntoView({ behavior: 'smooth' })}
-                className="glass-card text-on-surface px-8 py-4 rounded-lg font-headline font-extrabold uppercase tracking-widest hover:bg-surface-variant transition-colors"
+                className="glass-card rounded-xl px-8 py-4 font-headline font-extrabold uppercase tracking-widest text-on-surface transition-colors hover:bg-surface-variant"
               >
                 {t('home.hero.cta.demo')}
               </button>
@@ -297,18 +327,41 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="relative perspective-grid"
+            ref={heroVisualRef}
+            className="relative perspective-grid lg:-ml-8 lg:-mt-6"
           >
-            <div className="rotate-y-tilt glass-card rounded-2xl p-3 md:p-4 border border-outline-variant/20 shadow-2xl overflow-hidden group">
-              <img 
-                className="w-full h-[300px] md:h-[400px] object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-700 font-headline" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXnAvFguPWsfDncIsiz_VTsRbZnLD-ijwKpsba8dgOpyZOwbvEPpw4IAIEephJnVt2IFPnCQlgPp2C8f5LPdx13rRLuUafk0h137sv7TUUoM5BkFhczENA-Hdd5l4LgoU7P8v-DBtzEsYnq7KGP1wBymFAmFKjifmjsVtFJadkj1lrN-ADv54kFiw6EerlDj1oTYSBUiUmGcKPLLGBLuT8d9YdZ7iEslxdmowi1tTNOtLesnq16RndHiXPrFubMHInhrzM366NE7o" 
-                alt="Nbox AI Neural Core"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-60"></div>
-              <div className="absolute bottom-8 left-8">
-                <p className="text-primary font-headline font-bold text-xs tracking-widest uppercase mb-1">Status: Operational</p>
-                <h3 className="text-on-surface text-xl font-headline font-black uppercase tracking-tighter">Neural Core Active</h3>
+            <div className="rotate-y-tilt glass-card group relative overflow-hidden rounded-2xl border border-outline-variant/20 p-2 shadow-2xl md:p-2.5">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,122,24,0.16),transparent_48%),linear-gradient(180deg,rgba(255,255,255,0.03),transparent_42%)]" />
+              <div className="relative overflow-hidden rounded-xl border border-white/10 bg-[#090909] px-3 pb-3 pt-3 md:px-4 md:pb-4 md:pt-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="font-headline text-[10px] font-black uppercase tracking-[0.35em] text-primary/80 md:text-xs">
+                      {heroSketchCopy.eyebrow}
+                    </p>
+                    <h3 className="mt-3 whitespace-pre-line text-2xl font-headline font-black uppercase leading-[0.9] tracking-[-0.05em] text-on-surface sm:text-3xl md:text-4xl">
+                      {heroSketchCopy.title}
+                    </h3>
+                  </div>
+                  <div className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-primary">
+                    Sketch Auto
+                  </div>
+                </div>
+
+                <div className="mt-3 overflow-hidden rounded-[1.5rem] border border-[#cdbfa8]/18 bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.72),rgba(244,236,223,0.93)_42%,rgba(231,221,204,0.95)_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.18)]">
+                  <VillaSketchHero className="h-[360px] w-full md:h-[500px]" />
+
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#050505] via-[#050505]/92 to-transparent px-4 pb-4 pt-12 md:px-6 md:pb-6">
+                    <div className="flex items-end justify-between gap-4">
+                      <p className="max-w-xs text-[11px] leading-relaxed text-on-surface-variant md:text-sm">
+                        {heroSketchCopy.caption}
+                      </p>
+                      <div className="text-right text-[10px] font-bold uppercase tracking-[0.28em] text-primary/75">
+                        <span className="block">Villa Concept</span>
+                        <span className="block text-white/45">Sketch pipeline</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -316,7 +369,7 @@ export default function Home() {
       </section>
 
       {/* Social Proof */}
-      <section className="bg-surface-container-low py-8 md:py-12">
+      <section className="editorial-grid bg-surface-container-low py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {[
@@ -344,7 +397,7 @@ export default function Home() {
       </section>
 
       {/* Demo Section (DESIGN IN ACTION) */}
-      <section id="design-in-action" className="py-16 md:py-32 px-6 md:px-8 bg-surface-container overflow-hidden">
+      <section id="design-in-action" className="editorial-grid overflow-hidden bg-surface-container px-6 py-16 md:px-8 md:py-32">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 md:mb-20 px-4">
              <span className="text-primary font-headline font-bold uppercase tracking-[0.3em] text-[10px] md:text-sm mb-4 block">
@@ -365,10 +418,10 @@ export default function Home() {
                   <button
                     key={idx}
                     onClick={() => setActiveTipIndex(idx)}
-                    className={`flex-shrink-0 w-64 lg:w-full group relative flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-xl md:rounded-2xl transition-all duration-300 text-left border border-on-surface/5 snap-center ${
+                    className={`flex-shrink-0 w-64 lg:w-full group relative flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-xl md:rounded-2xl transition-all duration-300 text-left snap-center ${
                       activeTipIndex === idx 
-                        ? 'bg-primary text-on-primary shadow-[0_10px_40px_rgba(255,122,47,0.3)] border-primary' 
-                        : 'glass-card hover:bg-surface-variant hover:border-on-surface/20'
+                        ? 'bg-primary text-on-primary shadow-[0_10px_40px_rgba(255,122,47,0.3)]' 
+                        : 'glass-card hover:bg-surface-variant'
                     }`}
                   >
                      <span className={`material-symbols-outlined notranslate text-2xl md:text-3xl filter group-hover:scale-125 transition-transform duration-500 font-bold ${
@@ -483,7 +536,7 @@ export default function Home() {
       </section>
 
       {/* Founder Section */}
-      <section className="py-20 md:py-32 px-6 md:px-8 bg-surface-container-low overflow-hidden">
+      <section className="editorial-grid overflow-hidden bg-surface-container-low px-6 py-20 md:px-8 md:py-32">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 md:mb-16">
             <h2 className="text-3xl md:text-5xl font-headline font-black uppercase tracking-tighter text-on-surface">
@@ -563,7 +616,7 @@ export default function Home() {
       </section>
 
       {/* Academy CTA moved here */}
-      <section id="academy-cta" className="max-w-7xl mx-auto px-6 md:px-8 pb-20 md:pb-32 pt-16 md:pt-24">
+      <section id="academy-cta" className="mx-auto max-w-7xl px-6 pb-20 pt-16 md:px-8 md:pb-32 md:pt-24">
         <motion.div 
            initial={{ opacity: 0, scale: 0.95 }}
            whileInView={{ opacity: 1, scale: 1 }}
@@ -583,7 +636,6 @@ export default function Home() {
           </div>
         </motion.div>
       </section>
-
     </main>
   );
 }

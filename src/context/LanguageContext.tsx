@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 type Language = 'en' | 'vi';
 
@@ -100,7 +100,7 @@ const translations: Record<Language, Record<string, string>> = {
     'home.demo.try': 'TRY NOW',
     'academy.available': 'AVAILABLE COURSES',
     'academy.training': 'TRAINING SYSTEM',
-    'services.title': 'AI ARCHITECTURE & REAL ESTATE SERVICES',
+    'services.title': 'AI ARCHITECTURE & REAL ESTATE',
     'services.desc': 'Providing specialized AI services, helping individuals and businesses create images, improve renders and produce project videos quickly and with high quality.',
     'services.render.title': '1. AI Render Service',
     'services.render.subtitle': 'With just a hand sketch or initial idea, NBOX AI helps you create visual perspectives quickly.',
@@ -108,14 +108,14 @@ const translations: Record<Language, Record<string, string>> = {
     'services.render.f2': 'Flexible with many architectural styles',
     'services.render.f3': 'Available in a few hours',
     'services.render.f4': 'Realistic image quality, lighting and natural materials',
-    'services.improve.title': '2. Render Improvement Service',
-    'services.improve.subtitle': 'AI application combined with intensive processing helps images become clear, balanced in light and more realistic while still keeping the original design idea.',
+    'services.improve.title': '2. Render Enhancement',
+    'services.improve.subtitle': 'AI processing makes images clearer, more balanced, and more realistic while keeping the original design idea.',
     'services.improve.f1': 'Upgrade images to high resolution (4K Ultra HD)',
     'services.improve.f2': 'Balance lighting, improve materials, increase realism',
     'services.improve.f3': 'Ensures 90% of the original design idea is kept',
     'services.improve.f4': 'Fast processing, suitable for both individual and business projects',
-    'services.video.title': '3. AI Architectural - Real Estate Filmmaking Service',
-    'services.video.subtitle': 'An effective solution for presenting, pitching projects and real estate marketing, helping customers and investors easily visualize and make decisions.',
+    'services.video.title': '3. AI Architectural Filmmaking',
+    'services.video.subtitle': 'A focused solution for project presentation, pitching, and visual marketing that helps clients and investors decide faster.',
     'services.video.f1': 'Convert render images into smooth motion videos',
     'services.video.f2': 'Increase visibility and emotion when presenting projects',
     'services.video.f3': 'Easy to customize according to content requirements and purpose of use',
@@ -367,6 +367,11 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('en');
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.documentElement.dataset.language = language;
+  }, [language]);
 
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'en' ? 'vi' : 'en');

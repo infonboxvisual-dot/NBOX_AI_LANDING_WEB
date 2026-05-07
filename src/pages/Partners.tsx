@@ -57,9 +57,9 @@ export default function Partners() {
   };
 
   return (
-    <main className="overflow-hidden">
+    <main className="overflow-hidden editorial-grid">
       {/* Deployed Solutions 3D Carousel */}
-      <section className="pt-16 pb-12 px-6 bg-background overflow-hidden border-b border-on-surface/5">
+      <section className="overflow-hidden border-b border-on-surface/5 bg-background px-6 pb-12 pt-16">
         <div className="text-center mb-16">
            <h2 className="text-4xl md:text-6xl font-headline font-black uppercase tracking-tighter mb-4 text-on-surface">
              {language === 'vi' ? <>GIẢI PHÁP ĐÃ <span className="italic">TRIỂN KHAI</span></> : <>DEPLOYED <span className="italic">SOLUTIONS</span></>}
@@ -116,7 +116,7 @@ export default function Partners() {
       </section>
 
       {/* Auto-sliding Logo Cloud */}
-      <section className="py-24 bg-surface-container-low border-y border-on-surface/5 overflow-hidden">
+      <section className="editorial-grid overflow-hidden border-y border-on-surface/5 bg-surface-container-low py-24">
         <div className="logos-carousel">
           <div className="logos-track">
             {/* Set 1 */}
@@ -140,7 +140,7 @@ export default function Partners() {
       </section>
 
       {/* Corporate App Package Sections */}
-      <section className="py-24 px-6 bg-surface-container relative overflow-hidden">
+      <section className="editorial-grid relative overflow-hidden bg-surface-container px-6 py-24">
         {/* Background glow effects */}
         <div className="absolute top-1/4 -left-20 w-80 h-80 bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
         <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-purple-600/5 rounded-full blur-[150px] pointer-events-none"></div>
@@ -156,10 +156,10 @@ export default function Partners() {
                   <button
                     key={tab.id}
                     onClick={() => setActivePackageTab(tab.id)}
-                    className={`flex items-center gap-4 px-8 py-5 rounded-2xl font-headline font-black uppercase text-sm tracking-widest transition-all duration-300 border ${
+                    className={`flex items-center gap-4 px-8 py-5 rounded-2xl font-headline font-black uppercase text-sm tracking-widest transition-all duration-300 ${
                       activePackageTab === tab.id 
-                        ? 'bg-primary text-on-primary border-primary shadow-[0_10px_30px_rgba(255,122,47,0.3)]' 
-                        : 'bg-on-surface/5 text-on-surface/50 border-on-surface/10 hover:border-on-surface/30'
+                        ? 'bg-primary text-on-primary shadow-[0_10px_30px_rgba(255,122,47,0.3)]' 
+                        : 'bg-on-surface/5 text-on-surface/50 hover:bg-on-surface/10'
                     }`}
                   >
                     <span className="material-symbols-outlined notranslate">{tab.icon}</span>
