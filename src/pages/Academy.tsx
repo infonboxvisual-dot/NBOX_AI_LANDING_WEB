@@ -137,7 +137,7 @@ export default function Academy() {
   }, [testimonials.length]);
 
   return (
-    <main className="overflow-hidden pt-8 md:pt-12 space-y-8 md:space-y-12">
+    <main className="editorial-grid overflow-hidden pt-8 space-y-8 md:space-y-12 md:pt-12">
       <div className="max-w-7xl mx-auto px-6 md:px-8 text-center pt-8">
         <motion.div
            initial={{ opacity: 0, y: 20 }}

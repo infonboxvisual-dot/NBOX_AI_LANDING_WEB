@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { useTheme } from '../context/ThemeContext';
-import { Menu, X, ChevronRight, Lamp, Sun, Moon } from 'lucide-react';
+import { ArrowLeft, Menu, X, ChevronRight } from 'lucide-react';
+import { getLenis } from '../motion/lenisStore';
+
+function isMobileLike(): boolean {
+  if (typeof window === 'undefined') return false;
+  const coarse = window.matchMedia?.('(pointer: coarse)')?.matches ?? false;
+  const narrow = window.matchMedia?.('(max-width: 768px)')?.matches ?? false;
+  return coarse || narrow;
+}
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
   const { language, toggleLanguage, t } = useLanguage();
-  const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isLandingRoute = location.pathname === '/landing';
+  const [mobileLike, setMobileLike] = useState(() => isMobileLike());
+  const MENU_COLLAPSE_MS = 280;
   
   const navItems = [
     { name: t('nav.home'), path: '#home' },
@@ -17,74 +27,138 @@ export default function Header() {
     { name: t('nav.academy'), path: '#academy' },
     { name: t('nav.workspace'), path: '#workspace' },
     { name: language === 'vi' ? 'DỊCH VỤ AI' : 'AI SERVICES', path: '#services' },
-    { name: t('nav.contact'), path: '#contact' },
+    { name: t('nav.contact'), path: '#footer' },
   ];
 
   const closeMenu = () => setIsMenuOpen(false);
 
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+  useEffect(() => {
+    const onResize = () => setMobileLike(isMobileLike());
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const scrollToElement = (el: HTMLElement) => {
+    const rect = el.getBoundingClientRect();
+    const targetY = window.scrollY + rect.top;
+
+    // Mobile: prefer native scrolling (more reliable across browsers).
+    if (mobileLike) {
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+      return;
+    }
+
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(el, {
+        duration: 0.9,
+        easing: (t) => 1 - Math.pow(1 - t, 3),
+      });
+      return;
+    }
+
+    window.scrollTo({ top: targetY, behavior: 'smooth' });
+  };
+
+  const waitForElementAndScroll = (id: string) => {
+    const maxFrames = 180; // ~3s at 60fps
+    let frames = 0;
+
+    const tick = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        requestAnimationFrame(() => scrollToElement(el));
+        return;
+      }
+
+      frames += 1;
+      if (frames < maxFrames) {
+        requestAnimationFrame(tick);
+      }
+    };
+
+    tick();
+  };
+
+  const scrollToSection = (e: React.MouseEvent<HTMLElement>, path: string) => {
     if (path.startsWith('#')) {
       e.preventDefault();
-      const element = document.getElementById(path.substring(1));
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+      const id = path.substring(1);
+
+      // If we're not on landing, route there first then scroll.
+      if (!isLandingRoute) {
         closeMenu();
+        navigate(`/landing${path}`, { replace: false });
+
+        // Wait for landing DOM to mount (mobile route transitions can be slow).
+        waitForElementAndScroll(id);
+        return;
       }
+
+      closeMenu();
+      window.setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) scrollToElement(element);
+      }, MENU_COLLAPSE_MS);
     }
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl border-b border-primary/15 shadow-[0_0_30px_rgba(255,107,0,0.05)]">
-      <div className="flex justify-between items-center px-6 md:px-8 py-4 max-w-7xl mx-auto">
-        <a 
-          href="#home" 
-          onClick={(e) => scrollToSection(e, '#home')}
-          className="text-xl md:text-2xl font-black tracking-tighter uppercase text-on-surface font-headline"
-        >
-          NBOX AI
-        </a>
+    <header
+      className="site-header sticky top-0 z-50 h-16 w-full border-b border-primary/10 bg-background/72 backdrop-blur-2xl shadow-[0_0_30px_rgba(0,0,0,0.24)] md:h-[76px]"
+    >
+      <div className="flex h-full w-full items-center justify-between gap-4 px-6 md:gap-6 md:px-8">
+        <div className="flex items-center gap-2 md:gap-3">
+          {isLandingRoute && (
+            <button
+              type="button"
+              onClick={() => navigate('/', { replace: true })}
+              className="hidden h-10 w-10 items-center justify-center text-on-surface/70 transition-colors hover:border-primary/30 hover:text-primary md:flex md:h-11 md:w-11"
+              title={language === 'vi' ? 'Về trang cinematic' : 'Back to cinematic intro'}
+              aria-label={language === 'vi' ? 'Về trang cinematic' : 'Back to cinematic intro'}
+            >
+              <ArrowLeft size={14} />
+            </button>
+          )}
+
+          <a
+            href={isLandingRoute ? '/landing#home' : '#home'}
+            onClick={(e) => scrollToSection(e, '#home')}
+            className="group flex items-center gap-3 font-headline text-xl font-black uppercase tracking-[0.22em] text-on-surface md:text-2xl"
+          >
+            <span>NBOX AI</span>
+          </a>
+        </div>
         
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden items-center gap-2 md:flex">
           {navItems.map((item) => {
             return (
-              <a
+              <button
                 key={item.path}
-                href={item.path}
+                type="button"
                 onClick={(e) => scrollToSection(e, item.path)}
-                className="font-headline font-bold tracking-tighter uppercase transition-colors duration-300 pb-1 text-sm text-on-surface/70 hover:text-primary"
+                className="rounded-full px-4 py-2 font-headline text-xs font-black uppercase tracking-[0.22em] text-on-surface/65 transition-colors duration-300 hover:bg-primary/10 hover:text-primary"
               >
                 {item.name}
-              </a>
+              </button>
             );
           })}
         </nav>
 
-         <div className="flex items-center space-x-3 md:space-x-4 ml-auto md:ml-0">
-          <button 
-            onClick={toggleTheme}
-            className="w-10 h-10 rounded-full border border-on-surface/10 flex items-center justify-center text-on-surface hover:border-primary hover:text-primary transition-all bg-on-surface/5 backdrop-blur-sm shadow-lg group active:scale-90"
-            title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
-          >
-            <span className="relative group-hover:rotate-12 transition-transform">
-              {theme === 'light' ? <Lamp size={18} /> : <Sun size={18} />}
-            </span>
-          </button>
-          
+        <div className="flex items-center space-x-3 md:space-x-4">
           <button 
             onClick={toggleLanguage}
-            className="w-10 h-10 rounded-full border border-on-surface/10 flex items-center justify-center text-on-surface font-headline font-black text-xs md:text-sm hover:border-primary hover:text-primary transition-all bg-on-surface/5 backdrop-blur-sm shadow-lg group active:scale-90"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-on-surface/5 font-headline text-xs font-black text-on-surface transition-all hover:text-primary active:scale-90"
             title={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
           >
-            <span className="relative group-hover:scale-110 transition-transform">
+            <span className="relative transition-transform group-hover:scale-110">
               {language === 'en' ? 'E' : 'V'}
             </span>
           </button>
           
-          {/* Mobile Menu Toggle */}
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-on-surface hover:text-primary transition-colors"
+            className="text-on-surface transition-colors hover:text-primary md:hidden"
           >
             {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
@@ -99,20 +173,20 @@ export default function Header() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="md:hidden bg-background/95 border-b border-primary/10 overflow-hidden"
+            className="overflow-hidden border-b border-primary/10 bg-background/96 md:hidden"
           >
-            <nav className="flex flex-col p-6 space-y-4">
+              <nav className="flex flex-col space-y-4 p-6">
               {navItems.map((item) => {
                 return (
-                  <a
+                  <button
                     key={item.path}
-                    href={item.path}
+                    type="button"
                     onClick={(e) => scrollToSection(e, item.path)}
-                    className="flex items-center justify-between font-headline font-bold uppercase tracking-widest py-3 border-b border-on-surface/5 transition-colors text-on-surface/70"
+                      className="flex items-center justify-between border-b border-on-surface/5 py-3 font-headline text-sm font-black uppercase tracking-[0.24em] text-on-surface/70 transition-colors"
                   >
                     <span>{item.name}</span>
                     <ChevronRight size={16} className="opacity-30" />
-                  </a>
+                  </button>
                 );
               })}
             </nav>

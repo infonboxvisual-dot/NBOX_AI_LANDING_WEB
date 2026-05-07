@@ -56,7 +56,7 @@ export default function Workspace() {
   const selectedItem = [...apps, ...tools].find(item => item.id === selectedItemId);
 
   return (
-    <main className="overflow-hidden pt-12">
+    <main className="editorial-grid overflow-hidden pt-12">
       <div className="max-w-7xl mx-auto px-8 text-center mb-12">
         <motion.div
            initial={{ opacity: 0, y: 20 }}
