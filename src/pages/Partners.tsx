@@ -62,7 +62,15 @@ export default function Partners() {
       <section className="overflow-hidden border-b border-on-surface/5 bg-background px-6 pb-12 pt-16">
         <div className="text-center mb-16">
            <h2 className="text-4xl md:text-6xl font-headline font-black uppercase tracking-tighter mb-4 text-on-surface">
-             {language === 'vi' ? <>GIẢI PHÁP ĐÃ <span className="italic">TRIỂN KHAI</span></> : <>DEPLOYED <span className="italic">SOLUTIONS</span></>}
+             {language === 'vi' ? (
+               <>
+                 <span className="text-primary">30+</span> GIẢI PHÁP ĐÃ TRIỂN KHAI
+               </>
+             ) : (
+               <>
+                 DEPLOYED <span className="text-primary">30+</span> SOLUTIONS
+               </>
+             )}
            </h2>
            <p className="text-on-surface-variant max-w-2xl mx-auto">{t('partners.deployed.desc')}</p>
         </div>

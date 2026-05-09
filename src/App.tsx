@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import Header from './components/Header';
@@ -7,12 +7,8 @@ import MobileScrollToTop from './components/MobileScrollToTop';
 import Home from './pages/Home';
 import IntroPage from './pages/IntroPage';
 import Partners from './pages/Partners';
-import Academy from './pages/Academy';
 import CourseRenderAI from './pages/CourseRenderAI';
 import CourseVideoAI from './pages/CourseVideoAI';
-import Workspace from './pages/Workspace';
-import Contact from './pages/Contact';
-import Services from './pages/Services';
 
 export default function App() {
   return (
@@ -36,10 +32,13 @@ function AppShell() {
       <div className="flex-grow">
         <Routes>
           <Route path="/" element={<IntroPage />} />
-          <Route path="/landing" element={<Home />} />
-          <Route path="/academy/course-render-ai" element={<CourseRenderAI />} />
-          <Route path="/academy/course-video-ai" element={<CourseVideoAI />} />
-          <Route path="*" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          {/* Back-compat */}
+          <Route path="/landing" element={<Navigate to="/home" replace />} />
+          {/* Courses live under /home/academy/... to match hash-based IA */}
+          <Route path="/home/academy/course-render-ai" element={<CourseRenderAI />} />
+          <Route path="/home/academy/course-video-ai" element={<CourseVideoAI />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </div>
       {!isIntroRoute && <MobileScrollToTop />}

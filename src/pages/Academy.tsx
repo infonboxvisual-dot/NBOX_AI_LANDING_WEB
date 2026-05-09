@@ -24,7 +24,7 @@ export default function Academy() {
       ],
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCVDsovsMsejbbUgvR4XUyJsJ6AhicCZcHuM0kmVg5u42Mq543StzfDl_9dFCWtVljFda__dRKYVkJ5X0978C34UXwgxCUj_Uv4YkhaLbe-0WvbZoStH_AgqC6RdVk5v0WCHPT0gH2_Sh-QWIYJQd7l8H6UbPDQeFG4FHOkAd4EmTboi93PB-JP9s8FrsSGkDFmtsYbMFcoYeK1pD0j5BU_bA3snZNifzDTBE0QK4sKraj6aJVg7ghzN0bXden73qa2Kg_ltBvR1oM',
       link: '#',
-      detailLink: '/academy/course-render-ai'
+      detailLink: '/home/academy/course-render-ai'
     },
     {
       title: language === 'vi' ? 'Khóa Video AI' : 'AI Video Production',
@@ -41,7 +41,7 @@ export default function Academy() {
       ],
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuACqGCgxZ_UYRyfxhYQmivHEfWXpZanlFhl755j3al3x6ilpB6MmrV1wlUFB0VuYdpBaAMrJeafQvFGQd-EpjGvrJpJHuAUVGKuuv3s_KuLhnuUglG9y9SdkqXCVmMiDpMa1dmBatNlxqqQM7VXPAciF_nrCR7R-tZDAMthsbVJ87XYaDlc7vyCKa9BrRk08mxSGpF6QN0-t20qNiJRxxAjYSCSmHmUoLuTaVk23t6eIu3Xox3wv9muzda6avvkjmzXs8rrDFgtplA',
       link: '#',
-      detailLink: '/academy/course-video-ai'
+      detailLink: '/home/academy/course-video-ai'
     }
   ];
 

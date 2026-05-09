@@ -1,9 +1,21 @@
-import { motion } from 'motion/react';
+import { useLayoutEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { Link } from 'react-router-dom';
+import { getLenis } from '../motion/lenisStore';
 
 export default function CourseVideoAI() {
+  const navigate = useNavigate();
   const { language, t } = useLanguage();
+
+  useLayoutEffect(() => {
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    }
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
 
   const content = {
     vi: {
@@ -87,10 +99,14 @@ export default function CourseVideoAI() {
       </div>
 
       <div className="max-w-5xl mx-auto">
-        <Link to="/academy" className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors mb-12 group">
-          <span className="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">west</span>
+        <button
+          type="button"
+          onClick={() => navigate('/home', { replace: true })}
+          className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors mb-12 group cursor-pointer rounded-lg border-0 bg-transparent p-0 text-left font-inherit"
+        >
+          <span className="material-symbols-outlined text-lg transition-transform group-hover:-translate-x-1">west</span>
           <span className="font-headline font-bold uppercase text-xs tracking-widest">{t('academy.detail.back')}</span>
-        </Link>
+        </button>
 
         {/* Hero */}
         <section className="mb-20">

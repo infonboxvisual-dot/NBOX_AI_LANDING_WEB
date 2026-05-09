@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { useLanguage } from '../context/LanguageContext';
+import { getLenis } from '../motion/lenisStore';
 import VillaSketchHero from '../components/VillaSketchHero';
 import Services from './Services';
 import Partners from './Partners';
@@ -9,6 +11,7 @@ import Academy from './Academy';
 import Workspace from './Workspace';
 
 export default function Home() {
+  const location = useLocation();
   const { t, language } = useLanguage();
   const heroSectionRef = useRef<HTMLElement | null>(null);
   const heroCopyRef = useRef<HTMLDivElement | null>(null);
@@ -37,6 +40,28 @@ export default function Home() {
     // Keep transforms static for smoother scroll.
     gsap.set([heroCopyRef.current, heroVisualRef.current], { clearProps: 'transform,opacity,willChange' });
   }, []);
+
+  useEffect(() => {
+    const hash = (location.hash || '').replace('#', '').trim();
+    if (!hash) return;
+
+    let frames = 0;
+    const tick = () => {
+      const el = document.getElementById(hash);
+      if (el) {
+        const lenis = getLenis();
+        if (lenis) {
+          lenis.scrollTo(el, { duration: 0.9, easing: (t) => 1 - Math.pow(1 - t, 3) });
+        } else {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        return;
+      }
+      frames += 1;
+      if (frames < 180) requestAnimationFrame(tick);
+    };
+    tick();
+  }, [location.hash, location.key]);
 
   const demoCategories = [
     { 

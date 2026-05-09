@@ -17,17 +17,16 @@ export default function Header() {
   const { language, toggleLanguage, t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
-  const isLandingRoute = location.pathname === '/landing';
+  const isHomeRoute = location.pathname === '/home';
   const [mobileLike, setMobileLike] = useState(() => isMobileLike());
-  const MENU_COLLAPSE_MS = 280;
   
   const navItems = [
-    { name: t('nav.home'), path: '#home' },
-    { name: t('nav.partners'), path: '#partners' },
-    { name: t('nav.academy'), path: '#academy' },
-    { name: t('nav.workspace'), path: '#workspace' },
-    { name: language === 'vi' ? 'DỊCH VỤ AI' : 'AI SERVICES', path: '#services' },
-    { name: t('nav.contact'), path: '#footer' },
+    { name: t('nav.home'), hash: null },
+    { name: t('nav.partners'), hash: 'partners' },
+    { name: t('nav.academy'), hash: 'academy' },
+    { name: t('nav.workspace'), hash: 'workspace' },
+    { name: language === 'vi' ? 'DỊCH VỤ AI' : 'AI SERVICES', hash: 'services' },
+    { name: t('nav.contact'), hash: 'footer' },
   ];
 
   const closeMenu = () => setIsMenuOpen(false);
@@ -38,69 +37,77 @@ export default function Header() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  const scrollToElement = (el: HTMLElement) => {
-    const rect = el.getBoundingClientRect();
-    const targetY = window.scrollY + rect.top;
+  const scrollToId = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
 
-    // Mobile: prefer native scrolling (more reliable across browsers).
     if (mobileLike) {
-      window.scrollTo({ top: targetY, behavior: 'smooth' });
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
 
     const lenis = getLenis();
     if (lenis) {
-      lenis.scrollTo(el, {
-        duration: 0.9,
-        easing: (t) => 1 - Math.pow(1 - t, 3),
-      });
+      lenis.scrollTo(el, { duration: 0.9, easing: (t) => 1 - Math.pow(1 - t, 3) });
       return;
     }
 
-    window.scrollTo({ top: targetY, behavior: 'smooth' });
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const waitForElementAndScroll = (id: string) => {
-    const maxFrames = 180; // ~3s at 60fps
-    let frames = 0;
+  const scrollToTop = (immediate?: boolean) => {
+    if (mobileLike) {
+      window.scrollTo({ top: 0, behavior: immediate ? 'auto' : 'smooth' });
+      return;
+    }
 
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(0, immediate ? { immediate: true } : { duration: 0.9, easing: (t) => 1 - Math.pow(1 - t, 3) });
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: immediate ? 'auto' : 'smooth' });
+  };
+
+  const waitForAndScroll = (id: string) => {
+    let frames = 0;
     const tick = () => {
       const el = document.getElementById(id);
       if (el) {
-        requestAnimationFrame(() => scrollToElement(el));
+        scrollToId(id);
         return;
       }
-
       frames += 1;
-      if (frames < maxFrames) {
-        requestAnimationFrame(tick);
-      }
+      if (frames < 180) requestAnimationFrame(tick);
     };
-
     tick();
   };
 
-  const scrollToSection = (e: React.MouseEvent<HTMLElement>, path: string) => {
-    if (path.startsWith('#')) {
-      e.preventDefault();
-      const id = path.substring(1);
-
-      // If we're not on landing, route there first then scroll.
-      if (!isLandingRoute) {
-        closeMenu();
-        navigate(`/landing${path}`, { replace: false });
-
-        // Wait for landing DOM to mount (mobile route transitions can be slow).
-        waitForElementAndScroll(id);
-        return;
-      }
-
-      closeMenu();
-      window.setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) scrollToElement(element);
-      }, MENU_COLLAPSE_MS);
+  const onNavHome = () => {
+    closeMenu();
+    if (!isHomeRoute) {
+      navigate('/home', { replace: false });
+      // After route change, scroll to top.
+      requestAnimationFrame(() => scrollToTop(true));
+      return;
     }
+    navigate('/home', { replace: false });
+    scrollToTop();
+  };
+
+  const onNavHash = (hash: string) => {
+    closeMenu();
+
+    if (!isHomeRoute) {
+      navigate(`/home#${hash}`, { replace: false });
+      waitForAndScroll(hash);
+      return;
+    }
+
+    // Update URL hash and scroll.
+    navigate(`/home#${hash}`, { replace: false });
+    scrollToId(hash);
   };
 
   return (
@@ -109,7 +116,7 @@ export default function Header() {
     >
       <div className="flex h-full w-full items-center justify-between gap-4 px-6 md:gap-6 md:px-8">
         <div className="flex items-center gap-2 md:gap-3">
-          {isLandingRoute && (
+          {isHomeRoute && (
             <button
               type="button"
               onClick={() => navigate('/', { replace: true })}
@@ -121,22 +128,22 @@ export default function Header() {
             </button>
           )}
 
-          <a
-            href={isLandingRoute ? '/landing#home' : '#home'}
-            onClick={(e) => scrollToSection(e, '#home')}
+          <button
+            type="button"
+            onClick={onNavHome}
             className="group flex items-center gap-3 font-headline text-xl font-black uppercase tracking-[0.22em] text-on-surface md:text-2xl"
           >
             <span>NBOX AI</span>
-          </a>
+          </button>
         </div>
         
         <nav className="hidden items-center gap-2 md:flex">
           {navItems.map((item) => {
             return (
               <button
-                key={item.path}
+                key={item.hash ?? 'home'}
                 type="button"
-                onClick={(e) => scrollToSection(e, item.path)}
+                onClick={() => (item.hash ? onNavHash(item.hash) : onNavHome())}
                 className="rounded-full px-4 py-2 font-headline text-xs font-black uppercase tracking-[0.22em] text-on-surface/65 transition-colors duration-300 hover:bg-primary/10 hover:text-primary"
               >
                 {item.name}
@@ -179,9 +186,9 @@ export default function Header() {
               {navItems.map((item) => {
                 return (
                   <button
-                    key={item.path}
+                    key={item.hash ?? 'home'}
                     type="button"
-                    onClick={(e) => scrollToSection(e, item.path)}
+                    onClick={() => (item.hash ? onNavHash(item.hash) : onNavHome())}
                       className="flex items-center justify-between border-b border-on-surface/5 py-3 font-headline text-sm font-black uppercase tracking-[0.24em] text-on-surface/70 transition-colors"
                   >
                     <span>{item.name}</span>
