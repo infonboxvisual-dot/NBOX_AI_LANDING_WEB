@@ -1,23 +1,19 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import MobileScrollToTop from './components/MobileScrollToTop';
+import { getLenis } from './motion/lenisStore';
 import Home from './pages/Home';
-import IntroPage from './pages/IntroPage';
+import Partners from './pages/Partners';
+import Courses from './pages/Courses';
+import Workspace from './pages/Workspace';
+import Services from './pages/Services';
+import Contact from './pages/Contact';
 import CourseRenderAI from './pages/CourseRenderAI';
 import CourseVideoAI from './pages/CourseVideoAI';
-
-/** Below Tailwind `md` (768px): skip cinematic intro at `/`, always land on `/home`. */
-const MOBILE_VIEWPORT_MQ = '(max-width: 767px)';
-
-function IntroRoute() {
-  if (typeof window !== 'undefined' && window.matchMedia(MOBILE_VIEWPORT_MQ).matches) {
-    return <Navigate to="/home" replace />;
-  }
-  return <IntroPage />;
-}
 
 export default function App() {
   return (
@@ -33,27 +29,38 @@ export default function App() {
 
 function AppShell() {
   const location = useLocation();
-  const isIntroRoute = location.pathname === '/';
+
+  useEffect(() => {
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname]);
 
   return (
     <div className="flex min-h-screen flex-col bg-background selection:bg-primary/20 selection:text-on-primary">
-      {!isIntroRoute && <Header />}
+      <Header />
       <div className="flex-grow">
         <Routes>
-          <Route path="/" element={<IntroRoute />} />
-          <Route path="/home" element={<Home />} />
-          {/* Back-compat */}
-          <Route path="/landing" element={<Navigate to="/home" replace />} />
-          {/* Courses live under /home/academy/... to match hash-based IA */}
-          <Route path="/home/academy/course-render-ai" element={<CourseRenderAI />} />
-          <Route path="/home/academy/course-video-ai" element={<CourseVideoAI />} />
-          <Route path="*" element={<Navigate to="/home" replace />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="/enterprise" element={<Partners />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/workspace" element={<Workspace />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/courses/course-render-ai" element={<CourseRenderAI />} />
+          <Route path="/courses/course-video-ai" element={<CourseVideoAI />} />
+          <Route path="/landing" element={<Navigate to="/" replace />} />
+          <Route path="/home/academy/course-render-ai" element={<Navigate to="/courses/course-render-ai" replace />} />
+          <Route path="/home/academy/course-video-ai" element={<Navigate to="/courses/course-video-ai" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
-      {!isIntroRoute && <MobileScrollToTop />}
-      {!isIntroRoute && <Footer />}
+      <MobileScrollToTop />
+      <Footer />
     </div>
   );
 }
-
-

@@ -1,133 +1,201 @@
+import { FormEvent, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
 
+type ContactCopy = {
+  pageTitle: string;
+  sectionTitle: string;
+  name: string;
+  email: string;
+  phone: string;
+  social: string;
+  message: string;
+  placeholders: {
+    name: string;
+    email: string;
+    phone: string;
+    social: string;
+    message: string;
+  };
+  submit: string;
+};
+
 export default function Contact() {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
 
-  const socialLinks = [
-    { label: 'Facebook', value: '@nbox.ai.architect', icon: 'facebook' },
-    { label: 'Instagram', value: '@nbox_neural', icon: 'photo_camera' },
-    { label: 'YouTube', value: 'Nbox AI Lab', icon: 'video_library' },
-    { label: 'LinkedIn', value: 'NBOX AI CORP', icon: 'business' },
-  ];
+  const copy = useMemo<ContactCopy>(() => {
+    if (language === 'vi') {
+      return {
+        pageTitle: 'LIÊN HỆ',
+        sectionTitle: 'Gửi thông tin cho chúng tôi',
+        name: 'Họ và tên',
+        email: 'Email',
+        phone: 'Số điện thoại',
+        social: 'Link mạng xã hội',
+        message: 'Nội dung liên hệ',
+        placeholders: {
+          name: 'Nhập họ và tên',
+          email: 'vidu@email.com',
+          phone: '09xx xxx xxx',
+          social: 'https://…',
+          message: 'Nhập nội dung bạn muốn gửi…',
+        },
+        submit: 'GỬI LIÊN HỆ',
+      };
+    }
 
-  const contactOptions = [
-    { label: 'Customer Support', value: 'neural@nbox.ai', icon: 'bolt' },
-    { label: 'Enterprise', value: 'architect@nbox.ai', icon: 'business_center' },
-    { label: 'Academy', value: 'learn@nbox.ai', icon: 'school' },
-  ];
+    return {
+      pageTitle: 'CONTACT',
+      sectionTitle: 'Send us a message',
+      name: 'Full name',
+      email: 'Email',
+      phone: 'Phone number',
+      social: 'Social media link',
+      message: 'Message',
+      placeholders: {
+        name: 'Your full name',
+        email: 'you@example.com',
+        phone: '+84 …',
+        social: 'https://…',
+        message: 'How can we help you?',
+      },
+      submit: 'SEND MESSAGE',
+    };
+  }, [language]);
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [social, setSocial] = useState('');
+  const [message, setMessage] = useState('');
+
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const body = [
+      `${copy.name}: ${name}`,
+      `${copy.email}: ${email}`,
+      `${copy.phone}: ${phone}`,
+      `${copy.social}: ${social}`,
+      '',
+      `${copy.message}:`,
+      message,
+    ].join('\n');
+
+    const mailto = `mailto:info.nboxvisual@gmail.com?subject=${encodeURIComponent(
+      language === 'vi' ? `[LIÊN HỆ WEB] ${name || 'Khách'}` : `[WEB CONTACT] ${name || 'Guest'}`
+    )}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailto;
+  };
 
   return (
-    <main className="overflow-hidden pt-8 md:pt-12">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 text-center mb-8 md:mb-12">
-        <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           animate={{ opacity: 1, y: 0 }}
-           className="space-y-4"
-        >
-          <h1 className="text-4xl md:text-6xl font-headline font-black uppercase tracking-tighter text-on-surface">
-            {language === 'vi' ? 'KẾT NỐI VỚI CHÚNG TÔI' : 'GET IN TOUCH'}
+    <main className="overflow-hidden px-6 pb-20 pt-10 md:px-8 md:pb-28 md:pt-14">
+      <div className="mx-auto max-w-2xl">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10 text-center md:mb-12">
+          <h1 className="font-headline text-3xl font-black uppercase tracking-tighter text-on-surface md:text-5xl">
+            {copy.pageTitle}
           </h1>
         </motion.div>
-      </div>
 
-      {/* Contact Grid */}
-      <section className="max-w-7xl mx-auto px-6 md:px-8 py-8 md:py-12">
-        <div className="grid lg:grid-cols-2 gap-12 md:gap-16">
-          {/* Channels */}
-          <div className="space-y-12">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-headline font-black uppercase tracking-tight mb-6 md:mb-8 drop-shadow-sm text-on-surface">{t('contact.journey.title')}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                {contactOptions.map((opt, i) => (
-                  <motion.div 
-                    key={i}
-                    whileHover={{ scale: 1.05 }}
-                    className="glass-card p-6 md:p-8 rounded-xl border border-on-surface/10 flex flex-col items-start gap-4 group"
-                  >
-                    <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center text-primary border border-primary/30 group-hover:bg-primary group-hover:text-on-primary transition-all">
-                      <span className="material-symbols-outlined">{opt.icon}</span>
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant mb-1">{opt.label}</p>
-                      <p className="text-on-surface font-headline font-bold text-lg">{opt.value}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="glass-card rounded-2xl border border-on-surface/10 p-6 shadow-2xl md:rounded-3xl md:p-10"
+        >
+          <h2 className="mb-8 font-headline text-lg font-bold uppercase tracking-wide text-on-surface md:text-xl">
+            {copy.sectionTitle}
+          </h2>
+
+          <form onSubmit={onSubmit} className="space-y-6 md:space-y-7">
+            <div className="space-y-2">
+              <label htmlFor="contact-name" className="block text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                {copy.name}
+              </label>
+              <input
+                id="contact-name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={copy.placeholders.name}
+                className="w-full rounded-xl border border-outline-variant/25 bg-surface-variant/40 p-4 font-sans text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none md:p-5 md:text-base"
+              />
             </div>
 
-            {/* Social Ecosystem */}
-            <div>
-              <h2 className="text-2xl md:text-3xl font-headline font-black uppercase tracking-tight mb-6 md:mb-8 drop-shadow-sm text-on-surface">{t('contact.social.title')}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                 {socialLinks.map((social, i) => (
-                  <motion.a 
-                    key={i}
-                    href="#"
-                    whileHover={{ x: 10 }}
-                    className="flex items-center gap-4 md:gap-6 p-4 md:p-6 glass-card rounded-xl border border-on-surface/10 hover:border-primary/40 group transition-all"
-                  >
-                    <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-surface-variant border border-on-surface/5 group-hover:bg-primary/20 group-hover:text-primary transition-colors">
-                       <span className="material-symbols-outlined text-2xl">{social.icon}</span>
-                    </div>
-                    <div>
-                       <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">{social.label}</p>
-                       <p className="text-on-surface font-headline font-bold">{social.value}</p>
-                    </div>
-                  </motion.a>
-                ))}
-              </div>
+            <div className="space-y-2">
+              <label htmlFor="contact-email" className="block text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                {copy.email}
+              </label>
+              <input
+                id="contact-email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={copy.placeholders.email}
+                className="w-full rounded-xl border border-outline-variant/25 bg-surface-variant/40 p-4 font-sans text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none md:p-5 md:text-base"
+              />
             </div>
-          </div>
 
-          {/* Form Side */}
-          <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="glass-card p-8 md:p-12 rounded-2xl md:rounded-3xl border border-on-surface/10 shadow-2xl relative"
-          >
-            <div className="absolute top-0 right-0 p-4 md:p-8">
-               <span className="text-primary/20 font-headline font-black text-4xl md:text-6xl uppercase tracking-tighter">NBOX</span>
+            <div className="space-y-2">
+              <label htmlFor="contact-phone" className="block text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                {copy.phone}
+              </label>
+              <input
+                id="contact-phone"
+                name="phone"
+                type="tel"
+                autoComplete="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder={copy.placeholders.phone}
+                className="w-full rounded-xl border border-outline-variant/25 bg-surface-variant/40 p-4 font-sans text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none md:p-5 md:text-base"
+              />
             </div>
-            <h3 className="text-xl md:text-2xl font-headline font-bold uppercase mb-6 md:mb-8 text-on-surface">{t('contact.network.title')}</h3>
-            <div className="space-y-4 md:space-y-6">
-              <div className="space-y-2">
-                <label className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary">Full Name</label>
-                <input className="w-full bg-surface-variant/50 border border-outline-variant/20 rounded-lg p-4 md:p-5 text-sm md:text-base text-on-surface focus:outline-none focus:border-primary transition-all font-sans" placeholder="ARCHITECT NAME" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary">Department</label>
-                <input className="w-full bg-surface-variant/50 border border-outline-variant/20 rounded-lg p-4 md:p-5 text-sm md:text-base text-on-surface focus:outline-none focus:border-primary transition-all font-sans" placeholder="COMPANY / FIRM" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary">Manifesto</label>
-                <textarea rows={4} className="w-full bg-surface-variant/50 border border-outline-variant/20 rounded-lg p-4 md:p-5 text-sm md:text-base text-on-surface focus:outline-none focus:border-primary transition-all font-sans resize-none" placeholder="YOUR COLLABORATION VISION..." />
-              </div>
-              <button className="w-full bg-primary py-4 md:py-6 rounded-xl text-on-primary font-headline font-black uppercase tracking-[0.2em] text-sm md:text-base shadow-[0_0_40px_rgba(255,122,47,0.3)] hover:scale-[1.02] active:scale-95 transition-all">
-                Submit Frequency
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
-      {/* Lab Join */}
-      <section className="mb-20 md:mb-32 px-6 md:px-8">
-        <div className="max-w-7xl mx-auto glass-card rounded-2xl md:rounded-3xl p-8 md:p-16 lg:p-24 border border-on-surface/10 relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent"></div>
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-12 justify-between">
-            <div className="max-w-2xl text-center md:text-left">
-               <h2 className="text-3xl md:text-6xl font-headline font-black uppercase tracking-tighter mb-4 text-on-surface">{t('contact.lab.title')}</h2>
-               <p className="text-on-surface-variant text-base md:text-lg italic">{t('contact.lab.desc')}</p>
+            <div className="space-y-2">
+              <label htmlFor="contact-social" className="block text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                {copy.social}
+              </label>
+              <input
+                id="contact-social"
+                name="social"
+                type="url"
+                inputMode="url"
+                value={social}
+                onChange={(e) => setSocial(e.target.value)}
+                placeholder={copy.placeholders.social}
+                className="w-full rounded-xl border border-outline-variant/25 bg-surface-variant/40 p-4 font-sans text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none md:p-5 md:text-base"
+              />
             </div>
-            <button className="w-full md:w-auto whitespace-nowrap px-8 md:px-10 py-4 md:py-5 rounded-lg border-2 border-primary text-primary font-headline font-black uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-all text-sm md:text-base">
-               {t('contact.lab.cta')}
+
+            <div className="space-y-2">
+              <label htmlFor="contact-message" className="block text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                {copy.message}
+              </label>
+              <textarea
+                id="contact-message"
+                name="message"
+                rows={5}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder={copy.placeholders.message}
+                className="min-h-[140px] w-full resize-y rounded-xl border border-outline-variant/25 bg-surface-variant/40 p-4 font-sans text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none md:p-5 md:text-base"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full rounded-xl bg-primary py-4 font-headline text-sm font-black uppercase tracking-[0.2em] text-on-primary shadow-[0_0_40px_rgba(203,123,62,0.28)] transition-transform hover:scale-[1.01] active:scale-[0.99] md:py-5 md:text-base"
+            >
+              {copy.submit}
             </button>
-          </div>
-        </div>
-      </section>
+          </form>
+        </motion.section>
+      </div>
     </main>
   );
 }

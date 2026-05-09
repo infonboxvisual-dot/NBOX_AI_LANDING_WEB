@@ -101,7 +101,7 @@ export default function CourseVideoAI() {
       <div className="max-w-5xl mx-auto">
         <button
           type="button"
-          onClick={() => navigate('/home', { replace: true })}
+          onClick={() => navigate('/courses', { replace: true })}
           className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors mb-12 group cursor-pointer rounded-lg border-0 bg-transparent p-0 text-left font-inherit"
         >
           <span className="material-symbols-outlined text-lg transition-transform group-hover:-translate-x-1">west</span>
