@@ -71,6 +71,25 @@
   --radius-lg: 1rem;
   --radius-xl: 1.25rem;
   --radius-2xl: 1.5rem;
+
+  /* FuturisticLoader + docs/ANIMATION_LOADING_STANDARD.md */
+  --animate-spin-reverse: spin-reverse 1.2s linear infinite;
+  --animate-shimmer: shimmer 2.4s ease-in-out infinite;
+}
+
+@keyframes spin-reverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
 }
 
 @layer base {

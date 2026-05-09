@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { FuturisticLoader } from './FuturisticLoader';
 
 const FRAME_COUNT = 240;
+const PRELOAD_CONCURRENCY = 6;
 const FRAME_PREFIX = '/frame_video/ezgif-frame-';
 
 const padFrame = (index: number) => String(index).padStart(3, '0');
@@ -50,6 +52,7 @@ type CinematicIntroProps = {
 export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
   const { language, toggleLanguage } = useLanguage();
   const [surfaceReady, setSurfaceReady] = useState(false);
+  const [preloadProgress, setPreloadProgress] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const framesRef = useRef<(HTMLImageElement | null)[]>(Array.from({ length: FRAME_COUNT }, () => null));
   const progressRef = useRef(0);
@@ -203,10 +206,24 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
       }
     };
 
-    const batchSize = 12;
     let cancelled = false;
+    let progressRafId: number | null = null;
+    let pendingProgress = 0;
 
+    const flushProgress = (value: number) => {
+      pendingProgress = value;
+      if (progressRafId !== null) {
+        return;
+      }
+      progressRafId = window.requestAnimationFrame(() => {
+        progressRafId = null;
+        setPreloadProgress(pendingProgress);
+      });
+    };
+
+    /** Fallback if decoded preload fails (degraded: frames may pop in late). */
     const pumpRemainingFrames = (nextIndex: number) => {
+      const batchSize = 12;
       const pump = () => {
         if (cancelled || nextIndex > FRAME_COUNT) {
           return;
@@ -248,6 +265,41 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
       });
     };
 
+    const preloadAllFramesDecoded = async () => {
+      let nextIndex = 1;
+      let completed = 0;
+
+      const worker = async () => {
+        while (!cancelled) {
+          const frameIndex = nextIndex;
+          nextIndex += 1;
+
+          if (frameIndex > FRAME_COUNT) {
+            return;
+          }
+
+          const image = await loadImageDecoded(frameSrc(frameIndex));
+          if (cancelled) {
+            return;
+          }
+
+          framesRef.current[frameIndex - 1] = image;
+          completed += 1;
+
+          if (frameIndex === 1) {
+            hasFirstFrameRef.current = true;
+            ensureCanvasSize();
+            drawFrame(1);
+          }
+
+          flushProgress(completed / FRAME_COUNT);
+        }
+      };
+
+      await Promise.all(Array.from({ length: PRELOAD_CONCURRENCY }, () => worker()));
+      flushProgress(1);
+    };
+
     const bootstrap = async () => {
       ensureCanvasSize();
 
@@ -267,6 +319,7 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
           drawFrame(FRAME_COUNT);
           updateTypography(1);
 
+          setPreloadProgress(1);
           revealSurface();
 
           if (onComplete && !hasCompletedRef.current && !cancelled) {
@@ -279,6 +332,7 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
             targetProgressRef.current = 1;
             progressRef.current = 1;
             updateTypography(1);
+            setPreloadProgress(1);
             revealSurface();
             if (onComplete && !hasCompletedRef.current) {
               hasCompletedRef.current = true;
@@ -290,21 +344,29 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
         return;
       }
 
+      setPreloadProgress(0);
+
       try {
-        const image = await loadImageDecoded(frameSrc(1));
+        await preloadAllFramesDecoded();
         if (cancelled) {
           return;
         }
 
-        framesRef.current[0] = image;
-        hasFirstFrameRef.current = true;
-        ensureCanvasSize();
-        drawFrame(1);
-
-        pumpRemainingFrames(2);
         revealSurface();
       } catch {
         if (!cancelled) {
+          try {
+            const image = await loadImageDecoded(frameSrc(1));
+            if (!cancelled) {
+              framesRef.current[0] = image;
+              hasFirstFrameRef.current = true;
+              ensureCanvasSize();
+              drawFrame(1);
+            }
+          } catch {
+            // ignore
+          }
+
           pumpRemainingFrames(1);
 
           window.setTimeout(() => {
@@ -316,6 +378,8 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
               }
             }
           }, 480);
+
+          setPreloadProgress(1);
           revealSurface();
         }
       }
@@ -337,6 +401,31 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
     renderLoop();
 
     void bootstrap();
+
+    const onResize = () => {
+      ensureCanvasSize();
+    };
+
+    window.addEventListener('resize', onResize, { passive: true });
+
+    return () => {
+      cancelled = true;
+      if (progressRafId !== null) {
+        window.cancelAnimationFrame(progressRafId);
+      }
+      window.removeEventListener('resize', onResize);
+      document.body.style.overflow = bodyOverflowRef.current;
+
+      if (rafRef.current) {
+        window.cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, [onComplete]);
+
+  useEffect(() => {
+    if (!surfaceReady) {
+      return;
+    }
 
     const clampProgress = (value: number) => Math.min(1, Math.max(0, value));
 
@@ -377,34 +466,63 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
     window.addEventListener('touchstart', onTouchStart, { passive: true });
     window.addEventListener('touchmove', onTouchMove, { passive: false });
 
-    const onResize = () => {
-      ensureCanvasSize();
-    };
-
-    window.addEventListener('resize', onResize, { passive: true });
-
     return () => {
-      cancelled = true;
-      window.removeEventListener('resize', onResize);
       window.removeEventListener('wheel', onWheel as EventListener);
       window.removeEventListener('touchstart', onTouchStart as EventListener);
       window.removeEventListener('touchmove', onTouchMove as EventListener);
-      document.body.style.overflow = bodyOverflowRef.current;
-
-      if (rafRef.current) {
-        window.cancelAnimationFrame(rafRef.current);
-      }
     };
-  }, [onComplete]);
+  }, [surfaceReady, onComplete]);
 
   return (
     <section className="relative h-screen overflow-hidden bg-[#050505] text-white/90">
+      {!surfaceReady && (
+        <div
+          className="fixed inset-0 z-[60] overflow-hidden bg-[#050505]"
+          aria-busy="true"
+          aria-live="polite"
+        >
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/logo.jpg')" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/82 via-black/72 to-black/88" />
+          <div className="relative z-10 flex h-full flex-col items-center justify-center gap-8 px-8 text-center">
+            <FuturisticLoader size="lg" />
+            <p className="max-w-lg font-headline text-lg font-black leading-snug text-white md:text-xl">
+              {language === 'vi'
+                ? 'CHÀO MỪNG BẠN ĐẾN VỚI HỆ SINH THÁI NBOX AI'
+                : 'WELCOME TO THE NBOX AI ECOSYSTEM'}
+            </p>
+            <div className="flex w-full max-w-xs flex-col gap-2">
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full origin-left rounded-full bg-primary transition-[width] duration-150 ease-out"
+                  style={{ width: `${Math.round(preloadProgress * 100)}%` }}
+                />
+              </div>
+              <p className="font-headline text-[10px] font-black uppercase tracking-[0.28em] text-white/45">
+                {Math.min(100, Math.round(preloadProgress * 100))}%
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={toggleLanguage}
+              title={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
+              aria-label={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 font-headline text-[11px] font-black text-white/85 transition-colors hover:bg-white/18 hover:text-primary"
+            >
+              {language === 'en' ? 'E' : 'V'}
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,122,24,0.16),transparent_40%),linear-gradient(to_bottom,#050505_0%,#090909_45%,#050505_100%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:72px_72px] opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-80" />
 
-        {/* Gate canvas + overlays until frame 001 is decoded and painted (avoid text-only flash). */}
+        {/* Gate canvas + overlays until all frames are decoded (smooth scroll). */}
         <div
           className={`absolute inset-0 overflow-hidden transition-[opacity] duration-500 ease-out ${
             surfaceReady ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'

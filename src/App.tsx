@@ -6,9 +6,18 @@ import Footer from './components/Footer';
 import MobileScrollToTop from './components/MobileScrollToTop';
 import Home from './pages/Home';
 import IntroPage from './pages/IntroPage';
-import Partners from './pages/Partners';
 import CourseRenderAI from './pages/CourseRenderAI';
 import CourseVideoAI from './pages/CourseVideoAI';
+
+/** Below Tailwind `md` (768px): skip cinematic intro at `/`, always land on `/home`. */
+const MOBILE_VIEWPORT_MQ = '(max-width: 767px)';
+
+function IntroRoute() {
+  if (typeof window !== 'undefined' && window.matchMedia(MOBILE_VIEWPORT_MQ).matches) {
+    return <Navigate to="/home" replace />;
+  }
+  return <IntroPage />;
+}
 
 export default function App() {
   return (
@@ -31,7 +40,7 @@ function AppShell() {
       {!isIntroRoute && <Header />}
       <div className="flex-grow">
         <Routes>
-          <Route path="/" element={<IntroPage />} />
+          <Route path="/" element={<IntroRoute />} />
           <Route path="/home" element={<Home />} />
           {/* Back-compat */}
           <Route path="/landing" element={<Navigate to="/home" replace />} />
