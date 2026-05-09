@@ -1,7 +1,6 @@
-# Cloud Run injects PORT; nginx official image substitutes ${PORT} via envsubst
+# Placeholder __PORT__ is replaced at container start (Cloud Run sets PORT).
 server {
-    listen       ${PORT};
-    listen       [::]:${PORT};
+    listen       0.0.0.0:__PORT__;
     server_name  localhost;
     root   /usr/share/nginx/html;
     index  index.html;
@@ -10,12 +9,11 @@ server {
     gzip_types text/plain text/css application/json application/javascript application/xml image/svg+xml;
 
     location / {
-        try_files $$uri $$uri/ /index.html;
+        try_files $uri $uri/ /index.html;
     }
 
-    # Long cache for hashed assets (Vite emits /assets/*.js etc.)
     location /assets/ {
         add_header Cache-Control "public, max-age=31536000, immutable";
-        try_files $$uri =404;
+        try_files $uri =404;
     }
 }
