@@ -7,7 +7,9 @@ type VillaSketchHeroProps = {
   reducedMotion?: boolean;
 };
 
-const DEFAULT_IMAGE_SRC = '/landing_sketch_img.png';
+const DEFAULT_IMAGE_SRC = '/landing_sketch_img.avif';
+const DEFAULT_IMAGE_FALLBACK_SRC = '/landing_sketch_img.webp';
+const DEFAULT_IMAGE_PNG_FALLBACK_SRC = '/landing_sketch_img.png';
 
 function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined') return true;
@@ -70,6 +72,17 @@ export default function VillaSketchHero({
     img.onerror = () => {
       finished = true;
       if (!cancelled) {
+        // If the browser can't load AVIF, try WebP then PNG before giving up.
+        if (img.src.endsWith(DEFAULT_IMAGE_SRC)) {
+          img.src = DEFAULT_IMAGE_FALLBACK_SRC;
+          finished = false;
+          return;
+        }
+        if (img.src.endsWith(DEFAULT_IMAGE_FALLBACK_SRC)) {
+          img.src = DEFAULT_IMAGE_PNG_FALLBACK_SRC;
+          finished = false;
+          return;
+        }
         setRasterReady(true);
       }
     };

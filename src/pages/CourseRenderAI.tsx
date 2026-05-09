@@ -21,7 +21,7 @@ export default function CourseRenderAI() {
   const content = {
     vi: {
       title: "Khóa học Render AI Thực Chiến",
-      subtitle: "Ứng dụng AI để tăng tốc & nâng cấp toàn bộ quy trình diễn họa",
+      subtitle: "Dùng AI để tăng tốc & nâng cấp toàn bộ quy trình diễn họa",
       target: ["Kiến trúc sư", "3D Artist / Diễn họa viên", "Doanh nghiệp kiến trúc & bất động sản"],
       goal: "Nhanh hơn – Tốt hơn – Hiệu quả hơn",
       problems: [
@@ -173,7 +173,7 @@ export default function CourseRenderAI() {
             <div className="space-y-8">
               <div>
                 <h3 className="text-3xl font-headline font-black uppercase tracking-tighter mb-4 text-on-surface">{d.definition.title}</h3>
-                <p className="text-on-surface-variant mb-6">{language === 'vi' ? 'Ứng dụng AI vào:' : 'Applying AI into:'}</p>
+                <p className="text-on-surface-variant mb-6">{language === 'vi' ? 'Dùng AI cho:' : 'Applying AI into:'}</p>
                 <div className="grid grid-cols-2 gap-4">
                   {d.definition.items.map((item, i) => (
                     <div key={i} className="glass-card p-4 rounded-xl border border-on-surface/10 text-center">

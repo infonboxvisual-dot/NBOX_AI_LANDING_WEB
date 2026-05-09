@@ -65,7 +65,7 @@ export default function Workspace() {
            className="space-y-4"
         >
           <h1 className="text-4xl md:text-6xl font-headline font-black uppercase tracking-tighter text-on-surface">
-            {language === 'vi' ? 'DANH SÁCH ỨNG DỤNG' : 'AI APPLICATIONS'}
+            {language === 'vi' ? 'DANH SÁCH APP' : 'AI APPS'}
           </h1>
         </motion.div>
       </div>

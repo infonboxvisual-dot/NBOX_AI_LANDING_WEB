@@ -21,7 +21,7 @@ export default function CourseVideoAI() {
   const content = {
     vi: {
       title: "Khóa học Video AI Thực Chiến",
-      subtitle: "Ứng dụng AI để sản xuất video kiến trúc & bất động sản nhanh – hiệu quả – thuyết phục",
+      subtitle: "Dùng AI để sản xuất video kiến trúc & bất động sản nhanh – hiệu quả – thuyết phục",
       target: ["Kiến trúc sư / Designer", "Marketing bất động sản", "Doanh nghiệp kiến trúc & BĐS", "Content creator ngành kiến trúc"],
       goal: "Tạo video nhanh – đẹp – tăng khả năng chốt dự án",
       problems: [
@@ -161,7 +161,7 @@ export default function CourseVideoAI() {
             <div className="space-y-8">
               <div>
                 <h3 className="text-3xl font-headline font-black uppercase tracking-tighter mb-4 text-on-surface">{d.definition.title}</h3>
-                <p className="text-on-surface-variant mb-6">{language === 'vi' ? 'Ứng dụng AI để tạo video từ:' : 'Using AI to create videos from:'}</p>
+                <p className="text-on-surface-variant mb-6">{language === 'vi' ? 'Dùng AI để tạo video từ:' : 'Using AI to create videos from:'}</p>
                 <div className="grid grid-cols-2 gap-4">
                   {d.definition.items.map((item, i) => (
                     <div key={i} className="glass-card p-4 rounded-xl border border-on-surface/10 text-center">

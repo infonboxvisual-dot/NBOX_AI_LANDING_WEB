@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -8,6 +8,7 @@ import MobileScrollToTop from './components/MobileScrollToTop';
 import { FuturisticLoader } from './components/FuturisticLoader';
 import { getLenis } from './motion/lenisStore';
 import Home from './pages/Home';
+import { AnimatePresence, motion } from 'motion/react';
 
 const Partners = lazy(() => import('./pages/Partners'));
 const Courses = lazy(() => import('./pages/Courses'));
@@ -31,6 +32,7 @@ export default function App() {
 
 function AppShell() {
   const location = useLocation();
+  const hasMountedRef = useRef(false);
 
   useEffect(() => {
     const lenis = getLenis();
@@ -40,6 +42,10 @@ function AppShell() {
       window.scrollTo(0, 0);
     }
   }, [location.pathname]);
+
+  useEffect(() => {
+    hasMountedRef.current = true;
+  }, []);
 
   return (
     <div className="flex min-h-screen flex-col bg-background selection:bg-primary/20 selection:text-on-primary">
@@ -52,21 +58,35 @@ function AppShell() {
             </div>
           }
         >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Navigate to="/" replace />} />
-            <Route path="/enterprise" element={<Partners />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/workspace" element={<Workspace />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/courses/course-render-ai" element={<CourseRenderAI />} />
-            <Route path="/courses/course-video-ai" element={<CourseVideoAI />} />
-            <Route path="/landing" element={<Navigate to="/" replace />} />
-            <Route path="/home/academy/course-render-ai" element={<Navigate to="/courses/course-render-ai" replace />} />
-            <Route path="/home/academy/course-video-ai" element={<Navigate to="/courses/course-video-ai" replace />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={location.pathname}
+              initial={
+                hasMountedRef.current && location.pathname !== '/'
+                  ? { opacity: 0, y: 22 }
+                  : false
+              }
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+            >
+              <Routes location={location}>
+                <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Navigate to="/" replace />} />
+                <Route path="/enterprise" element={<Partners />} />
+                <Route path="/courses" element={<Courses />} />
+                <Route path="/workspace" element={<Workspace />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/courses/course-render-ai" element={<CourseRenderAI />} />
+                <Route path="/courses/course-video-ai" element={<CourseVideoAI />} />
+                <Route path="/landing" element={<Navigate to="/" replace />} />
+                <Route path="/home/academy/course-render-ai" element={<Navigate to="/courses/course-render-ai" replace />} />
+                <Route path="/home/academy/course-video-ai" element={<Navigate to="/courses/course-video-ai" replace />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </motion.div>
+          </AnimatePresence>
         </Suspense>
       </div>
       <MobileScrollToTop />

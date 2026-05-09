@@ -1,9 +1,11 @@
 import { motion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
 import Academy from './Academy';
+import { useNavigate } from 'react-router-dom';
 
 export default function Courses() {
   const { language } = useLanguage();
+  const navigate = useNavigate();
 
   return (
     <main className="scroll-smooth overflow-hidden">
@@ -22,7 +24,7 @@ export default function Courses() {
             </h2>
             <button
               type="button"
-              onClick={() => document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => navigate('/contact')}
               className="rounded-xl bg-on-surface px-10 py-4 font-headline text-sm font-black uppercase tracking-[0.2em] text-surface shadow-2xl transition-transform hover:scale-105 md:rounded-2xl md:px-16 md:py-8 md:text-xl"
             >
               {language === 'vi' ? 'ĐĂNG KÝ NGAY' : 'REGISTER NOW'}
