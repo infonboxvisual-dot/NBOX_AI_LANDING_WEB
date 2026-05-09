@@ -1,4 +1,5 @@
 import { useLanguage } from '../context/LanguageContext';
+import { MaterialIcon } from '../components/MaterialIcon';
 
 export default function Footer() {
   const { language } = useLanguage();
@@ -91,7 +92,7 @@ export default function Footer() {
                 aria-label="Website"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-on-surface/10 bg-on-surface/5 text-on-surface-variant transition-colors hover:border-primary/60 hover:text-primary"
               >
-                <span className="material-symbols-outlined text-[22px] leading-none">language</span>
+                <MaterialIcon name="language" className="size-[22px] shrink-0" strokeWidth={2} />
               </a>
 
               <a

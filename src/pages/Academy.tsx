@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
+import { MaterialIcon } from '../components/MaterialIcon';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -235,7 +236,7 @@ export default function Academy() {
                   transition={{ duration: 0.6, ease: "easeOut" }}
                   className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 md:px-12"
                 >
-                   <span className="material-symbols-outlined text-primary text-5xl md:text-7xl opacity-20 mb-4 md:mb-6">format_quote</span>
+                   <MaterialIcon name="format_quote" className="mb-4 md:mb-6 size-16 text-primary opacity-20 md:size-24" strokeWidth={1.25} />
                    <p className="text-lg md:text-2xl lg:text-3xl font-medium text-on-surface italic mb-6 md:mb-8 leading-relaxed">
                       "{testimonials[activeTestimonial].text}"
                    </p>
@@ -283,9 +284,11 @@ export default function Academy() {
                   <span className={`text-lg font-headline font-bold uppercase transition-colors ${activeFaq === index ? 'text-primary' : 'text-on-surface/80 group-hover:text-on-surface'}`}>
                     {faq.q}
                   </span>
-                  <span className={`material-symbols-outlined transition-transform duration-300 ${activeFaq === index ? 'rotate-180 text-primary' : 'text-on-surface/30'}`}>
-                    expand_more
-                  </span>
+                  <MaterialIcon
+                    name="expand_more"
+                    className={`size-6 shrink-0 transition-transform duration-300 ${activeFaq === index ? 'rotate-180 text-primary' : 'text-on-surface/30'}`}
+                    strokeWidth={2}
+                  />
                 </button>
                 <AnimatePresence>
                   {activeFaq === index && (

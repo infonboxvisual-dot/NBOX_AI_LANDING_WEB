@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
+import { MaterialIcon } from '../components/MaterialIcon';
 
 interface ServiceDetail {
   prices: { label: string; value: string }[];
@@ -142,7 +143,7 @@ const ServiceDetailsModal = ({ service, onClose, t }: { service: Service | null;
                 onClick={onClose}
                 className="w-12 h-12 rounded-full bg-on-surface/5 border border-on-surface/10 flex items-center justify-center hover:bg-on-surface/10 transition-colors"
               >
-                <span className="material-symbols-outlined text-on-surface">close</span>
+                <MaterialIcon name="close" className="size-6 text-on-surface" strokeWidth={2} />
               </button>
             </div>
           </div>
@@ -186,7 +187,7 @@ const ServiceDetailsModal = ({ service, onClose, t }: { service: Service | null;
           {/* Footer */}
           <div className="p-8 md:p-12 bg-on-surface/5 border-t border-on-surface/5 flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-4 text-on-surface/40">
-              <span className="material-symbols-outlined">info</span>
+              <MaterialIcon name="info" className="size-5 shrink-0 text-on-surface/40" strokeWidth={2} />
               <p className="text-xs uppercase tracking-widest font-headline font-bold">NBOX AI ARCHITECTURAL SERVICES</p>
             </div>
             <button 
