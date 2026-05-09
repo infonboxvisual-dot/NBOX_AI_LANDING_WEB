@@ -10,9 +10,9 @@ interface LanguageContextType {
 
 const translations: Record<Language, Record<string, string>> = {
   en: {
-    'nav.home': 'Home Page',
-    'nav.partners': 'Partners',
-    'nav.academy': 'Academy',
+    'nav.home': 'Introduction',
+    'nav.partners': 'Enterprise applications',
+    'nav.academy': 'Courses',
     'nav.workspace': 'Nbox AI App',
     'nav.contact': 'Contact',
     'nav.getStarted': 'Get Started',
@@ -187,9 +187,9 @@ const translations: Record<Language, Record<string, string>> = {
     'partners.pricing.note': 'Price does not include 8% VAT and gateway key purchase fee',
   },
   vi: {
-    'nav.home': 'Trang Chủ',
-    'nav.partners': 'Đối Tác',
-    'nav.academy': 'Học Viện',
+    'nav.home': 'Giới thiệu',
+    'nav.partners': 'Ứng dụng doanh nghiệp',
+    'nav.academy': 'Khóa học',
     'nav.workspace': 'Ứng Dụng Nbox AI',
     'nav.contact': 'Liên Hệ',
     'nav.getStarted': 'Bắt Đầu',

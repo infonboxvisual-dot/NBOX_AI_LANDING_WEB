@@ -1,17 +1,14 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { useLanguage } from '../context/LanguageContext';
 import { getLenis } from '../motion/lenisStore';
 import VillaSketchHero from '../components/VillaSketchHero';
-import Services from './Services';
-import Partners from './Partners';
-import Academy from './Academy';
-import Workspace from './Workspace';
 
 export default function Home() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { t, language } = useLanguage();
   const heroSectionRef = useRef<HTMLElement | null>(null);
   const heroCopyRef = useRef<HTMLDivElement | null>(null);
@@ -333,8 +330,9 @@ export default function Home() {
               {t('home.hero.desc')}
             </p>
             <div className="grid max-w-xl gap-4 sm:grid-cols-2">
-              <button 
-                onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+              <button
+                type="button"
+                onClick={() => navigate('/services')}
                 className="rounded-xl bg-primary px-8 py-4 text-center font-headline font-extrabold uppercase tracking-widest text-on-primary shadow-[0_0_40px_rgba(203,123,62,0.28)] transition-transform hover:scale-[1.01]"
               >
                 {language === 'vi' ? 'XEM DỊCH VỤ' : 'VIEW SERVICES'}
@@ -540,26 +538,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Partners Section */}
-      <section id="partners" className="pt-20">
-        <Partners />
-      </section>
-
-      {/* Academy Section */}
-      <section id="academy" className="pt-20">
-        <Academy />
-      </section>
-
-      {/* Workspace Section */}
-      <section id="workspace" className="pt-20">
-        <Workspace />
-      </section>
-
-      {/* Detailed Services Section */}
-      <section id="services" className="pt-20">
-        <Services />
-      </section>
-
       {/* Founder Section */}
       <section className="editorial-grid overflow-hidden bg-surface-container-low px-6 py-20 md:px-8 md:py-32">
         <div className="max-w-7xl mx-auto">
@@ -640,27 +618,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Academy CTA moved here */}
-      <section id="academy-cta" className="mx-auto max-w-7xl px-6 pb-20 pt-16 md:px-8 md:pb-32 md:pt-24">
-        <motion.div 
-           initial={{ opacity: 0, scale: 0.95 }}
-           whileInView={{ opacity: 1, scale: 1 }}
-           className="relative rounded-[2rem] md:rounded-[3rem] overflow-hidden p-12 md:p-32 text-center bg-gradient-to-br from-primary via-primary-container to-surface shadow-[0_0_80px_rgba(255,107,0,0.15)]"
-        >
-          <div className="absolute inset-0 bg-white/10"></div>
-          <div className="relative z-10">
-            <h2 className="text-3xl md:text-8xl font-headline font-black uppercase tracking-tighter mb-8 md:mb-12 text-on-primary leading-tight">
-              {language === 'vi' ? 'SẴN SÀNG LÀM CHỦ AI ĐỈNH CAO?' : 'READY TO MASTER TOP-TIER AI?'}
-            </h2>
-            <button 
-              onClick={() => document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-on-surface text-surface px-10 md:px-16 py-4 md:py-8 rounded-xl md:rounded-2xl font-headline font-black uppercase text-sm md:text-xl tracking-[0.2em] hover:scale-105 transition-transform shadow-2xl"
-            >
-              {language === 'vi' ? 'ĐĂNG KÝ NGAY' : 'REGISTER NOW'}
-            </button>
-          </div>
-        </motion.div>
-      </section>
     </main>
   );
 }

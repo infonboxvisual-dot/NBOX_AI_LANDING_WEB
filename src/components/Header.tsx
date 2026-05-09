@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { ArrowLeft, Menu, X, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronRight } from 'lucide-react';
 import { getLenis } from '../motion/lenisStore';
 
 function isMobileLike(): boolean {
@@ -12,21 +12,25 @@ function isMobileLike(): boolean {
   return coarse || narrow;
 }
 
+type NavItem = {
+  name: string;
+  path: string;
+};
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, toggleLanguage, t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
-  const isHomeRoute = location.pathname === '/home';
   const [mobileLike, setMobileLike] = useState(() => isMobileLike());
-  
-  const navItems = [
-    { name: t('nav.home'), hash: null },
-    { name: t('nav.partners'), hash: 'partners' },
-    { name: t('nav.academy'), hash: 'academy' },
-    { name: t('nav.workspace'), hash: 'workspace' },
-    { name: language === 'vi' ? 'DỊCH VỤ AI' : 'AI SERVICES', hash: 'services' },
-    { name: t('nav.contact'), hash: 'footer' },
+
+  const navItems: NavItem[] = [
+    { name: t('nav.home'), path: '/' },
+    { name: t('nav.partners'), path: '/enterprise' },
+    { name: t('nav.academy'), path: '/courses' },
+    { name: t('nav.workspace'), path: '/workspace' },
+    { name: language === 'vi' ? 'DỊCH VỤ AI' : 'AI SERVICES', path: '/services' },
+    { name: t('nav.contact'), path: '/contact' },
   ];
 
   const closeMenu = () => setIsMenuOpen(false);
@@ -36,24 +40,6 @@ export default function Header() {
     window.addEventListener('resize', onResize, { passive: true });
     return () => window.removeEventListener('resize', onResize);
   }, []);
-
-  const scrollToId = (id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    if (mobileLike) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return;
-    }
-
-    const lenis = getLenis();
-    if (lenis) {
-      lenis.scrollTo(el, { duration: 0.9, easing: (t) => 1 - Math.pow(1 - t, 3) });
-      return;
-    }
-
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
 
   const scrollToTop = (immediate?: boolean) => {
     if (mobileLike) {
@@ -70,44 +56,20 @@ export default function Header() {
     window.scrollTo({ top: 0, behavior: immediate ? 'auto' : 'smooth' });
   };
 
-  const waitForAndScroll = (id: string) => {
-    let frames = 0;
-    const tick = () => {
-      const el = document.getElementById(id);
-      if (el) {
-        scrollToId(id);
-        return;
-      }
-      frames += 1;
-      if (frames < 180) requestAnimationFrame(tick);
-    };
-    tick();
+  const isActivePath = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/' || location.pathname === '/home';
+    }
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
 
-  const onNavHome = () => {
+  const goNav = (path: string) => {
     closeMenu();
-    if (!isHomeRoute) {
-      navigate('/home', { replace: false });
-      // After route change, scroll to top.
-      requestAnimationFrame(() => scrollToTop(true));
+    if (location.pathname === path) {
+      scrollToTop();
       return;
     }
-    navigate('/home', { replace: false });
-    scrollToTop();
-  };
-
-  const onNavHash = (hash: string) => {
-    closeMenu();
-
-    if (!isHomeRoute) {
-      navigate(`/home#${hash}`, { replace: false });
-      waitForAndScroll(hash);
-      return;
-    }
-
-    // Update URL hash and scroll.
-    navigate(`/home#${hash}`, { replace: false });
-    scrollToId(hash);
+    navigate(path);
   };
 
   return (
@@ -116,35 +78,26 @@ export default function Header() {
     >
       <div className="flex h-full w-full items-center justify-between gap-4 px-6 md:gap-6 md:px-8">
         <div className="flex items-center gap-2 md:gap-3">
-          {isHomeRoute && (
-            <button
-              type="button"
-              onClick={() => navigate('/', { replace: true })}
-              className="hidden h-10 w-10 items-center justify-center text-on-surface/70 transition-colors hover:border-primary/30 hover:text-primary md:flex md:h-11 md:w-11"
-              title={language === 'vi' ? 'Về trang cinematic' : 'Back to cinematic intro'}
-              aria-label={language === 'vi' ? 'Về trang cinematic' : 'Back to cinematic intro'}
-            >
-              <ArrowLeft size={14} />
-            </button>
-          )}
-
           <button
             type="button"
-            onClick={onNavHome}
+            onClick={() => goNav('/')}
             className="group flex items-center gap-3 font-headline text-xl font-black uppercase tracking-[0.22em] text-on-surface md:text-2xl"
           >
             <span>NBOX AI</span>
           </button>
         </div>
-        
+
         <nav className="hidden items-center gap-2 md:flex">
           {navItems.map((item) => {
+            const active = isActivePath(item.path);
             return (
               <button
-                key={item.hash ?? 'home'}
+                key={item.path}
                 type="button"
-                onClick={() => (item.hash ? onNavHash(item.hash) : onNavHome())}
-                className="rounded-full px-4 py-2 font-headline text-xs font-black uppercase tracking-[0.22em] text-on-surface/65 transition-colors duration-300 hover:bg-primary/10 hover:text-primary"
+                onClick={() => goNav(item.path)}
+                className={`rounded-full px-4 py-2 font-headline text-xs font-black uppercase tracking-[0.22em] transition-colors duration-300 ${
+                  active ? 'bg-primary/15 text-primary' : 'text-on-surface/65 hover:bg-primary/10 hover:text-primary'
+                }`}
               >
                 {item.name}
               </button>
@@ -153,17 +106,17 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center space-x-3 md:space-x-4">
-          <button 
+          <button
             onClick={toggleLanguage}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-on-surface/5 font-headline text-xs font-black text-on-surface transition-all hover:text-primary active:scale-90"
+            className="group flex h-10 w-10 items-center justify-center rounded-full bg-on-surface/5 font-headline text-xs font-black text-on-surface transition-all hover:text-primary active:scale-90"
             title={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
           >
             <span className="relative transition-transform group-hover:scale-110">
               {language === 'en' ? 'E' : 'V'}
             </span>
           </button>
-          
-          <button 
+
+          <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="text-on-surface transition-colors hover:text-primary md:hidden"
           >
@@ -172,7 +125,6 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Nav Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -182,14 +134,17 @@ export default function Header() {
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="overflow-hidden border-b border-primary/10 bg-background/96 md:hidden"
           >
-              <nav className="flex flex-col space-y-4 p-6">
+            <nav className="flex flex-col space-y-4 p-6">
               {navItems.map((item) => {
+                const active = isActivePath(item.path);
                 return (
                   <button
-                    key={item.hash ?? 'home'}
+                    key={item.path}
                     type="button"
-                    onClick={() => (item.hash ? onNavHash(item.hash) : onNavHome())}
-                      className="flex items-center justify-between border-b border-on-surface/5 py-3 font-headline text-sm font-black uppercase tracking-[0.24em] text-on-surface/70 transition-colors"
+                    onClick={() => goNav(item.path)}
+                    className={`flex items-center justify-between border-b border-on-surface/5 py-3 font-headline text-sm font-black uppercase tracking-[0.24em] transition-colors ${
+                      active ? 'text-primary' : 'text-on-surface/70'
+                    }`}
                   >
                     <span>{item.name}</span>
                     <ChevronRight size={16} className="opacity-30" />
