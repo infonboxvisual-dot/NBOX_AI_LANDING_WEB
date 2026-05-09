@@ -26,10 +26,10 @@ export default function Header() {
 
   const navItems: NavItem[] = [
     { name: t('nav.home'), path: '/' },
-    { name: t('nav.partners'), path: '/enterprise' },
     { name: t('nav.academy'), path: '/courses' },
     { name: t('nav.workspace'), path: '/workspace' },
-    { name: language === 'vi' ? 'DỊCH VỤ AI' : 'AI SERVICES', path: '/services' },
+    { name: t('nav.partners'), path: '/enterprise' },
+    { name: t('nav.services'), path: '/services' },
     { name: t('nav.contact'), path: '/contact' },
   ];
 

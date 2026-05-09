@@ -20,18 +20,48 @@ interface Service {
 }
 
 const ServiceMedia = ({ service }: { service: Service }) => {
+  const [monaEnabled, setMonaEnabled] = useState(false);
+  const ensureMonaPreconnect = () => {
+    const id = 'mona-preconnect';
+    if (document.getElementById(id)) return;
+    const link = document.createElement('link');
+    link.id = id;
+    link.rel = 'preconnect';
+    link.href = 'https://video.mona-cloud.com';
+    document.head.appendChild(link);
+  };
+
   return (
     <div className="w-full md:w-[440px] flex-shrink-0">
       <div className="bg-black aspect-video rounded-2xl overflow-hidden flex items-center justify-center relative border border-on-surface/10 shadow-2xl group">
         {service.video ? (
           service.video.includes('mona-cloud.com') ? (
-            <iframe 
-              src={service.video}
-              className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-              title={service.title}
-            />
+            monaEnabled ? (
+              <iframe 
+                src={service.video}
+                className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
+                loading="lazy"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                title={service.title}
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  ensureMonaPreconnect();
+                  setMonaEnabled(true);
+                }}
+                className="flex h-full w-full flex-col items-center justify-center gap-4 bg-black/30 px-8 text-center"
+              >
+                <div className="rounded-full border border-primary/30 bg-primary/10 px-5 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-primary">
+                  {service.title}
+                </div>
+                <div className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">
+                  Click to load video
+                </div>
+              </button>
+            )
           ) : (
             <video 
               src={service.video} 

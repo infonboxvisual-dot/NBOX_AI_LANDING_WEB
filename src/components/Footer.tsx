@@ -11,10 +11,10 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         <div className="grid gap-12 lg:grid-cols-4 lg:gap-16">
           <div className="space-y-6">
-            <p className="text-[10px] font-black uppercase tracking-[0.35em] text-primary/80">
+            <p className="text-[10px] font-black uppercase tracking-[0.35em] text-primary">
               NBOX AI
             </p>
-            <h4 className="max-w-sm text-3xl font-headline font-black uppercase tracking-tighter text-on-surface md:text-4xl">
+            <h2 className="max-w-sm text-3xl font-headline font-black uppercase tracking-tighter text-on-surface md:text-4xl">
               {language === 'vi' ? (
                 <>
                   AI cho
@@ -24,7 +24,7 @@ export default function Footer() {
               ) : (
                 'AI for architecture, render, video.'
               )}
-            </h4>
+            </h2>
             <p className="max-w-sm text-sm leading-relaxed text-on-surface-variant md:text-base">
               {language === 'vi'
                 ? 'Tối giản, rõ ràng, tập trung cho người dùng chuyên nghiệp.'
@@ -34,9 +34,9 @@ export default function Footer() {
 
           <div className="space-y-6">
             <div className="space-y-6">
-              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-on-surface">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-on-surface">
                 {language === 'vi' ? 'Pháp lý' : 'Legal'}
-              </h4>
+              </h3>
               <div className="flex flex-col gap-4">
                 <a href="#" className="text-sm font-medium text-on-surface-variant transition-colors hover:text-primary">
                   {language === 'vi' ? 'Chính sách bảo mật' : 'Privacy Policy'}
@@ -52,9 +52,9 @@ export default function Footer() {
           </div>
 
           <div className="space-y-6">
-            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-on-surface">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-on-surface">
               {language === 'vi' ? 'Liên hệ chúng tôi' : 'Contact Us'}
-            </h4>
+            </h3>
             <div className="flex flex-col gap-4">
               <a
                 href="mailto:info.nboxvisual@gmail.com"
@@ -81,9 +81,9 @@ export default function Footer() {
           </div>
 
           <div className="space-y-6">
-            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-on-surface">
+            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-on-surface">
               {language === 'vi' ? 'Kết nối' : 'Connect'}
-            </h4>
+            </h3>
             <div className="flex gap-4">
               <a
                 href="https://academy.nboxvietnam.vn/"

@@ -16,4 +16,10 @@ server {
         add_header Cache-Control "public, max-age=31536000, immutable";
         try_files $uri =404;
     }
+
+    # Cache static images (public/). Prefer versioned assets for true immutability.
+    location ~* \.(png|jpg|jpeg|webp|avif|svg|ico)$ {
+        add_header Cache-Control "public, max-age=31536000";
+        try_files $uri =404;
+    }
 }

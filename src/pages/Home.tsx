@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import gsap from 'gsap';
 import { useLanguage } from '../context/LanguageContext';
 import { getLenis } from '../motion/lenisStore';
 import VillaSketchHero from '../components/VillaSketchHero';
@@ -14,6 +13,7 @@ export default function Home() {
   const heroSectionRef = useRef<HTMLElement | null>(null);
   const heroCopyRef = useRef<HTMLDivElement | null>(null);
   const heroVisualRef = useRef<HTMLDivElement | null>(null);
+  const monaPreconnectRef = useRef(false);
 
   const heroSketchCopy = useMemo(() => {
     if (language === 'vi') {
@@ -33,10 +33,7 @@ export default function Home() {
   }, [language]);
 
   useEffect(() => {
-    // Intentionally disabled: scroll-triggered hero shrink/zoom
-    // caused jank and layout shift on mobile.
-    // Keep transforms static for smoother scroll.
-    gsap.set([heroCopyRef.current, heroVisualRef.current], { clearProps: 'transform,opacity,willChange' });
+    // No-op: keep hero stable for LCP and reduce forced reflow risk.
   }, []);
 
   useEffect(() => {
@@ -163,7 +160,8 @@ export default function Home() {
         "With AI, generate hundreds of variations in minutes from a single original image.",
         "This solution optimizes time and provides numerous high-quality options."
       ],
-      media: { type: 'image', url: "https://lh3.googleusercontent.com/aida-public/AB6AXuDQe9e0CgT3Uj_R-LCHV3Yd-I5I_YQ_Rj1D-k_Q6Vj_2yN-W1J-k-P1F_Rj-W9R-U0E-m-k-Rj-W9R-U0E-m-k" }
+      // NOTE: Replace broken aida-public URL (400) with stable image.
+      media: { type: 'image', url: "https://images.unsplash.com/photo-1529421308418-eab98863cee5?q=80&w=1600&auto=format&fit=crop" }
     },
     {
       id: 4,
@@ -253,7 +251,7 @@ export default function Home() {
         "Just input an idea, and AI generates an aesthetic, synchronized moodboard.",
         "Saves time while maintaining high aesthetic efficiency."
       ],
-      media: { type: 'image', url: "https://lh3.googleusercontent.com/aida-public/AB6AXuDQe9e0CgT3Uj_R-LCHV3Yd-I5I_YQ_Rj1D-k_Q6Vj_2yN-W1J-k-P1F_Rj-W9R-U0E-m-k-Rj-W9R-U0E-m-k" }
+      media: { type: 'image', url: "https://images.unsplash.com/photo-1529421308418-eab98863cee5?q=80&w=1600&auto=format&fit=crop" }
     },
     {
       id: 10,
@@ -306,6 +304,7 @@ export default function Home() {
   const activeTip = designTips[activeTipIndex];
   const designTipsSectionRef = useRef<HTMLElement | null>(null);
   const [designTipsMediaReady, setDesignTipsMediaReady] = useState(false);
+  const [designTipsVideoEnabled, setDesignTipsVideoEnabled] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     const el = designTipsSectionRef.current;
@@ -317,11 +316,21 @@ export default function Home() {
       ([entry]) => {
         if (entry.isIntersecting) setDesignTipsMediaReady(true);
       },
-      { rootMargin: '200px', threshold: 0 }
+      // Keep conservative so PSI doesn't eagerly pull 3rd-party video bundles.
+      { rootMargin: '0px', threshold: 0.25 }
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  const ensureMonaPreconnect = () => {
+    if (monaPreconnectRef.current) return;
+    monaPreconnectRef.current = true;
+    const link = document.createElement('link');
+    link.rel = 'preconnect';
+    link.href = 'https://video.mona-cloud.com';
+    document.head.appendChild(link);
+  };
 
   return (
     <main className="overflow-hidden scroll-smooth">
@@ -331,16 +340,14 @@ export default function Home() {
         <div className="absolute bottom-[-5%] left-[-5%] w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-secondary/5 blur-[80px] md:blur-[100px] rounded-full"></div>
         
         <div className="relative z-10 mx-auto grid max-w-7xl gap-12 items-center lg:grid-cols-[1.05fr_0.95fr] md:gap-16">
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+          <motion.div
+            initial={false}
             ref={heroCopyRef}
             className="relative z-10 max-w-3xl"
           >
             <h1 className="mb-6 break-words whitespace-pre-line text-3xl font-headline font-extrabold uppercase leading-[1.05] tracking-tighter text-on-surface sm:text-4xl md:text-5xl lg:text-6xl">
               {language === 'vi' ? (
-                <>NBOX AI -<br/><span className="italic">HỆ SINH THÁI</span></>
+                <>NBOX AI -<br/><span className="italic">HỆ SINH THÁI AI DÀNH CHO KIẾN TRÚC</span></>
               ) : (
                 <>NBOX AI -<br/>ARCHITECTURAL <span className="italic">ECOSYSTEM</span></>
               )}
@@ -365,10 +372,8 @@ export default function Home() {
             </div>
           </motion.div>
 
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
+          <motion.div
+            initial={false}
             ref={heroVisualRef}
             className="relative perspective-grid lg:-ml-8 lg:-mt-6"
           >
@@ -377,12 +382,12 @@ export default function Home() {
               <div className="relative overflow-hidden rounded-xl border border-white/10 bg-[#090909] px-3 pb-3 pt-3 md:px-4 md:pb-4 md:pt-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="font-headline text-[10px] font-black uppercase tracking-[0.35em] text-primary/80 md:text-xs">
+                    <p className="font-headline text-[10px] font-black uppercase tracking-[0.35em] text-primary md:text-xs">
                       {heroSketchCopy.eyebrow}
                     </p>
-                    <h3 className="mt-3 whitespace-pre-line text-2xl font-headline font-black uppercase leading-[0.9] tracking-[-0.05em] text-on-surface sm:text-3xl md:text-4xl">
+                    <h2 className="mt-3 whitespace-pre-line text-2xl font-headline font-black uppercase leading-[0.9] tracking-[-0.05em] text-on-surface sm:text-3xl md:text-4xl">
                       {heroSketchCopy.title}
-                    </h3>
+                    </h2>
                   </div>
                   <div className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-primary">
                     Sketch Auto
@@ -415,8 +420,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {[
-              { label: t('home.stats.users'), value: '50,000+' },
-              { label: t('home.stats.rate'), value: '99%' },
+              { label: t('home.stats.users'), value: '~1000+' },
+              { label: t('home.stats.rate'), value: '100%' },
               { label: t('home.stats.support'), value: '24/7' },
               { label: t('home.stats.latency'), value: '0.4s' },
             ].map((stat, i) => (
@@ -474,11 +479,11 @@ export default function Home() {
                        strokeWidth={2}
                      />
                      <div>
-                        <h4 className={`font-headline font-black uppercase leading-tight tracking-tight whitespace-pre-line text-xs md:text-sm ${
+                        <p className={`font-headline font-black uppercase leading-tight tracking-tight whitespace-pre-line text-xs md:text-sm ${
                           activeTipIndex === idx ? 'text-on-primary' : 'text-on-surface/60 group-hover:text-on-surface'
                         }`}>
                           {tip.title}
-                        </h4>
+                        </p>
                         <div className={`h-1 transition-all duration-500 ${activeTipIndex === idx ? 'w-full bg-on-primary/30' : 'w-0'}`}></div>
                      </div>
                   </button>
@@ -535,7 +540,7 @@ export default function Home() {
                        <div className="lg:w-1/2 relative h-[400px] lg:h-full group">
                           {activeTip.media.type === 'video' ? (
                             <div className="w-full h-full rounded-2xl overflow-hidden glass-card border border-on-surface/5 relative shadow-inner">
-                              {designTipsMediaReady ? (
+                              {designTipsMediaReady && designTipsVideoEnabled[activeTip.id] ? (
                                 <iframe
                                   className="w-full h-full scale-[1.01]"
                                   src={activeTip.media.url}
@@ -545,7 +550,21 @@ export default function Home() {
                                   allowFullScreen
                                 />
                               ) : (
-                                <div className="h-full min-h-[400px] w-full animate-pulse bg-on-surface/15" aria-hidden />
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (!designTipsVideoEnabled[activeTip.id]) ensureMonaPreconnect();
+                                    setDesignTipsVideoEnabled((prev) => ({ ...prev, [activeTip.id]: true }));
+                                  }}
+                                  className="flex h-full min-h-[400px] w-full flex-col items-center justify-center gap-4 bg-black/30 px-8 text-center"
+                                >
+                                  <div className="rounded-full border border-primary/30 bg-primary/10 px-5 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-primary">
+                                    {language === 'vi' ? 'Bấm để tải video demo' : 'Click to load demo video'}
+                                  </div>
+                                  <div className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">
+                                    {language === 'vi' ? 'Giảm tải trang ban đầu' : 'Keeps initial load lightweight'}
+                                  </div>
+                                </button>
                               )}
                             </div>
                           ) : (
@@ -571,7 +590,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 md:mb-16">
             <h2 className="text-3xl md:text-5xl font-headline font-black uppercase tracking-tighter text-on-surface">
-              {language === 'vi' ? <>Trần Minh Nhật <span className="italic">là ai?</span></> : <>Who is <span className="italic">Tran Minh Nhat?</span></>}
+              {language === 'vi' ? <>Trần Minh Nhật Founder NboxAI <span className="italic">là ai?</span></> : <>Who is <span className="italic">Tran Minh Nhat</span>?</>}
             </h2>
           </div>
 
@@ -609,7 +628,7 @@ export default function Home() {
                         en: "AI doesn't replace humans; it amplifies creative power. The goal is to reduce render time, optimize workflows, and enhance output quality."
                       },
                       {
-                        vi: "Hệ sinh thái NBOX AI gồm 4 mảng chính: Đào tạo Render AI & Video AI; Phát triển ứng dụng AI; Dịch vụ Render & nâng cấp hình ảnh; Sản xuất phim AI cho kiến trúc & BĐS.",
+                        vi: "Hệ sinh thái NBOX AI gồm 4 mảng chính: Đào tạo Render AI & Video AI; Phát triển app AI; Dịch vụ Render & nâng cấp hình ảnh; Sản xuất phim AI cho kiến trúc & BĐS.",
                         en: "The NBOX AI ecosystem consists of 4 main areas: AI Render & Video Training; AI App Development; Render & Image Upgrade Services; AI Film Production for Architecture & Real Estate."
                       },
                       {
@@ -631,7 +650,7 @@ export default function Home() {
               {/* Image Side */}
               <div className="lg:w-5/12 relative min-h-[400px] lg:min-h-full">
                 <img 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQe9e0CgT3Uj_R-LCHV3Yd-I5I_YQ_Rj1D-k_Q6Vj_2yN-W1J-k-P1F_Rj-W9R-U0E-m-k-Rj-W9R-U0E-m-k" 
+                  src="https://images.unsplash.com/photo-1529421308418-eab98863cee5?q=80&w=1600&auto=format&fit=crop"
                   className="absolute inset-0 w-full h-full object-cover grayscale brightness-75 hover:grayscale-0 hover:brightness-100 transition-all duration-700" 
                   alt="Founder of NBOX AI"
                 />

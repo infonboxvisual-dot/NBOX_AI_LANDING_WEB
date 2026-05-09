@@ -8,12 +8,36 @@ export default function Academy() {
   const { t, language } = useLanguage();
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const registerLink = 'https://forms.gle/6WF3Z9x6gpd7LimC6';
+  const renderVnd = (value: string) => {
+    if (value.endsWith('đ')) {
+      return (
+        <>
+          {value.slice(0, -1)}
+          <span className="normal-case">đ</span>
+        </>
+      );
+    }
+    return value;
+  };
 
-  const courses = [
+  const courses: Array<{
+    title: string;
+    tools: string;
+    format: string;
+    content: string[];
+    image: string;
+    link: string;
+    detailLink?: string;
+    gift?: string;
+    price?: { old: string; now: string };
+  }> = [
     {
-      title: language === 'vi' ? 'Khóa Render AI' : 'AI Render Masterclass',
+      title: language === 'vi' ? 'Khóa Render AI THỰC CHIẾN' : 'Hands-on AI Render Course',
       tools: 'RunningHub, NBOX Render, Flow, Highfield, Freepik',
       format: language === 'vi' ? 'Video Online' : 'Online Video',
+      gift: language === 'vi' ? 'QUÀ TẶNG: APP NBOX RENDER' : 'BONUS: NBOX RENDER APP',
+      price: language === 'vi' ? { old: '4.000.000đ', now: '3.600.000đ' } : { old: '4,000,000 VND', now: '3,600,000 VND' },
       content: language === 'vi' ? [
         'Render nội/ngoại thất',
         'Đồng bộ góc nhìn',
@@ -24,13 +48,15 @@ export default function Academy() {
         'Pro image enhancement & upscaling'
       ],
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCVDsovsMsejbbUgvR4XUyJsJ6AhicCZcHuM0kmVg5u42Mq543StzfDl_9dFCWtVljFda__dRKYVkJ5X0978C34UXwgxCUj_Uv4YkhaLbe-0WvbZoStH_AgqC6RdVk5v0WCHPT0gH2_Sh-QWIYJQd7l8H6UbPDQeFG4FHOkAd4EmTboi93PB-JP9s8FrsSGkDFmtsYbMFcoYeK1pD0j5BU_bA3snZNifzDTBE0QK4sKraj6aJVg7ghzN0bXden73qa2Kg_ltBvR1oM',
-      link: '#',
+      link: registerLink,
       detailLink: '/courses/course-render-ai'
     },
     {
-      title: language === 'vi' ? 'Khóa Video AI' : 'AI Video Production',
+      title: language === 'vi' ? 'Khóa Video AI THỰC CHIẾN' : 'Hands-on AI Video Course',
       tools: 'Kling AI, VEO 3, Capcut',
       format: language === 'vi' ? 'Video Online' : 'Online Video',
+      gift: language === 'vi' ? 'QUÀ TẶNG: APP NBOX VIDEO' : 'BONUS: NBOX VIDEO APP',
+      price: language === 'vi' ? { old: '2.000.000đ', now: '1.600.000đ' } : { old: '2,000,000 VND', now: '1,600,000 VND' },
       content: language === 'vi' ? [
         'Tạo video kiến trúc',
         'Công thức tạo prompt chuẩn',
@@ -41,7 +67,7 @@ export default function Academy() {
         'Clothes swap, animation, product TVCs,...'
       ],
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuACqGCgxZ_UYRyfxhYQmivHEfWXpZanlFhl755j3al3x6ilpB6MmrV1wlUFB0VuYdpBaAMrJeafQvFGQd-EpjGvrJpJHuAUVGKuuv3s_KuLhnuUglG9y9SdkqXCVmMiDpMa1dmBatNlxqqQM7VXPAciF_nrCR7R-tZDAMthsbVJ87XYaDlc7vyCKa9BrRk08mxSGpF6QN0-t20qNiJRxxAjYSCSmHmUoLuTaVk23t6eIu3Xox3wv9muzda6avvkjmzXs8rrDFgtplA',
-      link: '#',
+      link: registerLink,
       detailLink: '/courses/course-video-ai'
     }
   ];
@@ -53,7 +79,7 @@ export default function Academy() {
     { name: 'Quốc Bảo', role: 'Visualizer', text: 'Trước đây mỗi lần chỉnh sửa hình ảnh rất mất thời gian, đặc biệt là ánh sáng và vật liệu. Sau khóa Render AI, mình xử lý nhanh hơn rất nhiều mà chất lượng vẫn đảm bảo.' },
     { name: 'Diệu Linh', role: 'Real Estate Agent', text: 'Khóa Video AI giúp mình tạo được các video dự án nhanh hơn trước rất nhiều. Quan trọng là video trực quan hơn nên khách hàng cũng dễ tiếp cận hơn khi mình gửi thông tin.' },
     { name: 'Mạnh Hùng', role: '3D Artist', text: 'Điều mình đánh giá cao ở NBOX Academy là tính thực tế. Không phải học xong để đó, mà có thể áp dụng ngay vào công việc hiện tại.' },
-    { name: 'Lê Nam', role: 'Architect', text: 'Trước đây mình gần như chưa biết gì về AI, nhưng khóa học hướng dẫn khá rõ ràng và dễ hiểu. Sau khóa học mình đã có thể ứng dụng AI vào công việc hiện tại.' },
+    { name: 'Lê Nam', role: 'Architect', text: 'Trước đây mình gần như chưa biết gì về AI, nhưng khóa học hướng dẫn khá rõ ràng và dễ hiểu. Sau khóa học mình đã có thể dùng AI cho công việc hiện tại.' },
     { name: 'Mai Phương', role: 'Student', text: 'Việc có App AI riêng đi kèm khóa học là điểm mình thấy rất khác biệt. Không cần phải tự mò quá nhiều tool bên ngoài, học xong là có thể dùng ngay.' },
     { name: 'Thế Vinh', role: 'Project Manager', text: 'Khóa học không chỉ giúp mình biết thêm về AI, mà thay đổi cách mình làm việc hằng ngày. Đây là điều mình thấy đáng giá nhất.' },
     { name: 'Ngọc Lan', role: 'Freelancer', text: 'Sau khi học Render AI, mình tiếp tục đăng ký Video AI vì thấy cách dạy rất thực tế và dễ áp dụng. Đây là một trong những khóa học hiếm mà mình thấy “đáng tiền”.' },
@@ -192,6 +218,31 @@ export default function Academy() {
                         ))}
                       </ul>
                    </div>
+
+                   {course.gift && (
+                     <div className="flex flex-col gap-1">
+                       <span className="text-[9px] font-black uppercase tracking-widest text-yellow-400">QUÀ TẶNG:</span>
+                       <p className="text-on-surface text-xs md:text-sm font-medium">{course.gift.replace(/^QUÀ TẶNG:\s*/i, '')}</p>
+                     </div>
+                   )}
+
+                   {course.price && (
+                     <div className="rounded-2xl border border-primary/20 bg-primary/10 p-4">
+                       <div className="flex items-baseline justify-between gap-3">
+                         <span className="text-[10px] font-black uppercase tracking-[0.22em] text-on-surface/70">
+                           {language === 'vi' ? 'GIÁ KHOÁ HỌC' : 'COURSE PRICE'}
+                         </span>
+                         <span className="text-[11px] font-black tracking-widest text-on-surface/40 line-through">
+                           {language === 'vi' ? renderVnd(course.price.old) : course.price.old}
+                         </span>
+                       </div>
+                       <div className="mt-2 text-center">
+                         <span className="text-3xl md:text-4xl font-black tracking-widest text-on-surface">
+                           {language === 'vi' ? renderVnd(course.price.now) : course.price.now}
+                         </span>
+                       </div>
+                     </div>
+                   )}
                 </div>
                 
                 <div className="space-y-3">
@@ -205,14 +256,44 @@ export default function Academy() {
                   )}
                   <a 
                     href={course.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="block w-full py-3 md:py-4 rounded-lg bg-primary text-on-primary-fixed font-headline font-black uppercase tracking-[0.1em] text-xs md:text-sm text-center shadow-[0_0_20px_rgba(255,122,47,0.2)] hover:scale-[1.02] transition-transform"
                   >
-                    {t('academy.course.link')}
+                    {language === 'vi' ? 'ĐĂNG KÝ' : 'REGISTER'}
                   </a>
                 </div>
               </div>
             </motion.div>
           ))}
+        </div>
+
+        <div className="mt-10">
+          <div className="glass-card rounded-2xl border border-on-surface/10 p-6 md:p-8">
+            <div className="flex flex-col items-center justify-center gap-6 text-center">
+              <div className="max-w-2xl">
+                <p className="text-[10px] font-black uppercase tracking-[0.25em] text-primary">
+                  {language === 'vi' ? 'COMBO' : 'COMBO'}
+                </p>
+                <h3 className="mt-2 text-2xl font-headline font-black uppercase tracking-tight text-on-surface">
+                  {language === 'vi' ? <>2 KHOÁ: {renderVnd('4.200.000đ')}</> : '2 COURSES: 4,200,000 VND'}
+                </h3>
+                <p className="mt-2 text-sm text-on-surface-variant">
+                  {language === 'vi'
+                    ? 'RENDER AI THỰC CHIẾN + VIDEO AI THỰC CHIẾN, TẶNG KÈM 2 APP NBOX.'
+                    : 'Hands-on AI Render + Hands-on AI Video, includes both NBOX apps.'}
+                </p>
+              </div>
+              <a
+                href={registerLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-xl bg-primary px-10 py-4 text-center font-headline font-extrabold uppercase tracking-widest text-on-primary shadow-[0_0_40px_rgba(203,123,62,0.28)] transition-transform hover:scale-[1.01]"
+              >
+                {language === 'vi' ? 'ĐĂNG KÝ COMBO' : 'REGISTER COMBO'}
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
