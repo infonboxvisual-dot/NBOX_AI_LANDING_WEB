@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { useLanguage } from '../context/LanguageContext';
 import { getLenis } from '../motion/lenisStore';
 import VillaSketchHero from '../components/VillaSketchHero';
+import { MaterialIcon } from '../components/MaterialIcon';
 
 export default function Home() {
   const location = useLocation();
@@ -303,6 +304,24 @@ export default function Home() {
 
   const [activeTipIndex, setActiveTipIndex] = useState(0);
   const activeTip = designTips[activeTipIndex];
+  const designTipsSectionRef = useRef<HTMLElement | null>(null);
+  const [designTipsMediaReady, setDesignTipsMediaReady] = useState(false);
+
+  useEffect(() => {
+    const el = designTipsSectionRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setDesignTipsMediaReady(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setDesignTipsMediaReady(true);
+      },
+      { rootMargin: '200px', threshold: 0 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <main className="overflow-hidden scroll-smooth">
@@ -420,7 +439,7 @@ export default function Home() {
       </section>
 
       {/* Demo Section (DESIGN IN ACTION) */}
-      <section id="design-in-action" className="editorial-grid overflow-hidden bg-surface-container px-6 py-16 md:px-8 md:py-32">
+      <section ref={designTipsSectionRef} id="design-in-action" className="editorial-grid overflow-hidden bg-surface-container px-6 py-16 md:px-8 md:py-32">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 md:mb-20 px-4">
              <span className="text-primary font-headline font-bold uppercase tracking-[0.3em] text-[10px] md:text-sm mb-4 block">
@@ -447,9 +466,13 @@ export default function Home() {
                         : 'glass-card hover:bg-surface-variant'
                     }`}
                   >
-                     <span className={`material-symbols-outlined notranslate text-2xl md:text-3xl filter group-hover:scale-125 transition-transform duration-500 font-bold ${
-                        activeTipIndex === idx ? 'text-on-primary' : 'text-primary'
-                     }`}>{tip.icon}</span>
+                     <MaterialIcon
+                       name={tip.icon}
+                       className={`inline-block shrink-0 md:size-10 size-8 filter group-hover:scale-125 transition-transform duration-500 ${
+                         activeTipIndex === idx ? 'text-on-primary' : 'text-primary'
+                       }`}
+                       strokeWidth={2}
+                     />
                      <div>
                         <h4 className={`font-headline font-black uppercase leading-tight tracking-tight whitespace-pre-line text-xs md:text-sm ${
                           activeTipIndex === idx ? 'text-on-primary' : 'text-on-surface/60 group-hover:text-on-surface'
@@ -504,7 +527,7 @@ export default function Home() {
                                className="inline-flex items-center gap-4 bg-on-surface text-surface px-8 py-4 rounded-xl font-headline font-black uppercase tracking-widest text-sm hover:bg-primary hover:text-on-primary transition-all shadow-xl group"
                              >
                                {t('home.demo.try')}
-                               <span className="material-symbols-outlined notranslate group-hover:translate-x-2 transition-all">bolt</span>
+                               <MaterialIcon name="bolt" className="inline-block size-5 shrink-0 group-hover:translate-x-2 transition-all" strokeWidth={2.25} />
                              </button>
                           </div>
                        </div>
@@ -512,13 +535,18 @@ export default function Home() {
                        <div className="lg:w-1/2 relative h-[400px] lg:h-full group">
                           {activeTip.media.type === 'video' ? (
                             <div className="w-full h-full rounded-2xl overflow-hidden glass-card border border-on-surface/5 relative shadow-inner">
-                              <iframe 
-                                className="w-full h-full scale-[1.01]"
-                                src={activeTip.media.url} 
-                                title={activeTip.title}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                allowFullScreen
-                              />
+                              {designTipsMediaReady ? (
+                                <iframe
+                                  className="w-full h-full scale-[1.01]"
+                                  src={activeTip.media.url}
+                                  title={activeTip.title}
+                                  loading="lazy"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                  allowFullScreen
+                                />
+                              ) : (
+                                <div className="h-full min-h-[400px] w-full animate-pulse bg-on-surface/15" aria-hidden />
+                              )}
                             </div>
                           ) : (
                             <div className="w-full h-full relative rounded-2xl overflow-hidden glass-card border border-on-surface/5 group-hover:border-primary/40 transition-colors">
@@ -561,7 +589,7 @@ export default function Home() {
                     </p>
                   </div>
                   <div className="w-12 h-12 md:w-16 md:h-16 bg-primary/20 rounded-full flex items-center justify-center border border-primary/30">
-                    <span className="material-symbols-outlined text-primary text-2xl md:text-3xl">psychology</span>
+                    <MaterialIcon name="psychology" className="inline-block size-8 md:size-10 text-primary shrink-0" strokeWidth={2} />
                   </div>
                 </div>
 

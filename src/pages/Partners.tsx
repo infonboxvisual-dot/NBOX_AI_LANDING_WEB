@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
 import { useState } from 'react';
+import { MaterialIcon } from '../components/MaterialIcon';
 
 export default function Partners() {
   const { t, language } = useLanguage();
@@ -100,7 +101,7 @@ export default function Partners() {
             className="absolute left-0 sm:-left-4 md:-left-8 z-40 p-3 rounded-full bg-on-surface/5 border border-on-surface/10 hover:bg-on-surface/10 text-on-surface backdrop-blur-md transition-all group" 
             aria-label="Previous image"
           >
-            <span className="material-symbols-outlined notranslate text-2xl group-hover:-translate-x-1 transition-transform">arrow_back_ios_new</span>
+            <MaterialIcon name="arrow_back_ios_new" className="size-7 group-hover:-translate-x-1 transition-transform" strokeWidth={2} />
           </button>
           
           <button 
@@ -108,7 +109,7 @@ export default function Partners() {
             className="absolute right-0 sm:-right-4 md:-right-8 z-40 p-3 rounded-full bg-on-surface/5 border border-on-surface/10 hover:bg-on-surface/10 text-on-surface backdrop-blur-md transition-all group" 
             aria-label="Next image"
           >
-            <span className="material-symbols-outlined notranslate text-2xl group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+            <MaterialIcon name="arrow_forward_ios" className="size-7 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
           </button>
 
           <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-2">
@@ -170,7 +171,7 @@ export default function Partners() {
                         : 'bg-on-surface/5 text-on-surface/50 hover:bg-on-surface/10'
                     }`}
                   >
-                    <span className="material-symbols-outlined notranslate">{tab.icon}</span>
+                    <MaterialIcon name={tab.icon} className="size-6 shrink-0" strokeWidth={2} />
                     {tab.label}
                   </button>
                 ))}
@@ -190,10 +191,10 @@ export default function Partners() {
                     ].map((item, idx) => (
                       <div key={item.num} className="glass-card p-10 rounded-[2rem] border border-on-surface/10 flex flex-col items-center text-center group hover:border-primary/40 transition-all relative overflow-hidden h-full">
                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                           <span className="material-symbols-outlined text-primary text-8xl">{item.icon_name || item.icon}</span>
+                           <MaterialIcon name={item.icon_name || item.icon} className="size-[10rem] text-primary" strokeWidth={1.25} />
                         </div>
                         <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mb-8 border border-primary/20 group-hover:bg-primary group-hover:scale-110 transition-all duration-500">
-                          <span className="material-symbols-outlined text-primary group-hover:text-on-primary text-4xl">{item.icon_name || item.icon}</span>
+                          <MaterialIcon name={item.icon_name || item.icon} className="size-12 text-primary group-hover:text-on-primary" strokeWidth={2} />
                         </div>
                         <h3 className="text-lg sm:text-xl md:text-2xl font-headline font-black text-on-surface mb-6 uppercase tracking-tight relative z-10 whitespace-nowrap overflow-hidden text-ellipsis">
                           {t(`partners.custom_app.card${item.num}.title`)}
@@ -222,10 +223,10 @@ export default function Partners() {
                     ].map((item, idx) => (
                       <div key={item.num} className="glass-card p-6 md:p-10 rounded-[2rem] flex flex-col items-center text-center gap-6 min-h-[220px] border border-on-surface/10 hover:border-primary/30 transition-all duration-500 relative overflow-hidden group h-full">
                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover/card:opacity-10 transition-opacity">
-                          <span className="material-symbols-outlined text-primary text-8xl -rotate-12">{item.icon}</span>
+                          <MaterialIcon name={item.icon} className="size-[10rem] -rotate-12 text-primary" strokeWidth={1.25} />
                         </div>
                         <div className="w-14 h-14 md:w-16 md:h-16 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20 group-hover:bg-primary group-hover:scale-110 transition-all duration-500">
-                          <span className="material-symbols-outlined text-primary group-hover:text-on-primary text-2xl md:text-3xl font-black">{item.icon}</span>
+                          <MaterialIcon name={item.icon} className="size-9 text-primary group-hover:text-on-primary md:size-10" strokeWidth={2.25} />
                         </div>
                         <span className="text-lg md:text-2xl font-headline font-black text-on-surface uppercase tracking-tight leading-tight relative z-10">
                           {t(`partners.benefit${item.num}`)}
@@ -260,7 +261,7 @@ export default function Partners() {
                   >
                      {/* Background shield icon */}
                      <div className="absolute top-0 right-0 p-6 sm:p-10 opacity-5 pointer-events-none">
-                        <span className="material-symbols-outlined text-primary text-7xl sm:text-9xl font-black">shield</span>
+                        <MaterialIcon name="shield" className="size-[7rem] text-primary sm:size-[9rem]" strokeWidth={1.2} />
                      </div>
 
                     <div className="mb-6 sm:mb-10 relative z-10">
@@ -279,7 +280,7 @@ export default function Partners() {
                     <div className="space-y-4 sm:space-y-6 flex-grow relative z-10 mb-6 sm:mb-8 overflow-y-auto orange-scrollbar pr-2">
                        <div className="flex gap-3 sm:gap-5 items-center group/item p-3 sm:p-4 bg-on-surface/5 rounded-xl sm:rounded-2xl border border-on-surface/5">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-primary flex items-center justify-center shadow-[0_0_20px_rgba(255,122,47,0.4)]">
-                            <span className="material-symbols-outlined text-on-primary text-lg sm:text-xl font-black">devices</span>
+                            <MaterialIcon name="devices" className="size-5 text-on-primary sm:size-6" strokeWidth={2.5} />
                           </div>
                           <span className="text-[10px] sm:text-xs uppercase font-black text-primary tracking-widest">{pkg.devices}</span>
                         </div>
@@ -291,7 +292,7 @@ export default function Partners() {
                       ].map((item, fIdx) => (
                         <div key={fIdx} className="flex gap-3 sm:gap-5 items-center group/item px-2">
                           <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-green-500/10 flex items-center justify-center border border-green-500/20">
-                            <span className="material-symbols-outlined text-green-600 text-xs sm:text-sm font-black">check</span>
+                            <MaterialIcon name="check" className="size-3.5 text-green-600 sm:size-4" strokeWidth={3} />
                           </div>
                           <span className="text-[11px] sm:text-sm uppercase font-bold text-on-surface/70 tracking-widest leading-tight">{item}</span>
                         </div>
@@ -323,7 +324,7 @@ export default function Partners() {
                 className="absolute left-0 sm:-left-24 md:-left-32 z-40 p-3 sm:p-4 rounded-2xl bg-on-surface/5 border border-on-surface/10 hover:bg-primary text-on-surface hover:text-on-primary backdrop-blur-md transition-all group shadow-2xl" 
                 aria-label="Previous plan"
               >
-                <span className="material-symbols-outlined notranslate text-2xl sm:text-3xl group-hover:-translate-x-1 transition-transform">arrow_back_ios_new</span>
+                <MaterialIcon name="arrow_back_ios_new" className="size-7 sm:size-8 group-hover:-translate-x-1 transition-transform" strokeWidth={2} />
               </button>
               
               <button 
@@ -331,7 +332,7 @@ export default function Partners() {
                 className="absolute right-0 sm:-right-24 md:-right-32 z-40 p-3 sm:p-4 rounded-2xl bg-on-surface/5 border border-on-surface/10 hover:bg-primary text-on-surface hover:text-on-primary backdrop-blur-md transition-all group shadow-2xl" 
                 aria-label="Next plan"
               >
-                <span className="material-symbols-outlined notranslate text-2xl sm:text-3xl group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
+                <MaterialIcon name="arrow_forward_ios" className="size-7 sm:size-8 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
               </button>
 
               <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex gap-3">

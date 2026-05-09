@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { MaterialIcon } from '../components/MaterialIcon';
 
 interface WorkspaceItem {
   id: string;
@@ -114,7 +115,7 @@ export default function Workspace() {
                        <img src={item.image} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" alt={item.title} />
                        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-60"></div>
                        <div className="absolute top-3 left-3 w-8 h-8 rounded-lg bg-primary/20 backdrop-blur-md flex items-center justify-center text-primary border border-primary/30">
-                          <span className="material-symbols-outlined text-lg">{item.icon}</span>
+                          <MaterialIcon name={item.icon} className="size-[18px] text-primary" strokeWidth={2} />
                         </div>
                     </div>
                     <div className={`${activeTab === 'pro' ? 'p-8' : 'p-5'} flex-grow`}>
@@ -142,7 +143,7 @@ export default function Workspace() {
                   onClick={() => setSelectedItemId(null)}
                   className="absolute top-4 left-4 md:top-8 md:left-8 bg-surface/30 hover:bg-surface/50 text-on-surface backdrop-blur-xl px-4 py-2 md:px-6 md:py-3 rounded-full flex items-center gap-2 md:gap-3 transition-all border border-on-surface/20"
                 >
-                  <span className="material-symbols-outlined text-sm md:text-base">west</span>
+                  <MaterialIcon name="west" className="size-4 shrink-0 md:size-[18px]" strokeWidth={2} />
                   <span className="font-headline font-bold uppercase text-[9px] md:text-xs tracking-widest">Back to Apps</span>
                 </button>
               </div>

@@ -2,6 +2,7 @@ import { useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { getLenis } from '../motion/lenisStore';
+import { MaterialIcon } from '../components/MaterialIcon';
 
 export default function CourseRenderAI() {
   const navigate = useNavigate();
@@ -116,7 +117,7 @@ export default function CourseRenderAI() {
           onClick={() => navigate('/courses', { replace: true })}
           className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors mb-12 group cursor-pointer rounded-lg border-0 bg-transparent p-0 text-left font-inherit"
         >
-          <span className="material-symbols-outlined text-lg transition-transform group-hover:-translate-x-1">west</span>
+          <MaterialIcon name="west" className="size-[18px] shrink-0 transition-transform group-hover:-translate-x-1" strokeWidth={2} />
           <span className="font-headline font-bold uppercase text-xs tracking-widest">{t('academy.detail.back')}</span>
         </button>
 
@@ -161,7 +162,7 @@ export default function CourseRenderAI() {
               <div className="space-y-4">
                 {d.problems.map((p, i) => (
                   <div key={i} className="flex gap-4 items-center glass-card p-5 rounded-xl border border-on-surface/10 hover:border-red-500/20 transition-colors">
-                     <span className="material-symbols-outlined text-red-500">error</span>
+                     <MaterialIcon name="error" className="size-5 shrink-0 text-red-500" strokeWidth={2} />
                      <p className="text-on-surface-variant font-medium">{p}</p>
                   </div>
                 ))}
@@ -199,7 +200,7 @@ export default function CourseRenderAI() {
               <ul className="space-y-6">
                 {d.learning.map((l, i) => (
                   <li key={i} className="flex gap-4">
-                    <span className="material-symbols-outlined text-primary">check_circle</span>
+                    <MaterialIcon name="check_circle" className="size-5 shrink-0 text-primary" strokeWidth={2} />
                     <p className="text-on-surface-variant font-medium leading-relaxed">{l}</p>
                   </li>
                 ))}
@@ -222,7 +223,7 @@ export default function CourseRenderAI() {
             {/* Philosophy */}
             <div className="p-8 rounded-3xl border-2 border-dashed border-primary/30 relative">
                <div className="absolute top-0 right-0 p-4">
-                  <span className="material-symbols-outlined text-primary/20 text-4xl">format_quote</span>
+                  <MaterialIcon name="format_quote" className="size-14 shrink-0 text-primary/20 md:size-16" strokeWidth={1.25} />
                </div>
                <h4 className="text-primary font-headline font-black uppercase tracking-widest text-sm mb-4">{t('academy.detail.philosophy')}</h4>
                <p className="text-2xl font-headline font-black text-on-surface mb-4">{d.philosophy.quote}</p>
