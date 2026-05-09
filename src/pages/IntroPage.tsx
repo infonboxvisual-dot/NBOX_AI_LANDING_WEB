@@ -14,11 +14,11 @@ export default function IntroPage() {
 
   useEffect(() => {
     if (isMobileLike()) {
-      navigate('/landing', { replace: true });
+      navigate('/home', { replace: true });
     }
   }, [navigate]);
 
   return (
-    <CinematicIntro onComplete={() => navigate('/landing', { replace: true })} />
+    <CinematicIntro onComplete={() => navigate('/home', { replace: true })} />
   );
 }

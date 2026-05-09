@@ -1,31 +1,50 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { getLenis } from '../motion/lenisStore';
 
-function isMobileLike(): boolean {
-  if (typeof window === 'undefined') return false;
-  const coarse = window.matchMedia?.('(pointer: coarse)')?.matches ?? false;
-  const narrow = window.matchMedia?.('(max-width: 768px)')?.matches ?? false;
-  return coarse || narrow;
+const SHOW_AFTER_PX = 520;
+
+function readScrollY(): number {
+  const lenis = getLenis();
+  if (lenis) {
+    return lenis.scroll;
+  }
+  return window.scrollY || document.documentElement.scrollTop || 0;
 }
 
 export default function MobileScrollToTop() {
   const [visible, setVisible] = useState(false);
-  const mobileLike = useMemo(() => isMobileLike(), []);
 
   useEffect(() => {
-    if (!mobileLike) return;
+    let offLenis: (() => void) | undefined;
 
-    const onScroll = () => {
-      setVisible(window.scrollY > 520);
+    const sync = () => {
+      setVisible(readScrollY() > SHOW_AFTER_PX);
     };
 
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [mobileLike]);
+    const attachLenis = () => {
+      offLenis?.();
+      offLenis = undefined;
+      const lenis = getLenis();
+      if (lenis) {
+        offLenis = lenis.on('scroll', sync);
+      }
+      sync();
+    };
 
-  if (!mobileLike || !visible) return null;
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+    attachLenis();
+    window.addEventListener('resize', attachLenis, { passive: true });
+
+    return () => {
+      offLenis?.();
+      window.removeEventListener('scroll', sync);
+      window.removeEventListener('resize', attachLenis);
+    };
+  }, []);
+
+  if (!visible) return null;
 
   const onClick = () => {
     const lenis = getLenis();
@@ -41,10 +60,9 @@ export default function MobileScrollToTop() {
       type="button"
       onClick={onClick}
       aria-label="Scroll to top"
-      className="fixed bottom-5 right-5 z-40 inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary/30 bg-background/80 text-primary shadow-[0_10px_30px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-transform active:scale-95"
+      className="fixed bottom-5 right-5 z-40 inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary/30 bg-background/80 text-primary shadow-[0_10px_30px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-transform active:scale-95 md:bottom-8 md:right-8"
     >
       <ArrowUp size={18} />
     </button>
   );
 }
-

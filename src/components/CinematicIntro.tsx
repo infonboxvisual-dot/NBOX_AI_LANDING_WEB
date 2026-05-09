@@ -38,7 +38,7 @@ type CinematicIntroProps = {
 };
 
 export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
-  const { language } = useLanguage();
+  const { language, toggleLanguage } = useLanguage();
   const [surfaceReady, setSurfaceReady] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const framesRef = useRef<(HTMLImageElement | null)[]>(Array.from({ length: FRAME_COUNT }, () => null));
@@ -57,17 +57,20 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
   const copy = useMemo<OverlayCopy>(() => {
     if (language === 'vi') {
       return {
-        eyebrow: 'KIẾN TRÚC BIỂN HÓA THEO CHUYỂN ĐỘNG',
-        title: 'TÁI ĐỊNH NGHĨA\nBLACK VILLA',
-        subtitle: 'Kéo xuống để thấy khối nhà matte-black tách lớp thành cấu trúc, kính, thép và ánh sáng nội thất.',
-        cta: 'Kéo xuống để khám phá',
+        eyebrow: 'KỂ CHUYỆN CUỘN ĐIỆN ẢNH',
+        // Use NBSP to keep the highlighted word on one line.
+        title: 'KIẾN TRÚC\nTÁI\u00A0TƯỞNG\u00A0TƯỢNG',
+        subtitle:
+          'Cuộn để khám phá một chuỗi cảnh điện ảnh về kiến trúc hiện đại — vật liệu, kết cấu và ánh sáng ấm của nội thất được hé lớp dần, chính xác từng khoảnh khắc.',
+        cta: 'Cuộn để khám phá',
       };
     }
 
     return {
       eyebrow: 'CINEMATIC SCROLLTELLING',
       title: 'ARCHITECTURE\nREIMAGINED',
-      subtitle: 'Scroll to uncover a cinematic sequence of modern architecture where material, structure, and warm interior glow evolve in precise layers.',
+      subtitle:
+        'Scroll to uncover a cinematic sequence of modern architecture where material, structure, and warm interior glow evolve in precise layers.',
       cta: 'Scroll to explore',
     };
   }, [language]);
@@ -397,9 +400,21 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
           </div>
 
           <div className="absolute inset-0 flex flex-col justify-between px-6 py-6 md:px-10 md:py-8">
-          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.32em] text-white/45 md:text-xs">
+          <div className="flex items-center justify-between gap-3 text-[10px] font-black uppercase tracking-[0.32em] text-white/45 md:text-xs">
             <span>{language === 'vi' ? 'NBOX AI / KIẾN TRÚC TỐI CAO' : 'NBOX AI / ULTRA LUXURY ARCHITECTURE'}</span>
-            <span>{language === 'vi' ? 'Kéo xuống để mở cảnh' : 'Scroll to reveal'}</span>
+            <div className="flex shrink-0 items-center gap-2 md:gap-3">
+              <span className="hidden sm:inline">{language === 'vi' ? 'Cuộn để hé lộ cảnh' : 'Scroll to reveal'}</span>
+              <span className="sm:hidden">{language === 'vi' ? 'Cuộn' : 'Scroll'}</span>
+              <button
+                type="button"
+                onClick={toggleLanguage}
+                title={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
+                aria-label={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/8 font-headline text-[11px] font-black text-white/80 transition-colors hover:bg-white/14 hover:text-primary md:h-10 md:w-10"
+              >
+                {language === 'en' ? 'E' : 'V'}
+              </button>
+            </div>
           </div>
 
           <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-0 md:px-4">
@@ -412,7 +427,10 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
                 className="text-4xl font-headline font-black uppercase leading-[0.9] tracking-[-0.04em] text-white/92 sm:text-6xl md:text-7xl lg:text-[clamp(5rem,8vw,8.5rem)]"
               >
                 {copy.title.split('\n').map((line) => (
-                  <span key={line} className="block">
+                  <span
+                    key={line}
+                    className={`block ${line.includes('REIMAGINED') || line.includes('TÁI') ? 'text-primary whitespace-nowrap' : ''}`}
+                  >
                     {line}
                   </span>
                 ))}
@@ -433,7 +451,7 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
           <div className="space-y-4">
             <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.28em] text-white/45">
               <span>Copyright NBOX AI - TRAN MINH NHAT</span>
-              <span>{language === 'vi' ? 'Lăn chuột tại chỗ' : 'Scroll here'}</span>
+              <span>{language === 'vi' ? 'Cuộn tại đây' : 'Scroll here'}</span>
             </div>
             <div className="h-px w-full overflow-hidden rounded-full bg-white/10">
               <div ref={progressLineRef} className="h-full origin-left bg-primary" style={{ transform: 'scaleX(0)' }} />
