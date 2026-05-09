@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
-import { motion } from 'motion/react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
 const FRAME_COUNT = 240;
@@ -7,6 +6,25 @@ const FRAME_PREFIX = '/frame_video/ezgif-frame-';
 
 const padFrame = (index: number) => String(index).padStart(3, '0');
 const frameSrc = (index: number) => `${FRAME_PREFIX}${padFrame(index)}.png`;
+
+function loadImageDecoded(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.decoding = 'async';
+    image.onload = async () => {
+      try {
+        if (typeof image.decode === 'function') {
+          await image.decode();
+        }
+      } catch {
+        // decode fails on some payloads; raster may still paint
+      }
+      resolve(image);
+    };
+    image.onerror = () => reject(new Error(`Failed to load ${src}`));
+    image.src = src;
+  });
+}
 
 type OverlayCopy = {
   eyebrow: string;
@@ -21,6 +39,7 @@ type CinematicIntroProps = {
 
 export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
   const { language } = useLanguage();
+  const [surfaceReady, setSurfaceReady] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const framesRef = useRef<(HTMLImageElement | null)[]>(Array.from({ length: FRAME_COUNT }, () => null));
   const progressRef = useRef(0);
@@ -70,13 +89,6 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Prevent a blank flash on remount/back-navigation:
-    // show the first frame as a CSS background until we draw to canvas.
-    canvas.style.backgroundImage = `url("${frameSrc(1)}")`;
-    canvas.style.backgroundSize = 'cover';
-    canvas.style.backgroundPosition = 'center';
-    canvas.style.backgroundRepeat = 'no-repeat';
-
     bodyOverflowRef.current = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
@@ -100,11 +112,6 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
 
       if (!frame || rect.width === 0 || rect.height === 0) {
         return;
-      }
-
-      // Once we have something real to draw, remove the fallback background.
-      if (canvas.style.backgroundImage) {
-        canvas.style.backgroundImage = '';
       }
 
       const { width, height } = rect;
@@ -174,38 +181,17 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
       }
     };
 
-    const loadFrames = () => {
-      const batchSize = 12;
-      let nextIndex = 1;
+    const batchSize = 12;
+    let cancelled = false;
 
-      // Prioritize first frame so it appears immediately when coming back.
-      if (!framesRef.current[0]) {
-        const first = new Image();
-        first.decoding = 'async';
-        first.src = frameSrc(1);
-        if (first.complete) {
-          framesRef.current[0] = first;
-          if (!hasFirstFrameRef.current) {
-            hasFirstFrameRef.current = true;
-            drawFrame(1);
-          }
-        } else {
-          first.onload = () => {
-            framesRef.current[0] = first;
-            if (!hasFirstFrameRef.current) {
-              hasFirstFrameRef.current = true;
-              drawFrame(1);
-            }
-          };
-        }
-      }
-
+    const pumpRemainingFrames = (nextIndex: number) => {
       const pump = () => {
-        if (nextIndex > FRAME_COUNT) {
+        if (cancelled || nextIndex > FRAME_COUNT) {
           return;
         }
 
         const end = Math.min(FRAME_COUNT, nextIndex + batchSize - 1);
+
         for (let frameIndex = nextIndex; frameIndex <= end; frameIndex += 1) {
           if (framesRef.current[frameIndex - 1]) {
             continue;
@@ -216,10 +202,6 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
           image.src = frameSrc(frameIndex);
           image.onload = () => {
             framesRef.current[frameIndex - 1] = image;
-            if (frameIndex === 1 && !hasFirstFrameRef.current) {
-              hasFirstFrameRef.current = true;
-              drawFrame(1);
-            }
           };
         }
 
@@ -228,6 +210,93 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
       };
 
       pump();
+    };
+
+    const revealSurface = () => {
+      if (cancelled) {
+        return;
+      }
+
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          if (!cancelled) {
+            setSurfaceReady(true);
+          }
+        });
+      });
+    };
+
+    const bootstrap = async () => {
+      ensureCanvasSize();
+
+      if (reducedMotion) {
+        try {
+          const image = await loadImageDecoded(frameSrc(FRAME_COUNT));
+          if (cancelled) {
+            return;
+          }
+
+          framesRef.current[FRAME_COUNT - 1] = image;
+          hasFirstFrameRef.current = true;
+          ensureCanvasSize();
+
+          targetProgressRef.current = 1;
+          progressRef.current = 1;
+          drawFrame(FRAME_COUNT);
+          updateTypography(1);
+
+          revealSurface();
+
+          if (onComplete && !hasCompletedRef.current && !cancelled) {
+            hasCompletedRef.current = true;
+            window.setTimeout(onComplete, 0);
+          }
+        } catch {
+          if (!cancelled) {
+            pumpRemainingFrames(1);
+            targetProgressRef.current = 1;
+            progressRef.current = 1;
+            updateTypography(1);
+            revealSurface();
+            if (onComplete && !hasCompletedRef.current) {
+              hasCompletedRef.current = true;
+              window.setTimeout(onComplete, 160);
+            }
+          }
+        }
+
+        return;
+      }
+
+      try {
+        const image = await loadImageDecoded(frameSrc(1));
+        if (cancelled) {
+          return;
+        }
+
+        framesRef.current[0] = image;
+        hasFirstFrameRef.current = true;
+        ensureCanvasSize();
+        drawFrame(1);
+
+        pumpRemainingFrames(2);
+        revealSurface();
+      } catch {
+        if (!cancelled) {
+          pumpRemainingFrames(1);
+
+          window.setTimeout(() => {
+            if (!cancelled) {
+              if (framesRef.current[0] && !hasFirstFrameRef.current) {
+                hasFirstFrameRef.current = true;
+                ensureCanvasSize();
+                drawFrame(1);
+              }
+            }
+          }, 480);
+          revealSurface();
+        }
+      }
     };
 
     const renderLoop = () => {
@@ -243,9 +312,9 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
       rafRef.current = window.requestAnimationFrame(renderLoop);
     };
 
-    ensureCanvasSize();
-    loadFrames();
     renderLoop();
+
+    void bootstrap();
 
     const clampProgress = (value: number) => Math.min(1, Math.max(0, value));
 
@@ -292,19 +361,8 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
 
     window.addEventListener('resize', onResize, { passive: true });
 
-    if (reducedMotion) {
-      targetProgressRef.current = 1;
-      progressRef.current = 1;
-      drawFrame(FRAME_COUNT);
-      updateTypography(1);
-
-      if (onComplete && !hasCompletedRef.current) {
-        hasCompletedRef.current = true;
-        window.setTimeout(onComplete, 0);
-      }
-    }
-
     return () => {
+      cancelled = true;
       window.removeEventListener('resize', onResize);
       window.removeEventListener('wheel', onWheel as EventListener);
       window.removeEventListener('touchstart', onTouchStart as EventListener);
@@ -315,7 +373,7 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
         window.cancelAnimationFrame(rafRef.current);
       }
     };
-  }, []);
+  }, [onComplete]);
 
   return (
     <section className="relative h-screen overflow-hidden bg-[#050505] text-white/90">
@@ -324,16 +382,21 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:72px_72px] opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-80" />
 
-        <div className="absolute inset-0 overflow-hidden">
-          <canvas
-            ref={canvasRef}
-            className="block h-full w-full translate-y-[2%] md:translate-y-[0.7%]"
-            aria-hidden="true"
-          />
-        </div>
+        {/* Gate canvas + overlays until frame 001 is decoded and painted (avoid text-only flash). */}
+        <div
+          className={`absolute inset-0 overflow-hidden transition-[opacity] duration-500 ease-out ${
+            surfaceReady ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+          }`}
+        >
+          <div className="absolute inset-0 overflow-hidden">
+            <canvas
+              ref={canvasRef}
+              className="block h-full w-full translate-y-[2%] md:translate-y-[0.7%]"
+              aria-hidden="true"
+            />
+          </div>
 
-
-        <div className="absolute inset-0 flex flex-col justify-between px-6 py-6 md:px-10 md:py-8">
+          <div className="absolute inset-0 flex flex-col justify-between px-6 py-6 md:px-10 md:py-8">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.32em] text-white/45 md:text-xs">
             <span>{language === 'vi' ? 'NBOX AI / KIẾN TRÚC TỐI CAO' : 'NBOX AI / ULTRA LUXURY ARCHITECTURE'}</span>
             <span>{language === 'vi' ? 'Kéo xuống để mở cảnh' : 'Scroll to reveal'}</span>
@@ -376,6 +439,7 @@ export default function CinematicIntro({ onComplete }: CinematicIntroProps) {
               <div ref={progressLineRef} className="h-full origin-left bg-primary" style={{ transform: 'scaleX(0)' }} />
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>
