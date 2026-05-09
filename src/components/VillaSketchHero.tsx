@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 type VillaSketchHeroProps = {
@@ -24,6 +24,7 @@ export default function VillaSketchHero({
   imageSrc = DEFAULT_IMAGE_SRC,
   reducedMotion,
 }: VillaSketchHeroProps) {
+  const [rasterReady, setRasterReady] = useState(false);
   const sketchGroupRef = useRef<SVGGElement | null>(null);
   const sketchPathsRef = useRef<(SVGPathElement | null)[]>([]);
   const sketchWipeRectRef = useRef<SVGRectElement | null>(null);
@@ -36,6 +37,51 @@ export default function VillaSketchHero({
   const shouldReduceMotion = reducedMotion ?? prefersReducedMotion();
   const enableHeavyFilters = useMemo(() => !shouldReduceMotion && !isCoarsePointer(), [shouldReduceMotion]);
   const isDefaultImage = imageSrc === DEFAULT_IMAGE_SRC;
+
+  useEffect(() => {
+    if (shouldReduceMotion) {
+      setRasterReady(true);
+      return;
+    }
+
+    let cancelled = false;
+    let finished = false;
+
+    const finalize = async () => {
+      if (finished || cancelled) {
+        return;
+      }
+      finished = true;
+      try {
+        if (typeof img.decode === 'function') {
+          await img.decode();
+        }
+      } catch {
+        //
+      }
+      if (!cancelled) {
+        setRasterReady(true);
+      }
+    };
+
+    const img = new Image();
+    img.decoding = 'async';
+    img.onload = () => void finalize();
+    img.onerror = () => {
+      finished = true;
+      if (!cancelled) {
+        setRasterReady(true);
+      }
+    };
+    img.src = imageSrc;
+    if (img.complete) {
+      void finalize();
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [imageSrc, shouldReduceMotion]);
 
   useEffect(() => {
     if (shouldReduceMotion) {
@@ -186,7 +232,9 @@ export default function VillaSketchHero({
   return (
     <svg
       viewBox="0 0 1280 760"
-      className={className}
+      className={`transition-opacity duration-500 ease-out ${
+        rasterReady ? 'opacity-100' : 'opacity-0'
+      } ${className ?? ''}`}
       fill="none"
       aria-hidden="true"
     >
