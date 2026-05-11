@@ -38,7 +38,7 @@ export default function CourseVideoAI() {
         "Học cách đưa AI vào quy trình sản xuất video thực tế",
         "Tạo video trực tiếp từ render & dữ liệu dự án",
         "Hiểu tư duy xây dựng video theo mục tiêu",
-        "Tặng App Video AI riêng của NBOX"
+        "Tặng Ứng dụng Video AI riêng của NBOX"
       ],
       results: [
         "Tự tạo video dự án nhanh chóng",

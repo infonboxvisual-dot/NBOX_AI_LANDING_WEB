@@ -628,7 +628,7 @@ export default function Home() {
                         en: "AI doesn't replace humans; it amplifies creative power. The goal is to reduce render time, optimize workflows, and enhance output quality."
                       },
                       {
-                        vi: "Hệ sinh thái NBOX AI gồm 4 mảng chính: Đào tạo Render AI & Video AI; Phát triển app AI; Dịch vụ Render & nâng cấp hình ảnh; Sản xuất phim AI cho kiến trúc & BĐS.",
+                        vi: "Hệ sinh thái NBOX AI gồm 4 mảng chính: Đào tạo Render AI & Video AI; Phát triển ứng dụng AI; Dịch vụ Render & nâng cấp hình ảnh; Sản xuất phim AI cho kiến trúc & BĐS.",
                         en: "The NBOX AI ecosystem consists of 4 main areas: AI Render & Video Training; AI App Development; Render & Image Upgrade Services; AI Film Production for Architecture & Real Estate."
                       },
                       {

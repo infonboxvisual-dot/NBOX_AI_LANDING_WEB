@@ -38,7 +38,7 @@ export default function CourseRenderAI() {
         "AI nên dùng ở bước nào trong workflow",
         "Cách kết hợp AI với pipeline hiện tại",
         "Cách kiểm soát chất lượng khi dùng AI",
-        "Thực hành trực tiếp với App Render AI của NBOX"
+        "Thực hành trực tiếp với Ứng dụng Render AI của NBOX"
       ],
       differences: [
         "100% thực chiến từ kinh nghiệm làm nghề",
