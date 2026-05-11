@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { MaterialIcon } from '../components/MaterialIcon';
 
@@ -164,7 +165,7 @@ const ServiceDetailsModal = ({ service, onClose, t }: { service: Service | null;
           <div className="p-8 md:p-12 bg-on-surface/5">
             <div className="flex justify-between items-start">
               <div className="space-y-2">
-                <p className="text-primary font-headline font-black uppercase text-sm tracking-[0.2em]">D. {t('services.details.title')}</p>
+                <p className="text-primary font-headline font-black uppercase text-sm tracking-[0.2em]">{t('services.details.title')}</p>
                 <h3 className="whitespace-normal break-words text-[clamp(1.55rem,2.7vw,2.65rem)] font-headline font-black uppercase tracking-tighter leading-none text-on-surface">
                   {service.title.split('. ')[1]}
                 </h3>
@@ -220,12 +221,13 @@ const ServiceDetailsModal = ({ service, onClose, t }: { service: Service | null;
               <MaterialIcon name="info" className="size-5 shrink-0 text-on-surface/40" strokeWidth={2} />
               <p className="text-xs uppercase tracking-widest font-headline font-bold">NBOX AI ARCHITECTURAL SERVICES</p>
             </div>
-            <button 
+            <Link
+              to="/contact"
               onClick={onClose}
               className="bg-primary text-on-primary px-10 py-4 rounded-xl font-headline font-black uppercase text-sm tracking-widest shadow-[0_0_30px_rgba(255,122,47,0.3)] hover:scale-105 active:scale-95 transition-all"
             >
-              OK
-            </button>
+              {t('services.details.register')}
+            </Link>
           </div>
         </motion.div>
       </motion.div>

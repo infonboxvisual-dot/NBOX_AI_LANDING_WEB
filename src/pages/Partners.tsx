@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useState } from 'react';
 import { MaterialIcon } from '../components/MaterialIcon';
@@ -7,18 +8,17 @@ export default function Partners() {
   const { t, language } = useLanguage();
   
   const partners = [
-    'COLUMBIA', 'AUD', 'NAGAMI', 'HBC', 'PRATT', 'CORNELL', 'ATM', 
-    'BARCODE', 'UNS', 'AA', 'UPENN', 'BIG', 'IAAC', 'BART', 
-    'MVRDV', 'ARUP', 'GENSLER', 'P&G', 'HOUZZ', 'MAD', 'T', 
-    'UDEM', 'LOGI', 'RCA', 'AIDIA', 'SUTD', 'TUD'
+    'PENTA', 'ANHOUSES', 'ĐẢO NGỌC PLUS', 'HOMETALK', 'HOME DESIGN',
+    'HAAN GROUP', 'REAL HOUSE', 'METIS', '349 DESIGN', 'NHẬT HOÀNG PHÁT',
+    'NICE HOUSE', 'VHOUSE', 'HAXIS', 'TROC DESIGN', 'NGUYÊN THÀNH HOME'
   ];
 
   const deployedApps = [
-    { image: 'https://mtlomjjlgvsjpudxlspq.supabase.co/storage/v1/object/public/background-imgs/homepage5.png' },
-    { image: 'https://mtlomjjlgvsjpudxlspq.supabase.co/storage/v1/object/public/background-imgs/homepage1.png' },
-    { image: 'https://mtlomjjlgvsjpudxlspq.supabase.co/storage/v1/object/public/background-imgs/render%204k%20img.jpg' },
-    { image: 'https://mtlomjjlgvsjpudxlspq.supabase.co/storage/v1/object/public/background-imgs/homepage3.png' },
-    { image: 'https://mtlomjjlgvsjpudxlspq.supabase.co/storage/v1/object/public/background-imgs/homepage4.png' },
+    { image: '/companies/cpn1.png' },
+    { image: '/companies/cpn2.png' },
+    { image: '/companies/cpn3.png' },
+    { image: '/companies/cpn4.png' },
+    { image: '/companies/cpn5.png' },
   ];
 
   const pricingPackages = [
@@ -242,7 +242,7 @@ export default function Partners() {
           <div className="mb-32">
             <div className="text-center mb-16 md:mb-24">
               <h2 className="text-4xl md:text-7xl font-headline font-black uppercase text-on-surface tracking-tighter mb-6 px-4">
-                {language === 'vi' ? <>BẢNG GIÁ <span className="italic">CHO 1 APP</span></> : <>PRICING <span className="italic">PER APP</span></>}
+                {language === 'vi' ? <>BẢNG GIÁ <span className="italic">CHO 1 ỨNG DỤNG</span></> : <>PRICING <span className="italic">PER APP</span></>}
               </h2>
               <div className="inline-block px-8 py-3 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-md">
                 <p className="text-primary font-headline font-bold uppercase tracking-[0.2em] text-[10px] md:text-sm">
@@ -251,13 +251,13 @@ export default function Partners() {
               </div>
             </div>
             
-            <div className="relative w-full max-w-6xl mx-auto h-[550px] sm:h-[620px] md:h-[700px] flex items-center justify-center perspective-[2000px]">
+            <div className="relative w-full max-w-6xl mx-auto h-[640px] sm:h-[720px] md:h-[800px] flex items-center justify-center perspective-[2000px]">
               <div className="relative w-full h-full flex items-center justify-center">
                 {pricingPackages.map((pkg, i) => (
-                  <motion.div 
+                  <motion.div
                     key={i}
                     onClick={() => i !== pricingActiveIndex && setPricingActiveIndex(i)}
-                    className={`absolute w-[280px] sm:w-[350px] md:w-[420px] h-[480px] sm:h-[550px] md:h-[620px] glass-card border border-on-surface/10 p-6 sm:p-10 rounded-[2rem] md:rounded-[2.5rem] flex flex-col transition-all duration-700 ease-in-out shadow-xl ${getPricingSlideClass(i)}`}
+                    className={`absolute w-[300px] sm:w-[370px] md:w-[440px] h-[580px] sm:h-[660px] md:h-[740px] glass-card border border-on-surface/10 p-6 sm:p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] flex flex-col transition-all duration-700 ease-in-out shadow-xl ${getPricingSlideClass(i)}`}
                   >
                      {/* Background shield icon */}
                      <div className="absolute top-0 right-0 p-6 sm:p-10 opacity-5 pointer-events-none">
@@ -277,7 +277,7 @@ export default function Partners() {
                       </div>
                     </div>
 
-                    <div className="space-y-4 sm:space-y-6 flex-grow relative z-10 mb-6 sm:mb-8 overflow-y-auto orange-scrollbar pr-2">
+                    <div className="space-y-3 sm:space-y-4 flex-grow relative z-10 mb-4 sm:mb-6">
                        <div className="flex gap-3 sm:gap-5 items-center group/item p-3 sm:p-4 bg-on-surface/5 rounded-xl sm:rounded-2xl border border-on-surface/5">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-primary flex items-center justify-center shadow-[0_0_20px_rgba(255,122,47,0.4)]">
                             <MaterialIcon name="devices" className="size-5 text-on-primary sm:size-6" strokeWidth={2.5} />
@@ -305,9 +305,12 @@ export default function Partners() {
                       </div>
                     </div>
 
-                    <button className="w-full py-4 sm:py-6 bg-on-surface text-surface hover:bg-primary hover:text-on-primary rounded-xl sm:rounded-2xl font-headline font-black uppercase text-xs sm:text-sm tracking-widest shadow-2xl transition-all duration-300 mt-auto active:scale-95">
+                    <Link
+                      to="/contact"
+                      className="w-full block text-center py-4 sm:py-5 bg-on-surface text-surface hover:bg-primary hover:text-on-primary rounded-xl sm:rounded-2xl font-headline font-black uppercase text-xs sm:text-sm tracking-widest shadow-2xl transition-all duration-300 mt-auto active:scale-95"
+                    >
                       {t('partners.pricing.choose')}
-                    </button>
+                    </Link>
 
                     {pkg.isPro && (
                       <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[12px] font-black uppercase px-8 py-3 rounded-full shadow-[0_10px_30px_rgba(255,122,47,0.5)] border border-on-surface/20 z-20 whitespace-nowrap">

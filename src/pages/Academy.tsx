@@ -36,7 +36,7 @@ export default function Academy() {
       title: language === 'vi' ? 'Khóa Render AI THỰC CHIẾN' : 'Hands-on AI Render Course',
       tools: 'RunningHub, NBOX Render, Flow, Highfield, Freepik',
       format: language === 'vi' ? 'Video Online' : 'Online Video',
-      gift: language === 'vi' ? 'QUÀ TẶNG: APP NBOX RENDER' : 'BONUS: NBOX RENDER APP',
+      gift: language === 'vi' ? 'QUÀ TẶNG: ỨNG DỤNG NBOX RENDER' : 'BONUS: NBOX RENDER APP',
       price: language === 'vi' ? { old: '4.000.000đ', now: '3.600.000đ' } : { old: '4,000,000 VND', now: '3,600,000 VND' },
       content: language === 'vi' ? [
         'Render nội/ngoại thất',
@@ -55,7 +55,7 @@ export default function Academy() {
       title: language === 'vi' ? 'Khóa Video AI THỰC CHIẾN' : 'Hands-on AI Video Course',
       tools: 'Kling AI, VEO 3, Capcut',
       format: language === 'vi' ? 'Video Online' : 'Online Video',
-      gift: language === 'vi' ? 'QUÀ TẶNG: APP NBOX VIDEO' : 'BONUS: NBOX VIDEO APP',
+      gift: language === 'vi' ? 'QUÀ TẶNG: ỨNG DỤNG NBOX VIDEO' : 'BONUS: NBOX VIDEO APP',
       price: language === 'vi' ? { old: '2.000.000đ', now: '1.600.000đ' } : { old: '2,000,000 VND', now: '1,600,000 VND' },
       content: language === 'vi' ? [
         'Tạo video kiến trúc',
@@ -80,7 +80,7 @@ export default function Academy() {
     { name: 'Diệu Linh', role: 'Real Estate Agent', text: 'Khóa Video AI giúp mình tạo được các video dự án nhanh hơn trước rất nhiều. Quan trọng là video trực quan hơn nên khách hàng cũng dễ tiếp cận hơn khi mình gửi thông tin.' },
     { name: 'Mạnh Hùng', role: '3D Artist', text: 'Điều mình đánh giá cao ở NBOX Academy là tính thực tế. Không phải học xong để đó, mà có thể áp dụng ngay vào công việc hiện tại.' },
     { name: 'Lê Nam', role: 'Architect', text: 'Trước đây mình gần như chưa biết gì về AI, nhưng khóa học hướng dẫn khá rõ ràng và dễ hiểu. Sau khóa học mình đã có thể dùng AI cho công việc hiện tại.' },
-    { name: 'Mai Phương', role: 'Student', text: 'Việc có App AI riêng đi kèm khóa học là điểm mình thấy rất khác biệt. Không cần phải tự mò quá nhiều tool bên ngoài, học xong là có thể dùng ngay.' },
+    { name: 'Mai Phương', role: 'Student', text: 'Việc có Ứng dụng AI riêng đi kèm khóa học là điểm mình thấy rất khác biệt. Không cần phải tự mò quá nhiều tool bên ngoài, học xong là có thể dùng ngay.' },
     { name: 'Thế Vinh', role: 'Project Manager', text: 'Khóa học không chỉ giúp mình biết thêm về AI, mà thay đổi cách mình làm việc hằng ngày. Đây là điều mình thấy đáng giá nhất.' },
     { name: 'Ngọc Lan', role: 'Freelancer', text: 'Sau khi học Render AI, mình tiếp tục đăng ký Video AI vì thấy cách dạy rất thực tế và dễ áp dụng. Đây là một trong những khóa học hiếm mà mình thấy “đáng tiền”.' },
   ] : [
@@ -114,16 +114,16 @@ export default function Academy() {
       a: 'Hàng tuần, Facebook Trần Minh Nhật đều sẽ tung ra những slot trải nghiệm cho mọi người dùng thử.' 
     },
     { 
-      q: 'Thời hạn sử dụng app và khóa học là bao lâu?', 
-      a: 'Cả khóa học và app đều có giá trị vĩnh viễn, bạn chỉ cần mua 1 lần và sử dụng trọn đời.' 
+      q: 'Thời hạn sử dụng ứng dụng và khóa học là bao lâu?',
+      a: 'Cả khóa học và ứng dụng đều có giá trị vĩnh viễn, bạn chỉ cần mua 1 lần và sử dụng trọn đời.'
     },
     { 
       q: 'Có chi phí phát sinh trong quá trình sử dụng không?', 
-      a: 'NBOX AI không thu phí duy trì app. Chỉ khi tạo ảnh, bạn sẽ cần trả phí API. Nói một cách dễ hiểu là NBOX tặng bạn “chiếc xe”, bạn cần tự đổ “xăng” khi sử dụng.' 
+      a: 'NBOX AI không thu phí duy trì ứng dụng. Chỉ khi tạo ảnh, bạn sẽ cần trả phí API. Nói một cách dễ hiểu là NBOX tặng bạn “chiếc xe”, bạn cần tự đổ “xăng” khi sử dụng.'
     },
     { 
-      q: 'App có xuất được ảnh 4K không?', 
-      a: 'App xuất được ảnh 4K nhé, đảm bảo chất lượng sắc nét phục vụ cho dự án.' 
+      q: 'Ứng dụng có xuất được ảnh 4K không?',
+      a: 'Ứng dụng xuất được ảnh 4K nhé, đảm bảo chất lượng sắc nét phục vụ cho dự án.'
     },
   ] : [
     { 
@@ -280,7 +280,7 @@ export default function Academy() {
                 </h3>
                 <p className="mt-2 text-sm text-on-surface-variant">
                   {language === 'vi'
-                    ? 'RENDER AI THỰC CHIẾN + VIDEO AI THỰC CHIẾN, TẶNG KÈM 2 APP NBOX.'
+                    ? 'RENDER AI THỰC CHIẾN + VIDEO AI THỰC CHIẾN, TẶNG KÈM 2 ỨNG DỤNG NBOX.'
                     : 'Hands-on AI Render + Hands-on AI Video, includes both NBOX apps.'}
                 </p>
               </div>
