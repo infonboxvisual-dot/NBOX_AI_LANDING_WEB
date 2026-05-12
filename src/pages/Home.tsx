@@ -389,7 +389,7 @@ export default function Home() {
                       {heroSketchCopy.title}
                     </h2>
                   </div>
-                  <div className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-primary">
+                  <div className="rounded-full border border-primary/40 bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-on-primary">
                     Sketch Auto
                   </div>
                 </div>
@@ -505,7 +505,7 @@ export default function Home() {
                        
                        <div className="lg:w-1/2 space-y-10 relative z-10 flex flex-col justify-center">
                           <div className="space-y-4">
-                             <span className="inline-block px-4 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/30">
+                             <span className="inline-block px-4 py-1 rounded-full bg-primary text-on-primary text-[10px] font-black uppercase tracking-widest border border-primary/40">
                                Insight #{activeTipIndex + 1}
                              </span>
                              <h3 className="text-4xl md:text-5xl font-headline font-black text-on-surface uppercase tracking-tighter leading-[1.1] whitespace-pre-line">
@@ -556,14 +556,12 @@ export default function Home() {
                                     if (!designTipsVideoEnabled[activeTip.id]) ensureMonaPreconnect();
                                     setDesignTipsVideoEnabled((prev) => ({ ...prev, [activeTip.id]: true }));
                                   }}
-                                  className="flex h-full min-h-[400px] w-full flex-col items-center justify-center gap-4 bg-black/30 px-8 text-center"
+                                  aria-label={language === 'vi' ? 'Phát video demo' : 'Play demo video'}
+                                  className="group/play flex h-full min-h-[400px] w-full items-center justify-center bg-black/30 transition-colors hover:bg-black/40"
                                 >
-                                  <div className="rounded-full border border-primary/30 bg-primary/10 px-5 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-primary">
-                                    {language === 'vi' ? 'Bấm để tải video demo' : 'Click to load demo video'}
-                                  </div>
-                                  <div className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">
-                                    {language === 'vi' ? 'Giảm tải trang ban đầu' : 'Keeps initial load lightweight'}
-                                  </div>
+                                  <span className="flex h-20 w-20 items-center justify-center rounded-full bg-primary text-on-primary shadow-[0_0_40px_rgba(164,88,42,0.55)] transition-transform group-hover/play:scale-110 active:scale-95">
+                                    <MaterialIcon name="play_arrow" className="size-12" strokeWidth={2.5} />
+                                  </span>
                                 </button>
                               )}
                             </div>

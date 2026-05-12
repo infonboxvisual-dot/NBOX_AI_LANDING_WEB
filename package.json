@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "optimize:landing-image": "node scripts/optimize-landing-image.mjs",
+    "optimize-images": "node scripts/optimize-images.mjs",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

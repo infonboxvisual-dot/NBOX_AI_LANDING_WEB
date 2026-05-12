@@ -43,11 +43,11 @@
   --font-headline: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   
-  /* Slightly darker for better contrast with on-primary text */
-  --color-primary: #b76532;
-  --color-primary-dim: #9d542a;
-  --color-primary-fixed: #b76532;
-  --color-primary-fixed-dim: #9d542a;
+  /* Darkened to satisfy WCAG AA (4.86:1 white text on primary) */
+  --color-primary: #a4582a;
+  --color-primary-dim: #8e4a22;
+  --color-primary-fixed: #a4582a;
+  --color-primary-fixed-dim: #8e4a22;
   --color-primary-container: #e0a06a;
   
   --color-secondary: #d39b72;

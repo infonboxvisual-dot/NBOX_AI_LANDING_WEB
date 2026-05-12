@@ -53,14 +53,12 @@ const ServiceMedia = ({ service }: { service: Service }) => {
                   ensureMonaPreconnect();
                   setMonaEnabled(true);
                 }}
-                className="flex h-full w-full flex-col items-center justify-center gap-4 bg-black/30 px-8 text-center"
+                aria-label={`Play ${service.title}`}
+                className="group/play flex h-full w-full items-center justify-center bg-black/30 transition-colors hover:bg-black/40"
               >
-                <div className="rounded-full border border-primary/30 bg-primary/10 px-5 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-primary">
-                  {service.title}
-                </div>
-                <div className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">
-                  Click to load video
-                </div>
+                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-on-primary shadow-[0_0_40px_rgba(164,88,42,0.55)] transition-transform group-hover/play:scale-110 active:scale-95">
+                  <MaterialIcon name="play_arrow" className="size-10" strokeWidth={2.5} />
+                </span>
               </button>
             )
           ) : (

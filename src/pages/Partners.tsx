@@ -17,8 +17,11 @@ export default function Partners() {
     { image: '/companies/cpn1.png' },
     { image: '/companies/cpn2.png' },
     { image: '/companies/cpn3.png' },
-    { image: '/companies/cpn4.png' },
     { image: '/companies/cpn5.png' },
+    { image: '/companies/cpn6.png' },
+    { image: '/companies/cpn7.png' },
+    { image: '/companies/cpn8.png' },
+    { image: '/companies/cpn9.png' },
   ];
 
   const pricingPackages = [
