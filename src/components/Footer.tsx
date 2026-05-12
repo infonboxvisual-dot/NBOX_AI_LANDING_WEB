@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { MaterialIcon } from '../components/MaterialIcon';
 
@@ -38,15 +39,15 @@ export default function Footer() {
                 {language === 'vi' ? 'Pháp lý' : 'Legal'}
               </h3>
               <div className="flex flex-col gap-4">
-                <a href="#" className="text-sm font-medium text-on-surface-variant transition-colors hover:text-primary">
+                <Link to="/privacy" className="text-sm font-medium text-on-surface-variant transition-colors hover:text-primary">
                   {language === 'vi' ? 'Chính sách bảo mật' : 'Privacy Policy'}
-                </a>
-                <a href="#" className="text-sm font-medium text-on-surface-variant transition-colors hover:text-primary">
+                </Link>
+                <Link to="/terms" className="text-sm font-medium text-on-surface-variant transition-colors hover:text-primary">
                   {language === 'vi' ? 'Điều khoản dịch vụ' : 'Terms of Service'}
-                </a>
-                <a href="#" className="text-sm font-medium text-on-surface-variant transition-colors hover:text-primary">
+                </Link>
+                <Link to="/cookies" className="text-sm font-medium text-on-surface-variant transition-colors hover:text-primary">
                   {language === 'vi' ? 'Chính sách Cookie' : 'Cookie Policy'}
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -141,7 +142,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col items-start gap-4 text-center text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-on-surface/30 md:flex-row md:items-center">
+          <div className="flex flex-col items-start gap-4 text-center text-[10px] font-headline font-bold uppercase tracking-[0.2em] text-on-surface/60 md:flex-row md:items-center">
             <span>© 2026 NBOX AI. All rights reserved.</span>
           </div>
         </div>

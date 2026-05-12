@@ -96,7 +96,7 @@ export default function Header() {
                 type="button"
                 onClick={() => goNav(item.path)}
                 className={`rounded-full px-4 py-2 font-headline text-xs font-black uppercase tracking-[0.22em] transition-colors duration-300 ${
-                  active ? 'bg-primary/15 text-primary' : 'text-on-surface/65 hover:bg-primary/10 hover:text-primary'
+                  active ? 'bg-primary text-on-primary' : 'text-on-surface/80 hover:bg-primary/15 hover:text-on-surface'
                 }`}
               >
                 {item.name}
@@ -108,16 +108,19 @@ export default function Header() {
         <div className="flex items-center space-x-3 md:space-x-4">
           <button
             onClick={toggleLanguage}
-            className="group flex h-10 w-10 items-center justify-center rounded-full bg-on-surface/5 font-headline text-xs font-black text-on-surface transition-all hover:text-primary active:scale-90"
+            className="group flex h-10 min-w-[2.75rem] items-center justify-center rounded-full bg-on-surface/5 px-3 font-headline text-xs font-black text-on-surface transition-all hover:text-primary active:scale-90"
             title={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
           >
             <span className="relative transition-transform group-hover:scale-110">
-              {language === 'en' ? 'E' : 'V'}
+              {language === 'en' ? 'EN' : 'VI'}
             </span>
           </button>
 
           <button
+            type="button"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? (language === 'vi' ? 'Đóng menu' : 'Close menu') : (language === 'vi' ? 'Mở menu' : 'Open menu')}
+            aria-expanded={isMenuOpen}
             className="text-on-surface transition-colors hover:text-primary md:hidden"
           >
             {isMenuOpen ? <X size={28} /> : <Menu size={28} />}

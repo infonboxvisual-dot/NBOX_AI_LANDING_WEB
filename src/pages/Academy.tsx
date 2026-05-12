@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
 import { MaterialIcon } from '../components/MaterialIcon';
+import { BlurImage } from '../components/BlurImage';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -47,7 +48,7 @@ export default function Academy() {
         'Camera View Synchronization',
         'Pro image enhancement & upscaling'
       ],
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCVDsovsMsejbbUgvR4XUyJsJ6AhicCZcHuM0kmVg5u42Mq543StzfDl_9dFCWtVljFda__dRKYVkJ5X0978C34UXwgxCUj_Uv4YkhaLbe-0WvbZoStH_AgqC6RdVk5v0WCHPT0gH2_Sh-QWIYJQd7l8H6UbPDQeFG4FHOkAd4EmTboi93PB-JP9s8FrsSGkDFmtsYbMFcoYeK1pD0j5BU_bA3snZNifzDTBE0QK4sKraj6aJVg7ghzN0bXden73qa2Kg_ltBvR1oM',
+      image: '/app/course-render.webp',
       link: registerLink,
       detailLink: '/courses/course-render-ai'
     },
@@ -66,7 +67,7 @@ export default function Academy() {
         'Standardized Prompt Formulas',
         'Clothes swap, animation, product TVCs,...'
       ],
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuACqGCgxZ_UYRyfxhYQmivHEfWXpZanlFhl755j3al3x6ilpB6MmrV1wlUFB0VuYdpBaAMrJeafQvFGQd-EpjGvrJpJHuAUVGKuuv3s_KuLhnuUglG9y9SdkqXCVmMiDpMa1dmBatNlxqqQM7VXPAciF_nrCR7R-tZDAMthsbVJ87XYaDlc7vyCKa9BrRk08mxSGpF6QN0-t20qNiJRxxAjYSCSmHmUoLuTaVk23t6eIu3Xox3wv9muzda6avvkjmzXs8rrDFgtplA',
+      image: '/app/course-video.webp',
       link: registerLink,
       detailLink: '/courses/course-video-ai'
     }
@@ -193,8 +194,8 @@ export default function Academy() {
               className="glass-card rounded-2xl md:rounded-[1.5rem] overflow-hidden border border-on-surface/10 hover:border-primary/30 transition-all flex flex-col"
             >
               <div className="h-48 md:h-60 relative overflow-hidden">
-                 <img src={course.image} className="w-full h-full object-cover" alt={course.title} />
-                 <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 bg-gradient-to-t from-background to-transparent">
+                 <BlurImage src={course.image} alt={course.title} eager />
+                 <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 bg-gradient-to-t from-background to-transparent pointer-events-none">
                     <h3 className="text-xl md:text-2xl font-headline font-black uppercase text-on-surface tracking-tight">{course.title}</h3>
                  </div>
               </div>
