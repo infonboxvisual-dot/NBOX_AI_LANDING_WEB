@@ -1,5 +1,5 @@
-import { FormEvent, useMemo, useState } from 'react';
-import { motion } from 'motion/react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
 import { MaterialIcon } from '../components/MaterialIcon';
 
@@ -17,10 +17,64 @@ type ContactCopy = {
     message: string;
   };
   submit: string;
+  sending: string;
+  cooldown: (sec: number) => string;
+  errors: {
+    network: string;
+    missing: string;
+    invalidEmail: string;
+    rateLimit: string;
+    generic: string;
+  };
+  thanks: {
+    title: string;
+    body: string;
+    close: string;
+  };
 };
 
 const MAPS_LINK = 'https://www.google.com/maps/place/286+%C4%90.+29+Th%C3%A1ng+3,+H%C3%B2a+Xu%C3%A2n,+%C4%90%C3%A0+N%E1%BA%B5ng+550000/data=!4m2!3m1!1s0x31421a031ec24dcb:0xa0b3219ac53073af';
 const MAPS_EMBED_SRC = 'https://www.google.com/maps?q=286+%C4%90%C6%B0%E1%BB%9Dng+29%2F3%2C+H%C3%B2a+Xu%C3%A2n%2C+C%E1%BA%A9m+L%E1%BB%87%2C+%C4%90%C3%A0+N%E1%BA%B5ng&output=embed';
+
+const COOLDOWN_KEY = 'contact-cooldown-until';
+const COOLDOWN_AFTER_SUCCESS_SEC = 60;
+const SESSION_HISTORY_KEY = 'contact-submit-history';
+const SESSION_LIMIT = 3;
+const SESSION_WINDOW_MS = 60 * 60 * 1000;
+
+function loadCooldown(): number {
+  if (typeof window === 'undefined') return 0;
+  const v = Number(window.localStorage.getItem(COOLDOWN_KEY));
+  if (!v || Number.isNaN(v)) return 0;
+  const remaining = Math.ceil((v - Date.now()) / 1000);
+  return remaining > 0 ? remaining : 0;
+}
+
+function setCooldown(seconds: number) {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(COOLDOWN_KEY, String(Date.now() + seconds * 1000));
+}
+
+function loadHistory(): number[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = window.localStorage.getItem(SESSION_HISTORY_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    if (!Array.isArray(arr)) return [];
+    const now = Date.now();
+    return arr.filter((t) => typeof t === 'number' && now - t < SESSION_WINDOW_MS);
+  } catch {
+    return [];
+  }
+}
+
+function pushHistory(): number[] {
+  if (typeof window === 'undefined') return [];
+  const arr = [...loadHistory(), Date.now()];
+  window.localStorage.setItem(SESSION_HISTORY_KEY, JSON.stringify(arr));
+  return arr;
+}
 
 export default function Contact() {
   const { language, t } = useLanguage();
@@ -41,6 +95,20 @@ export default function Contact() {
           message: 'Nhập nội dung bạn muốn gửi…',
         },
         submit: 'GỬI LIÊN HỆ',
+        sending: 'ĐANG GỬI…',
+        cooldown: (sec) => `VUI LÒNG CHỜ ${sec}S`,
+        errors: {
+          network: 'Không thể kết nối tới máy chủ. Vui lòng thử lại.',
+          missing: 'Vui lòng điền đầy đủ Họ tên, Email và Nội dung.',
+          invalidEmail: 'Email không hợp lệ.',
+          rateLimit: 'Bạn đã gửi quá nhiều lần. Vui lòng thử lại sau.',
+          generic: 'Có lỗi xảy ra. Vui lòng thử lại sau.',
+        },
+        thanks: {
+          title: 'CẢM ƠN BẠN!',
+          body: 'Cảm ơn bạn đã tin tưởng dịch vụ bên chúng tôi. Đội ngũ hỗ trợ sẽ liên hệ bạn trong thời gian sớm nhất.',
+          close: 'ĐÓNG',
+        },
       };
     }
 
@@ -58,6 +126,20 @@ export default function Contact() {
         message: 'How can we help you?',
       },
       submit: 'SEND MESSAGE',
+      sending: 'SENDING…',
+      cooldown: (sec) => `PLEASE WAIT ${sec}S`,
+      errors: {
+        network: 'Could not reach the server. Please try again.',
+        missing: 'Please fill in Name, Email, and Message.',
+        invalidEmail: 'Invalid email address.',
+        rateLimit: 'Too many submissions. Please try again later.',
+        generic: 'Something went wrong. Please try again later.',
+      },
+      thanks: {
+        title: 'THANK YOU!',
+        body: 'Thanks for reaching out. Our team will contact you as soon as possible.',
+        close: 'CLOSE',
+      },
     };
   }, [language]);
 
@@ -65,28 +147,113 @@ export default function Contact() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [hp, setHp] = useState(''); // honeypot
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [showThanks, setShowThanks] = useState(false);
+  const [cooldownSec, setCooldownSecState] = useState(0);
+  const mountedAtRef = useRef<number>(Date.now());
 
-  const onSubmit = (e: FormEvent) => {
+  useEffect(() => {
+    setCooldownSecState(loadCooldown());
+  }, []);
+
+  // Tick cooldown countdown every second when active.
+  useEffect(() => {
+    if (cooldownSec <= 0) return;
+    const id = setInterval(() => {
+      setCooldownSecState((prev) => {
+        const next = prev - 1;
+        return next > 0 ? next : 0;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [cooldownSec]);
+
+  const submitDisabled = status === 'loading' || cooldownSec > 0;
+
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const body = [
-      `${copy.name}: ${name}`,
-      `${copy.email}: ${email}`,
-      `${copy.phone}: ${phone}`,
-      '',
-      `${copy.message}:`,
-      message,
-    ].join('\n');
+    if (submitDisabled) return;
 
-    const mailto = `mailto:info.nboxvisual@gmail.com?subject=${encodeURIComponent(
-      language === 'vi' ? `[LIÊN HỆ WEB] ${name || 'Khách'}` : `[WEB CONTACT] ${name || 'Guest'}`
-    )}&body=${encodeURIComponent(body)}`;
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      setStatus('error');
+      setErrorMsg(copy.errors.missing);
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setStatus('error');
+      setErrorMsg(copy.errors.invalidEmail);
+      return;
+    }
 
-    window.location.href = mailto;
+    const history = loadHistory();
+    if (history.length >= SESSION_LIMIT) {
+      setStatus('error');
+      setErrorMsg(copy.errors.rateLimit);
+      setCooldown(COOLDOWN_AFTER_SUCCESS_SEC);
+      setCooldownSecState(COOLDOWN_AFTER_SUCCESS_SEC);
+      return;
+    }
+
+    setStatus('loading');
+    setErrorMsg(null);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          message: message.trim(),
+          hp,
+          ts: mountedAtRef.current,
+        }),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; retryAfterSec?: number };
+
+      if (res.ok && data.ok) {
+        pushHistory();
+        setCooldown(COOLDOWN_AFTER_SUCCESS_SEC);
+        setCooldownSecState(COOLDOWN_AFTER_SUCCESS_SEC);
+        setShowThanks(true);
+        setStatus('idle');
+        setName('');
+        setEmail('');
+        setPhone('');
+        setMessage('');
+        mountedAtRef.current = Date.now();
+        return;
+      }
+
+      if (res.status === 429) {
+        const wait = data.retryAfterSec ?? COOLDOWN_AFTER_SUCCESS_SEC;
+        setCooldown(wait);
+        setCooldownSecState(wait);
+        setStatus('error');
+        setErrorMsg(copy.errors.rateLimit);
+        return;
+      }
+
+      setStatus('error');
+      if (data.error === 'invalid_email') setErrorMsg(copy.errors.invalidEmail);
+      else if (data.error === 'missing_required') setErrorMsg(copy.errors.missing);
+      else setErrorMsg(copy.errors.generic);
+    } catch {
+      setStatus('error');
+      setErrorMsg(copy.errors.network);
+    }
   };
 
   const fieldClass =
-    'w-full rounded-xl border border-outline-variant/25 bg-surface-variant/40 p-4 font-sans text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none md:p-4 md:text-base';
+    'w-full rounded-xl border border-outline-variant/25 bg-surface-variant/40 p-4 font-sans text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none md:p-4 md:text-base disabled:opacity-50 disabled:cursor-not-allowed';
   const labelClass = 'block text-[10px] font-black uppercase tracking-[0.2em] text-primary';
+
+  const submitLabel =
+    cooldownSec > 0 ? copy.cooldown(cooldownSec) : status === 'loading' ? copy.sending : copy.submit;
 
   return (
     <main className="overflow-hidden px-6 pb-20 pt-10 md:px-8 md:pb-28 md:pt-14">
@@ -108,7 +275,7 @@ export default function Contact() {
             {copy.sectionTitle}
           </h2>
 
-          <form onSubmit={onSubmit} className="space-y-5 md:space-y-6">
+          <form onSubmit={onSubmit} className="space-y-5 md:space-y-6" noValidate>
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
               <div className="space-y-2">
                 <label htmlFor="contact-name" className={labelClass}>{copy.name}</label>
@@ -117,6 +284,8 @@ export default function Contact() {
                   name="name"
                   type="text"
                   autoComplete="name"
+                  required
+                  disabled={status === 'loading'}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={copy.placeholders.name}
@@ -131,6 +300,7 @@ export default function Contact() {
                   name="phone"
                   type="tel"
                   autoComplete="tel"
+                  disabled={status === 'loading'}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder={copy.placeholders.phone}
@@ -146,6 +316,8 @@ export default function Contact() {
                 name="email"
                 type="email"
                 autoComplete="email"
+                required
+                disabled={status === 'loading'}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={copy.placeholders.email}
@@ -159,18 +331,45 @@ export default function Contact() {
                 id="contact-message"
                 name="message"
                 rows={4}
+                required
+                disabled={status === 'loading'}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder={copy.placeholders.message}
-                className="min-h-[120px] w-full resize-y rounded-xl border border-outline-variant/25 bg-surface-variant/40 p-4 font-sans text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none md:p-4 md:text-base"
+                className="min-h-[120px] w-full resize-y rounded-xl border border-outline-variant/25 bg-surface-variant/40 p-4 font-sans text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none md:p-4 md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
 
+            {/* Honeypot — hidden from humans, bots will fill it. */}
+            <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden" tabIndex={-1}>
+              <label>
+                Website
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={hp}
+                  onChange={(e) => setHp(e.target.value)}
+                />
+              </label>
+            </div>
+
+            {errorMsg && (
+              <p
+                role="alert"
+                className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300"
+              >
+                {errorMsg}
+              </p>
+            )}
+
             <button
               type="submit"
-              className="w-full rounded-xl bg-primary py-4 font-headline text-sm font-black uppercase tracking-[0.2em] text-on-primary shadow-[0_0_40px_rgba(203,123,62,0.28)] transition-transform hover:scale-[1.01] active:scale-[0.99] md:py-5 md:text-base"
+              disabled={submitDisabled}
+              className="w-full rounded-xl bg-primary py-4 font-headline text-sm font-black uppercase tracking-[0.2em] text-on-primary shadow-[0_0_40px_rgba(203,123,62,0.28)] transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100 md:py-5 md:text-base"
             >
-              {copy.submit}
+              {submitLabel}
             </button>
           </form>
         </motion.section>
@@ -290,6 +489,57 @@ export default function Contact() {
           </div>
         </motion.section>
       </div>
+
+      <AnimatePresence>
+        {showThanks && (
+          <motion.div
+            key="thanks-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 px-6 py-10 backdrop-blur-md"
+            onClick={() => setShowThanks(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="thanks-title"
+          >
+            <motion.div
+              key="thanks-card"
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.28, ease: 'easeOut' }}
+              onClick={(e) => e.stopPropagation()}
+              className="glass-card relative max-w-md w-full rounded-3xl border border-primary/30 p-8 text-center shadow-[0_30px_60px_rgba(0,0,0,0.5)] md:p-10"
+            >
+              <button
+                type="button"
+                onClick={() => setShowThanks(false)}
+                aria-label={copy.thanks.close}
+                className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-on-surface/5 text-on-surface-variant transition-colors hover:bg-on-surface/10 hover:text-on-surface"
+              >
+                <MaterialIcon name="close" className="size-5" strokeWidth={2} />
+              </button>
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/15 border border-primary/30">
+                <MaterialIcon name="check_circle" className="size-9 text-primary" strokeWidth={2} />
+              </div>
+              <h3 id="thanks-title" className="mb-3 font-headline text-2xl font-black uppercase tracking-tighter text-on-surface md:text-3xl">
+                {copy.thanks.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-on-surface-variant md:text-base">
+                {copy.thanks.body}
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowThanks(false)}
+                className="mt-8 w-full rounded-xl bg-primary py-3 font-headline text-xs font-black uppercase tracking-[0.2em] text-on-primary shadow-[0_0_30px_rgba(164,88,42,0.35)] transition-transform hover:scale-[1.01] active:scale-95 md:text-sm"
+              >
+                {copy.thanks.close}
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

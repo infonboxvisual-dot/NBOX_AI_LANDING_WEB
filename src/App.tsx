@@ -53,7 +53,7 @@ function AppShell() {
   return (
     <div className="flex min-h-screen flex-col bg-background selection:bg-primary/20 selection:text-on-primary">
       <Header />
-      <div className="flex-grow">
+      <div className="flex-grow pt-16 md:pt-[76px]">
         <Suspense
           fallback={
             <div className="flex min-h-[45vh] flex-grow items-center justify-center py-24">

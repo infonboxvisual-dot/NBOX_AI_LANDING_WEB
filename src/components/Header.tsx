@@ -74,7 +74,7 @@ export default function Header() {
 
   return (
     <header
-      className="site-header sticky top-0 z-50 h-16 w-full border-b border-primary/10 bg-background/72 backdrop-blur-2xl shadow-[0_0_30px_rgba(0,0,0,0.24)] md:h-[76px]"
+      className="site-header fixed inset-x-0 top-0 z-50 h-16 w-full border-b border-primary/10 bg-background/72 backdrop-blur-2xl shadow-[0_0_30px_rgba(0,0,0,0.24)] md:h-[76px]"
     >
       <div className="flex h-full w-full items-center justify-between gap-4 px-6 md:gap-6 md:px-8">
         <div className="flex items-center gap-2 md:gap-3">

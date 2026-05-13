@@ -99,7 +99,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    /* `overflow-x: clip` prevents horizontal scroll WITHOUT creating a new scroll
+       container, so `position: sticky` on the header continues working on mobile.
+       (overflow-x: hidden establishes a scroll container that scopes sticky to html.) */
+    overflow-x: clip;
   }
   body {
     @apply bg-background text-on-surface font-sans font-normal antialiased transition-colors duration-300;

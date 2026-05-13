@@ -3,30 +3,62 @@ import path from 'node:path';
 import sharp from 'sharp';
 
 const ROOT = process.cwd();
-const SRC_DIR = path.join(ROOT, 'public', 'app');
-const BACKUP_DIR = path.join(ROOT, 'assets-source', 'app', 'originals');
 const OUT_PLACEHOLDERS = path.join(ROOT, 'src', 'data', 'imagePlaceholders.ts');
-
-const FILES = [
-  'render',
-  'video',
-  'visual',
-  'texture',
-  'human-enhancer',
-  'virtual',
-  'prompt',
-  'photo-enhancer',
-  'kitchen',
-  'tool-render',
-  'tool-video',
-  'course-render',
-  'course-video',
-];
 
 const TARGET_WIDTH = 1280;
 const TARGET_QUALITY = 78;
 const PLACEHOLDER_WIDTH = 24;
 const PLACEHOLDER_QUALITY = 40;
+
+/**
+ * Groups of images to optimize. Each item runs the same pipeline:
+ *   1) Backup original (auto-detect ext from candidates) → assets-source/<group>/originals/
+ *   2) Resize to TARGET_WIDTH → public/<group>/<name>.webp
+ *   3) Build base64 placeholder
+ */
+const GROUPS = [
+  {
+    name: 'app',
+    srcDir: path.join(ROOT, 'public', 'app'),
+    backupDir: path.join(ROOT, 'assets-source', 'app', 'originals'),
+    urlPrefix: '/app',
+    srcExts: ['jpeg', 'jpg', 'png'],
+    files: [
+      'render',
+      'video',
+      'visual',
+      'texture',
+      'human-enhancer',
+      'virtual',
+      'prompt',
+      'photo-enhancer',
+      'kitchen',
+      'tool-render',
+      'tool-video',
+      'course-render',
+      'course-video',
+    ],
+  },
+  {
+    name: 'products',
+    srcDir: path.join(ROOT, 'public', 'products'),
+    backupDir: path.join(ROOT, 'assets-source', 'products', 'originals'),
+    urlPrefix: '/products',
+    srcExts: ['png', 'jpg', 'jpeg'],
+    files: [
+      'pr1',
+      'pr2',
+      'pr3',
+      'pr4',
+      'pr5',
+      'pr7',
+      'pr8',
+      'pr9',
+      'service-render',
+      'service-enhance',
+    ],
+  },
+];
 
 async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true });
@@ -41,41 +73,42 @@ async function fileExists(p) {
   }
 }
 
-async function findSource(name) {
-  // Prefer original backup if present, else use whatever lives in public/app
-  const backupPath = path.join(BACKUP_DIR, `${name}.jpeg`);
-  if (await fileExists(backupPath)) return backupPath;
-
-  const livePath = path.join(SRC_DIR, `${name}.jpeg`);
-  if (await fileExists(livePath)) return livePath;
-
+async function findSourceWithExt(group, name) {
+  // Prefer backup if present (idempotent re-runs)
+  for (const ext of group.srcExts) {
+    const candidate = path.join(group.backupDir, `${name}.${ext}`);
+    if (await fileExists(candidate)) return { source: candidate, ext };
+  }
+  for (const ext of group.srcExts) {
+    const candidate = path.join(group.srcDir, `${name}.${ext}`);
+    if (await fileExists(candidate)) return { source: candidate, ext };
+  }
   return null;
 }
 
-async function backupIfNeeded(name) {
-  const livePath = path.join(SRC_DIR, `${name}.jpeg`);
-  const backupPath = path.join(BACKUP_DIR, `${name}.jpeg`);
-  if ((await fileExists(livePath)) && !(await fileExists(backupPath))) {
-    await fs.copyFile(livePath, backupPath);
+async function backupIfNeeded(group, name, ext) {
+  const live = path.join(group.srcDir, `${name}.${ext}`);
+  const backup = path.join(group.backupDir, `${name}.${ext}`);
+  if ((await fileExists(live)) && !(await fileExists(backup))) {
+    await fs.copyFile(live, backup);
     return true;
   }
   return false;
 }
 
-async function processOne(name) {
-  await backupIfNeeded(name);
-  const source = await findSource(name);
-  if (!source) {
-    console.warn(`[skip] no source for ${name}`);
+async function processOne(group, name) {
+  const found = await findSourceWithExt(group, name);
+  if (!found) {
+    console.warn(`[skip] ${group.name}/${name} — no source`);
     return null;
   }
+  await backupIfNeeded(group, name, found.ext);
 
-  const buf = await fs.readFile(source);
+  const buf = await fs.readFile(found.source);
   const image = sharp(buf, { failOnError: false });
   const meta = await image.metadata();
 
-  const outWebp = path.join(SRC_DIR, `${name}.webp`);
-
+  const outWebp = path.join(group.srcDir, `${name}.webp`);
   await image
     .clone()
     .resize({ width: TARGET_WIDTH, withoutEnlargement: true })
@@ -89,14 +122,15 @@ async function processOne(name) {
     .toBuffer();
 
   const placeholder = `data:image/webp;base64,${placeholderBuf.toString('base64')}`;
-
-  const [srcStat, webpStat] = await Promise.all([fs.stat(source), fs.stat(outWebp)]);
+  const [srcStat, webpStat] = await Promise.all([fs.stat(found.source), fs.stat(outWebp)]);
 
   return {
+    group: group.name,
     name,
     sourceBytes: srcStat.size,
     webpBytes: webpStat.size,
     srcDim: `${meta.width}x${meta.height}`,
+    url: `${group.urlPrefix}/${name}.webp`,
     placeholder,
   };
 }
@@ -112,22 +146,24 @@ async function writePlaceholders(map) {
 }
 
 async function main() {
-  await ensureDir(BACKUP_DIR);
-
   const placeholders = {};
   const results = [];
-  for (const name of FILES) {
-    const result = await processOne(name);
-    if (result) {
-      results.push(result);
-      placeholders[`/app/${name}.webp`] = result.placeholder;
+
+  for (const group of GROUPS) {
+    await ensureDir(group.backupDir);
+    for (const name of group.files) {
+      const result = await processOne(group, name);
+      if (result) {
+        results.push(result);
+        placeholders[result.url] = result.placeholder;
+      }
     }
   }
 
   await writePlaceholders(placeholders);
 
   const summary = results.map((r) => ({
-    name: r.name,
+    file: `${r.group}/${r.name}`,
     src: `${(r.sourceBytes / 1024 / 1024).toFixed(2)} MB (${r.srcDim})`,
     webp: `${(r.webpBytes / 1024).toFixed(1)} KB`,
     saving: `${(100 - (r.webpBytes / r.sourceBytes) * 100).toFixed(1)}%`,
