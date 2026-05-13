@@ -23,62 +23,71 @@ interface Service {
 const ServiceMedia = ({ service }: { service: Service }) => {
   const [monaEnabled, setMonaEnabled] = useState(false);
   const ensureMonaPreconnect = () => {
-    const id = 'mona-preconnect';
-    if (document.getElementById(id)) return;
-    const link = document.createElement('link');
-    link.id = id;
-    link.rel = 'preconnect';
-    link.href = 'https://video.mona-cloud.com';
-    document.head.appendChild(link);
+    const targets = service.video?.includes('facebook.com')
+      ? [{ id: 'fb-preconnect', href: 'https://www.facebook.com' }]
+      : [{ id: 'mona-preconnect', href: 'https://video.mona-cloud.com' }];
+    for (const { id, href } of targets) {
+      if (document.getElementById(id)) continue;
+      const link = document.createElement('link');
+      link.id = id;
+      link.rel = 'preconnect';
+      link.href = href;
+      document.head.appendChild(link);
+    }
   };
 
   return (
     <div className="w-full md:w-[440px] flex-shrink-0">
       <div className="bg-black aspect-video rounded-2xl overflow-hidden flex items-center justify-center relative border border-on-surface/10 shadow-2xl group">
         {service.video ? (
-          service.video.includes('mona-cloud.com') ? (
-            monaEnabled ? (
-              <iframe 
+          monaEnabled ? (
+            service.video.includes('mona-cloud.com') || service.video.includes('facebook.com') ? (
+              <iframe
                 src={service.video}
-                className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
+                className="w-full h-full"
                 loading="lazy"
-                allow="autoplay; encrypted-media"
+                scrolling="no"
+                frameBorder={0}
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                 allowFullScreen
                 title={service.title}
               />
             ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  ensureMonaPreconnect();
-                  setMonaEnabled(true);
-                }}
-                aria-label={`Play ${service.title}`}
-                className="group/play flex h-full w-full items-center justify-center bg-black/30 transition-colors hover:bg-black/40"
-              >
-                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-on-primary shadow-[0_0_40px_rgba(164,88,42,0.55)] transition-transform group-hover/play:scale-110 active:scale-95">
-                  <MaterialIcon name="play_arrow" className="size-10" strokeWidth={2.5} />
-                </span>
-              </button>
+              <video
+                src={service.video}
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls
+                preload="metadata"
+                className="w-full h-full object-cover"
+              />
             )
           ) : (
-            <video 
-              src={service.video} 
-              autoPlay 
-              muted 
-              loop 
-              playsInline
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
-            />
+            <button
+              type="button"
+              onClick={() => {
+                ensureMonaPreconnect();
+                setMonaEnabled(true);
+              }}
+              aria-label={`Play ${service.title}`}
+              className="group/play flex h-full w-full items-center justify-center bg-black/30 transition-colors hover:bg-black/40"
+            >
+              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-on-primary shadow-[0_0_40px_rgba(164,88,42,0.55)] transition-transform group-hover/play:scale-110 active:scale-95">
+                <MaterialIcon name="play_arrow" className="size-10" strokeWidth={2.5} />
+              </span>
+            </button>
           )
         ) : (
           <div className="relative w-full h-full">
-            <img 
-              src={service.image} 
-              className="w-full h-full object-cover grayscale brightness-90 group-hover:grayscale-0 group-hover:brightness-105 transition-all duration-700" 
-              alt="" 
+            <img
+              src={service.image}
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              alt=""
             />
-            <div className="absolute inset-0 bg-on-surface/10 group-hover:bg-transparent transition-colors duration-500"></div>
           </div>
         )}
         <div className="absolute inset-0 border-[8px] border-on-surface/5 pointer-events-none rounded-2xl"></div>
@@ -248,7 +257,7 @@ const Services = () => {
         t('services.render.f3'),
         t('services.render.f4'),
       ],
-      image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070&auto=format&fit=crop',
+      image: '/products/service-render.webp',
       icon: 'architecture',
       details: {
         prices: [
@@ -272,7 +281,7 @@ const Services = () => {
         t('services.improve.f3'),
         t('services.improve.f4'),
       ],
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop',
+      image: '/products/service-enhance.webp',
       icon: 'auto_awesome',
       details: {
         prices: [
@@ -295,7 +304,7 @@ const Services = () => {
         t('services.video.f2'),
         t('services.video.f3'),
       ],
-      video: 'https://video.mona-cloud.com/api/video/?user=28065060&video=1743152133-bi-kip-01&protected=False&version=v2&token=gAAAAABn5mZR41IHRUShuRHTypXBu00l7H-HYNXqCFR4sLULhzAH6FRWKfhKMMOgpbGsOCBSb8Vl6MNAISaSx6NiaO8jAECFwkHUcujBTvkx158mHd0p0iI%3D&autoplay=true&fitVideo=true&draggable=true&controller=false&loop=true&muted=true',
+      video: '/video2.mp4',
       icon: 'movie',
       details: {
         prices: [

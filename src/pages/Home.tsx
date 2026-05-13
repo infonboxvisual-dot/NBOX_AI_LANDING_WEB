@@ -19,16 +19,16 @@ export default function Home() {
     if (language === 'vi') {
       return {
         eyebrow: 'AUTO SKETCH / VILLA FORM STUDY',
-        title: 'BIỆT THỰ\nĐƯỢC VẼ TỰ ĐỘNG',
-        caption: 'Từ khối nhà đến đường nét kiến trúc, sketch được dựng ngay trong hero để truyền tải ý tưởng trước khi render.',
+        title: 'PHÁC THẢO\nTỰ ĐỘNG BẰNG AI',
+        caption: 'AI phác thảo ý tưởng kiến trúc của bạn — từ khối nhà đến đường nét chi tiết — chỉ trong vài giây.',
       };
     }
 
     return {
       eyebrow: 'AUTO SKETCH / VILLA FORM STUDY',
-      title: 'VILLA\nAUTO-DRAWN',
+      title: 'AI-POWERED\nAUTO SKETCH',
       caption:
-        'From soft, hazy sketch lines to a polished villa vision, the hero transforms the drawing into crisp architecture as the final render fades in.',
+        'AI sketches your architectural ideas — from massing to fine lines — in just a few seconds.',
     };
   }, [language]);
 
@@ -115,7 +115,7 @@ export default function Home() {
         "With AI, just one exterior image allows the system to analyze style and suggest matching interiors.",
         "The result is a harmonious, unified design that saves significant time."
       ],
-      media: { type: 'video', url: "https://video.mona-cloud.com/api/video/?user=28065060&video=1743152133-bi-kip-01&protected=False&version=v2&token=gAAAAABn5mZR41IHRUShuRHTypXBu00l7H-HYNXqCFR4sLULhzAH6FRWKfhKMMOgpbGsOCBSb8Vl6MNAISaSx6NiaO8jAECFwkHUcujBTvkx158mHd0p0iI%3D&autoplay=true&fitVideo=true&draggable=true&controller=false&loop=true&muted=true" }
+      media: { type: 'image', url: "/products/pr1.webp" }
     },
     {
       id: 1,
@@ -130,7 +130,7 @@ export default function Home() {
         "However, converting sketches to complete images is traditionally time-consuming and costly.",
         "With AI, simply upload a sketch and the system automatically generates detailed, vivid imagery."
       ],
-      media: { type: 'video', url: "https://video.mona-cloud.com/api/video/?user=28065060&video=1743144576-bi-kip-02&protected=False&version=v2&token=gAAAAABn5mNZrjBMyrIHZmo9nkiMBuwYO0qAcjY5wE4FkzE6AWXpXbc7h439LjOSgGH9f9ZYqrqOe5SKbymOocp9aexEDzexKmVL1z0SQfz3779yM1_yhRU%3D&autoplay=true&fitVideo=true&draggable=true&controller=false&loop=true&muted=true" }
+      media: { type: 'image', url: "/products/pr2.webp" }
     },
     {
       id: 2,
@@ -145,7 +145,7 @@ export default function Home() {
         "With AI, upgrade photos easily: improve sharpness, remove noise, and sync color tones.",
         "This tool saves time and ensures images meet professional standards."
       ],
-      media: { type: 'image', url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAcbHGx3_ulsG9DjNHHiZGsVdMaoTqBNmWYh2Nn_m6-vbn0toA-Rv95pXJikbBGfHF039Z23L2NfYJmHbxhPNh4N7MNV9t37r8Aqto2KTJhn_gJvTxhkaFUO2tF_D9IHRbhDk2s5fzKboiBB5QkPu_-YobXLHKm4sJ3vFDasgvGwE8eix9vyjQW4idVvm0mkz46QVfYz2uP_Sq_CV7pV8ne48rEOIIpuVGfM0zGx-yVb01xD8oWO8lseIyl3ZpS5aJlES4TkLiO25g" }
+      media: { type: 'image', url: "/products/pr3.webp" }
     },
     {
       id: 3,
@@ -160,8 +160,7 @@ export default function Home() {
         "With AI, generate hundreds of variations in minutes from a single original image.",
         "This solution optimizes time and provides numerous high-quality options."
       ],
-      // NOTE: Replace broken aida-public URL (400) with stable image.
-      media: { type: 'image', url: "https://images.unsplash.com/photo-1529421308418-eab98863cee5?q=80&w=1600&auto=format&fit=crop" }
+      media: { type: 'image', url: "/products/pr4.webp" }
     },
     {
       id: 4,
@@ -176,7 +175,7 @@ export default function Home() {
         "Nbox's special techniques generate alternative views with up to 90% accuracy.",
         "Supports deeper spatial analysis and ensures total project harmony."
       ],
-      media: { type: 'image', url: "https://lh3.googleusercontent.com/aida-public/AB6AXuCXnAvFguPWsfDncIsiz_VTsRbZnLD-ijwKpsba8dgOpyZOwbvEPpw4IAIEephJnVt2IFPnCQlgPp2C8f5LPdx13rRLuUafk0h137sv7TUUoM5BkFhczENA-Hdd5l4LgoU7P8v-DBtzEsYnq7KGP1wBymFAmFKjifmjsVtFJadkj1lrN-ADv54kFiw6EerlDj1oTYSBUiUmGcKPLLGBLuT8d9YdZ7iEslxdmowi1tTNOtLesnq16RndHiXPrFubMHInhrzM366NE7o" }
+      media: { type: 'image', url: "/products/pr5.webp" }
     },
     {
       id: 5,
@@ -191,22 +190,7 @@ export default function Home() {
         "With AI, generate vivid videos from a single image in extremely short time.",
         "Automatically adds movement effects, lighting, and professional camera angles."
       ],
-      media: { type: 'image', url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBQPetl3uK4hY15_JfiFUl1jkylIYwHfM1j3gdOVWBLb5e2kUJI-zMKEeyJt9Aqd7QtKCZW-XTsoFYBwuyanuFkx2sBHmh1OMF9W4HPR91c2qXEJhD-TxbhyGXgidclAVNGskg72Ok1TmdWm7Z9zbdsmuUKKJRAFcGNZm0_BCM5FG3vu3HDut9-p9gEMmi0UsRYMK1j1BeV_S60QJDHeOV5gw-5fPhwY4IcNhxcHzKfAuahwSItAk1VZY_AVQdTm6EoEXrAM5tPXqs" }
-    },
-    {
-      id: 6,
-      title: "Home\nRenovation",
-      icon: "home_repair_service",
-      bullets: language === 'vi' ? [
-        "Cải tạo không gian thường đòi hỏi nhiều ý tưởng sáng tạo và thời gian để thử nghiệm.",
-        "Với AI, chỉ cần hình ảnh hiện trạng, hệ thống sẽ tự động đưa ra các gợi ý cải tạo trọn gói.",
-        "Tiết kiệm đáng kể thời gian và công sức trong quá trình lập kế hoạch."
-      ] : [
-        "Space renovation requires creative ideas and significant testing time.",
-        "With AI, just provide current photos and the system suggests full renovation plans.",
-        "Significantly saves time and effort during the planning phase."
-      ],
-      media: { type: 'image', url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAcbHGx3_ulsG9DjNHHiZGsVdMaoTqBNmWYh2Nn_m6-vbn0toA-Rv95pXJikbBGfHF039Z23L2NfYJmHbxhPNh4N7MNV9t37r8Aqto2KTJhn_gJvTxhkaFUO2tF_D9IHRbhDk2s5fzKboiBB5QkPu_-YobXLHKm4sJ3vFDasgvGwE8eix9vyjQW4idVvm0mkz46QVfYz2uP_Sq_CV7pV8ne48rEOIIpuVGfM0zGx-yVb01xD8oWO8lseIyl3ZpS5aJlES4TkLiO25g" }
+      media: { type: 'video', url: "/video1.mp4" }
     },
     {
       id: 7,
@@ -221,22 +205,7 @@ export default function Home() {
         "AI automatically adds furniture, decor, and context from a single empty room photo.",
         "Easily test multiple styles without actual construction costs."
       ],
-      media: { type: 'image', url: "https://lh3.googleusercontent.com/aida-public/AB6AXuCXnAvFguPWsfDncIsiz_VTsRbZnLD-ijwKpsba8dgOpyZOwbvEPpw4IAIEephJnVt2IFPnCQlgPp2C8f5LPdx13rRLuUafk0h137sv7TUUoM5BkFhczENA-Hdd5l4LgoU7P8v-DBtzEsYnq7KGP1wBymFAmFKjifmjsVtFJadkj1lrN-ADv54kFiw6EerlDj1oTYSBUiUmGcKPLLGBLuT8d9YdZ7iEslxdmowi1tTNOtLesnq16RndHiXPrFubMHInhrzM366NE7o" }
-    },
-    {
-      id: 8,
-      title: "Post\nProduction",
-      icon: "video_settings",
-      bullets: language === 'vi' ? [
-        "Hậu kỳ hình ảnh thường mất nhiều thời gian để chỉnh sửa ánh sáng và màu sắc.",
-        "Với AI, mọi công việc này được tự động hóa: cân chỉnh màu, nâng cấp chất lượng chỉ trong vài giây.",
-        "Kết quả là hình ảnh chuyên nghiệp mà không tốn quá nhiều công sức."
-      ] : [
-        "Image post-production usually takes ages to fix lighting and color.",
-        "With AI, this is automated: color balance and quality upgrades in seconds.",
-        "The result is professional-grade imagery with minimal effort."
-      ],
-      media: { type: 'image', url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBQPetl3uK4hY15_JfiFUl1jkylIYwHfM1j3gdOVWBLb5e2kUJI-zMKEeyJt9Aqd7QtKCZW-XTsoFYBwuyanuFkx2sBHmh1OMF9W4HPR91c2qXEJhD-TxbhyGXgidclAVNGskg72Ok1TmdWm7Z9zbdsmuUKKJRAFcGNZm0_BCM5FG3vu3HDut9-p9gEMmi0UsRYMK1j1BeV_S60QJDHeOV5gw-5fPhwY4IcNhxcHzKfAuahwSItAk1VZY_AVQdTm6EoEXrAM5tPXqs" }
+      media: { type: 'image', url: "/products/pr7.webp" }
     },
     {
       id: 9,
@@ -251,7 +220,7 @@ export default function Home() {
         "Just input an idea, and AI generates an aesthetic, synchronized moodboard.",
         "Saves time while maintaining high aesthetic efficiency."
       ],
-      media: { type: 'image', url: "https://images.unsplash.com/photo-1529421308418-eab98863cee5?q=80&w=1600&auto=format&fit=crop" }
+      media: { type: 'image', url: "/products/pr8.webp" }
     },
     {
       id: 10,
@@ -266,37 +235,7 @@ export default function Home() {
         "AI Inpainting lets you select areas to fix and automates completion in the original style.",
         "Processes images quickly, creating natural and impressive results."
       ],
-      media: { type: 'image', url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAcbHGx3_ulsG9DjNHHiZGsVdMaoTqBNmWYh2Nn_m6-vbn0toA-Rv95pXJikbBGfHF039Z23L2NfYJmHbxhPNh4N7MNV9t37r8Aqto2KTJhn_gJvTxhkaFUO2tF_D9IHRbhDk2s5fzKboiBB5QkPu_-YobXLHKm4sJ3vFDasgvGwE8eix9vyjQW4idVvm0mkz46QVfYz2uP_Sq_CV7pV8ne48rEOIIpuVGfM0zGx-yVb01xD8oWO8lseIyl3ZpS5aJlES4TkLiO25g" }
-    },
-    {
-      id: 11,
-      title: "Image\nOutpainting",
-      icon: "aspect_ratio",
-      bullets: language === 'vi' ? [
-        "Khi hình ảnh không phù hợp với tỷ lệ mong muốn cho dàn trang hoặc slide.",
-        "AI Outpainting mở rộng hình ảnh dựa trên nội dung gốc, tạo phần bổ sung liền mạch.",
-        "Đảm bảo sản phẩm hoàn hảo mà không thấy ranh giới giữa cũ và mới."
-      ] : [
-        "When an image doesn't fit the desired aspect ratio for layouts or slides.",
-        "AI Outpainting expands the image based on original content, creating seamless additions.",
-        "Ensures a perfect product with no visible borders between old and new."
-      ],
-      media: { type: 'image', url: "https://lh3.googleusercontent.com/aida-public/AB6AXuCXnAvFguPWsfDncIsiz_VTsRbZnLD-ijwKpsba8dgOpyZOwbvEPpw4IAIEephJnVt2IFPnCQlgPp2C8f5LPdx13rRLuUafk0h137sv7TUUoM5BkFhczENA-Hdd5l4LgoU7P8v-DBtzEsYnq7KGP1wBymFAmFKjifmjsVtFJadkj1lrN-ADv54kFiw6EerlDj1oTYSBUiUmGcKPLLGBLuT8d9YdZ7iEslxdmowi1tTNOtLesnq16RndHiXPrFubMHInhrzM366NE7o" }
-    },
-    {
-      id: 12,
-      title: "Visual\nStorytelling",
-      icon: "auto_stories",
-      bullets: language === 'vi' ? [
-        "Hình render thông thường dễ bị khô cứng, thiếu cảm xúc.",
-        "Với AI, thêm hoạt động, con người, ánh sáng để kể một câu chuyện trong không gian.",
-        "Giúp khách hàng dễ cảm nhận và ra quyết định chốt dự án nhanh hơn."
-      ] : [
-        "Standard renders can often feel stiff and emotionless.",
-        "With AI, add activities, people, and lighting to tell a story within the space.",
-        "Helps clients connect emotionally and make project decisions faster."
-      ],
-      media: { type: 'image', url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBQPetl3uK4hY15_JfiFUl1jkylIYwHfM1j3gdOVWBLb5e2kUJI-zMKEeyJt9Aqd7QtKCZW-XTsoFYBwuyanuFkx2sBHmh1OMF9W4HPR91c2qXEJhD-TxbhyGXgidclAVNGskg72Ok1TmdWm7Z9zbdsmuUKKJRAFcGNZm0_BCM5FG3vu3HDut9-p9gEMmi0UsRYMK1j1BeV_S60QJDHeOV5gw-5fPhwY4IcNhxcHzKfAuahwSItAk1VZY_AVQdTm6EoEXrAM5tPXqs" }
+      media: { type: 'image', url: "/products/pr9.webp" }
     }
   ];
 
@@ -345,11 +284,22 @@ export default function Home() {
             ref={heroCopyRef}
             className="relative z-10 max-w-3xl"
           >
-            <h1 className="mb-6 break-words whitespace-pre-line text-3xl font-headline font-extrabold uppercase leading-[1.05] tracking-tighter text-on-surface sm:text-4xl md:text-5xl lg:text-6xl">
+            <h1 className="mb-6 break-words text-3xl font-headline font-extrabold uppercase leading-[1.2] tracking-tighter text-on-surface sm:text-4xl md:text-5xl lg:text-6xl">
               {language === 'vi' ? (
-                <>NBOX AI -<br/><span className="italic">HỆ SINH THÁI AI DÀNH CHO KIẾN TRÚC</span></>
+                <>
+                  NBOX AI -<br />
+                  <span className="italic">HỆ SINH THÁI AI DÀNH CHO</span>
+                  <span className="mt-2 block italic text-primary text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+                    KIẾN TRÚC
+                  </span>
+                </>
               ) : (
-                <>NBOX AI -<br/>ARCHITECTURAL <span className="italic">ECOSYSTEM</span></>
+                <>
+                  NBOX AI -<br />
+                  <span className="mt-2 block italic text-primary text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.2]">
+                    ARCHITECTURAL<br />ECOSYSTEM
+                  </span>
+                </>
               )}
             </h1>
             <p className="mb-10 max-w-xl text-base leading-relaxed text-on-surface-variant md:text-lg lg:text-xl font-sans">
@@ -359,13 +309,14 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => navigate('/services')}
-                className="rounded-xl bg-primary px-8 py-4 text-center font-headline font-extrabold uppercase tracking-widest text-on-primary shadow-[0_0_40px_rgba(203,123,62,0.28)] transition-transform hover:scale-[1.01]"
+                className="cursor-pointer rounded-xl bg-primary px-8 py-4 text-center font-headline font-extrabold uppercase tracking-widest text-on-primary shadow-[0_0_40px_rgba(203,123,62,0.28)] transition-transform hover:scale-[1.01]"
               >
                 {language === 'vi' ? 'XEM DỊCH VỤ' : 'VIEW SERVICES'}
               </button>
-              <button 
+              <button
+                type="button"
                 onClick={() => document.getElementById('design-in-action')?.scrollIntoView({ behavior: 'smooth' })}
-                className="glass-card rounded-xl px-8 py-4 font-headline font-extrabold uppercase tracking-widest text-on-surface transition-colors hover:bg-surface-variant"
+                className="cursor-pointer glass-card rounded-xl px-8 py-4 font-headline font-extrabold uppercase tracking-widest text-on-surface transition-colors hover:bg-surface-variant"
               >
                 {t('home.hero.cta.demo')}
               </button>
@@ -458,33 +409,33 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch h-auto lg:h-[650px]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch h-auto lg:h-[720px]">
              {/* Navigation List */}
-             <div className="lg:col-span-4 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto pb-4 lg:pb-0 lg:pr-4 custom-scrollbar snap-x">
+             <div className="lg:col-span-4 flex lg:flex-col gap-1.5 lg:gap-2 overflow-x-auto lg:overflow-x-visible lg:overflow-y-visible pb-4 lg:pb-0 lg:pr-2 custom-scrollbar snap-x">
                 {designTips.map((tip, idx) => (
                   <button
                     key={idx}
                     onClick={() => setActiveTipIndex(idx)}
-                    className={`flex-shrink-0 w-64 lg:w-full group relative flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-xl md:rounded-2xl transition-all duration-300 text-left snap-center ${
-                      activeTipIndex === idx 
-                        ? 'bg-primary text-on-primary shadow-[0_10px_40px_rgba(255,122,47,0.3)]' 
+                    className={`flex-shrink-0 lg:flex-1 lg:min-h-0 w-64 lg:w-full group relative flex items-center gap-3 md:gap-4 p-4 md:p-3 lg:p-3.5 rounded-xl md:rounded-2xl transition-all duration-300 text-left snap-center ${
+                      activeTipIndex === idx
+                        ? 'bg-primary text-on-primary shadow-[0_10px_40px_rgba(164,88,42,0.3)]'
                         : 'glass-card hover:bg-surface-variant'
                     }`}
                   >
                      <MaterialIcon
                        name={tip.icon}
-                       className={`inline-block shrink-0 md:size-10 size-8 filter group-hover:scale-125 transition-transform duration-500 ${
+                       className={`inline-block shrink-0 size-7 md:size-8 filter group-hover:scale-110 transition-transform duration-500 ${
                          activeTipIndex === idx ? 'text-on-primary' : 'text-primary'
                        }`}
                        strokeWidth={2}
                      />
                      <div>
-                        <p className={`font-headline font-black uppercase leading-tight tracking-tight whitespace-pre-line text-xs md:text-sm ${
+                        <p className={`font-headline font-black uppercase leading-tight tracking-tight whitespace-pre-line text-xs md:text-[13px] ${
                           activeTipIndex === idx ? 'text-on-primary' : 'text-on-surface/60 group-hover:text-on-surface'
                         }`}>
                           {tip.title}
                         </p>
-                        <div className={`h-1 transition-all duration-500 ${activeTipIndex === idx ? 'w-full bg-on-primary/30' : 'w-0'}`}></div>
+                        <div className={`h-0.5 transition-all duration-500 ${activeTipIndex === idx ? 'w-full bg-on-primary/30' : 'w-0'}`}></div>
                      </div>
                   </button>
                 ))}
@@ -527,8 +478,8 @@ export default function Home() {
                           </ul>
 
                           <div className="pt-6">
-                             <button 
-                               onClick={() => document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })}
+                             <button
+                               onClick={() => navigate('/workspace')}
                                className="inline-flex items-center gap-4 bg-on-surface text-surface px-8 py-4 rounded-xl font-headline font-black uppercase tracking-widest text-sm hover:bg-primary hover:text-on-primary transition-all shadow-xl group"
                              >
                                {t('home.demo.try')}
@@ -539,16 +490,31 @@ export default function Home() {
 
                        <div className="lg:w-1/2 relative h-[400px] lg:h-full group">
                           {activeTip.media.type === 'video' ? (
-                            <div className="w-full h-full rounded-2xl overflow-hidden glass-card border border-on-surface/5 relative shadow-inner">
+                            <div className="w-full h-full relative rounded-2xl overflow-hidden glass-card border border-on-surface/5 group-hover:border-primary/40 transition-colors bg-black">
                               {designTipsMediaReady && designTipsVideoEnabled[activeTip.id] ? (
-                                <iframe
-                                  className="w-full h-full scale-[1.01]"
-                                  src={activeTip.media.url}
-                                  title={activeTip.title}
-                                  loading="lazy"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  allowFullScreen
-                                />
+                                activeTip.media.url.includes('facebook.com') ? (
+                                  <iframe
+                                    className="absolute inset-0 h-full w-full"
+                                    src={activeTip.media.url}
+                                    title={activeTip.title}
+                                    loading="lazy"
+                                    scrolling="no"
+                                    frameBorder={0}
+                                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                                    allowFullScreen
+                                  />
+                                ) : (
+                                  <video
+                                    src={activeTip.media.url}
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    controls
+                                    preload="metadata"
+                                    className="absolute inset-0 h-full w-full object-cover"
+                                  />
+                                )
                               ) : (
                                 <button
                                   type="button"
@@ -557,7 +523,7 @@ export default function Home() {
                                     setDesignTipsVideoEnabled((prev) => ({ ...prev, [activeTip.id]: true }));
                                   }}
                                   aria-label={language === 'vi' ? 'Phát video demo' : 'Play demo video'}
-                                  className="group/play flex h-full min-h-[400px] w-full items-center justify-center bg-black/30 transition-colors hover:bg-black/40"
+                                  className="group/play absolute inset-0 flex h-full w-full items-center justify-center bg-black/30 transition-colors hover:bg-black/40"
                                 >
                                   <span className="flex h-20 w-20 items-center justify-center rounded-full bg-primary text-on-primary shadow-[0_0_40px_rgba(164,88,42,0.55)] transition-transform group-hover/play:scale-110 active:scale-95">
                                     <MaterialIcon name="play_arrow" className="size-12" strokeWidth={2.5} />
@@ -567,12 +533,13 @@ export default function Home() {
                             </div>
                           ) : (
                             <div className="w-full h-full relative rounded-2xl overflow-hidden glass-card border border-on-surface/5 group-hover:border-primary/40 transition-colors">
-                              <img 
-                                src={activeTip.media.url} 
-                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 hover:scale-110" 
-                                alt={activeTip.title} 
+                              <img
+                                src={activeTip.media.url}
+                                loading="lazy"
+                                decoding="async"
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                alt={activeTip.title}
                               />
-                              <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent pointer-events-none"></div>
                             </div>
                           )}
                        </div>
@@ -647,9 +614,11 @@ export default function Home() {
 
               {/* Image Side */}
               <div className="lg:w-5/12 relative min-h-[400px] lg:min-h-full">
-                <img 
-                  src="https://images.unsplash.com/photo-1529421308418-eab98863cee5?q=80&w=1600&auto=format&fit=crop"
-                  className="absolute inset-0 w-full h-full object-cover grayscale brightness-75 hover:grayscale-0 hover:brightness-100 transition-all duration-700" 
+                <img
+                  src="/founder.jpg"
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover transition-all duration-700"
                   alt="Founder of NBOX AI"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80 lg:hidden"></div>
