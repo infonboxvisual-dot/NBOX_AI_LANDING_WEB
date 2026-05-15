@@ -29,8 +29,6 @@ interface ToolItem {
 
 type WorkspaceItem = AppItem | ToolItem;
 
-const DEFAULT_YOUTUBE = 'https://youtu.be/s-eICQbZhiE?si=y3_qXF62ksKonHdk';
-const DEFAULT_ACCESS = '#';
 const DEFAULT_DOWNLOAD = 'https://drive.google.com/file/d/1GbqJ6yPbUEKUs-RUbkTul6QiMSHfnyOT/view?usp=drive_link';
 const DEFAULT_SIGNUP = 'https://forms.gle/zSRaodPnrnv5Si7X7';
 
@@ -40,15 +38,15 @@ export default function Workspace() {
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
   const apps: AppItem[] = [
-    { kind: 'app', id: 'app1', title: 'NBOX RENDERING', descKey: 'workspace.app1.desc', icon: 'architecture', image: '/app/render.webp', youtubeUrl: 'https://www.youtube.com/watch?v=RpS66NWqj8I', accessUrl: DEFAULT_ACCESS },
-    { kind: 'app', id: 'app2', title: 'NBOX VIDEO', descKey: 'workspace.app2.desc', icon: 'videocam', image: '/app/video.webp', youtubeUrl: 'https://www.youtube.com/watch?v=wEDOLDRNGKU', accessUrl: DEFAULT_ACCESS },
-    { kind: 'app', id: 'app3', title: 'NBOX VISUAL', descKey: 'workspace.app3.desc', icon: 'visibility', image: '/app/visual.webp', youtubeUrl: 'https://www.youtube.com/watch?v=DhouOh2Yrec', accessUrl: DEFAULT_ACCESS },
-    { kind: 'app', id: 'app4', title: 'NBOX TEXTURELAB', descKey: 'workspace.app4.desc', icon: 'texture', image: '/app/texture.webp', youtubeUrl: 'https://www.youtube.com/watch?v=Ll08ASOGPvU', accessUrl: DEFAULT_ACCESS },
-    { kind: 'app', id: 'app5', title: 'NBOX HUMAN ENHANCER', descKey: 'workspace.app5.desc', icon: 'person_add', image: '/app/human-enhancer.webp', youtubeUrl: 'https://www.youtube.com/watch?v=jiRpMfQWzno', accessUrl: DEFAULT_ACCESS },
-    { kind: 'app', id: 'app6', title: 'NBOX VIRTUAL STAGING', descKey: 'workspace.app6.desc', icon: 'meeting_room', image: '/app/virtual.webp', youtubeUrl: 'https://www.youtube.com/watch?v=kyleUz33uAM', accessUrl: DEFAULT_ACCESS },
-    { kind: 'app', id: 'app7', title: 'NBOX PROMPT', descKey: 'workspace.app7.desc', icon: 'integration_instructions', image: '/app/prompt.webp', youtubeUrl: 'https://www.youtube.com/watch?v=FVD83vRLnqg', accessUrl: DEFAULT_ACCESS },
-    { kind: 'app', id: 'app8', title: 'NBOX PHOTO ENHANCER', descKey: 'workspace.app8.desc', icon: 'photo_filter', image: '/app/photo-enhancer.webp', youtubeUrl: 'https://www.youtube.com/watch?v=BC6dbWfG9T4', accessUrl: DEFAULT_ACCESS },
-    { kind: 'app', id: 'app9', title: 'NBOX KITCHEN DESIGN', descKey: 'workspace.app9.desc', icon: 'kitchen', image: '/app/kitchen.webp', youtubeUrl: 'https://www.youtube.com/watch?v=SibPfsk2G_c', accessUrl: DEFAULT_ACCESS },
+    { kind: 'app', id: 'app1', title: 'NBOX RENDERING', descKey: 'workspace.app1.desc', icon: 'architecture', image: '/app/render.webp', youtubeUrl: 'https://www.youtube.com/watch?v=RpS66NWqj8I', accessUrl: 'https://render.nboxai.io' },
+    { kind: 'app', id: 'app2', title: 'NBOX VIDEO', descKey: 'workspace.app2.desc', icon: 'videocam', image: '/app/video.webp', youtubeUrl: 'https://www.youtube.com/watch?v=wEDOLDRNGKU', accessUrl: 'https://video.nboxai.io' },
+    { kind: 'app', id: 'app3', title: 'NBOX VISUAL', descKey: 'workspace.app3.desc', icon: 'visibility', image: '/app/visual.webp', youtubeUrl: 'https://www.youtube.com/watch?v=DhouOh2Yrec', accessUrl: 'https://visual.nboxai.io' },
+    { kind: 'app', id: 'app4', title: 'NBOX TEXTURELAB', descKey: 'workspace.app4.desc', icon: 'texture', image: '/app/texture.webp', youtubeUrl: 'https://www.youtube.com/watch?v=Ll08ASOGPvU', accessUrl: 'https://texturelab.nboxai.io' },
+    { kind: 'app', id: 'app5', title: 'NBOX HUMAN ENHANCER', descKey: 'workspace.app5.desc', icon: 'person_add', image: '/app/human-enhancer.webp', youtubeUrl: 'https://www.youtube.com/watch?v=jiRpMfQWzno', accessUrl: 'https://human-enhancer.nboxai.io' },
+    { kind: 'app', id: 'app6', title: 'NBOX VIRTUAL STAGING', descKey: 'workspace.app6.desc', icon: 'meeting_room', image: '/app/virtual.webp', youtubeUrl: 'https://www.youtube.com/watch?v=kyleUz33uAM', accessUrl: 'https://virtual-staging.nboxai.io' },
+    { kind: 'app', id: 'app7', title: 'NBOX PROMPT', descKey: 'workspace.app7.desc', icon: 'integration_instructions', image: '/app/prompt.webp', youtubeUrl: 'https://www.youtube.com/watch?v=FVD83vRLnqg', accessUrl: 'https://prompt.nboxai.io' },
+    { kind: 'app', id: 'app8', title: 'NBOX PHOTO ENHANCER', descKey: 'workspace.app8.desc', icon: 'photo_filter', image: '/app/photo-enhancer.webp', youtubeUrl: 'https://www.youtube.com/watch?v=BC6dbWfG9T4', accessUrl: 'https://render-enhancer.nboxai.io' },
+    { kind: 'app', id: 'app9', title: 'NBOX KITCHEN DESIGN', descKey: 'workspace.app9.desc', icon: 'kitchen', image: '/app/kitchen.webp', youtubeUrl: 'https://www.youtube.com/watch?v=SibPfsk2G_c', accessUrl: 'https://kitchen-cabinet.nboxai.io' },
   ];
 
   const tools: ToolItem[] = [
