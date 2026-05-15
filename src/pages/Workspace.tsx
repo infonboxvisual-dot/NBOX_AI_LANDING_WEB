@@ -70,7 +70,7 @@ export default function Workspace() {
        descKey: 'workspace.tool2.desc',
        icon: 'movie_edit',
        image: '/app/tool-video.webp',
-       youtubeUrl: DEFAULT_YOUTUBE,
+       youtubeUrl: 'https://www.youtube.com/watch?v=xGObmRoBaOU',
        downloadUrl: DEFAULT_DOWNLOAD,
        signupUrl: DEFAULT_SIGNUP,
     }

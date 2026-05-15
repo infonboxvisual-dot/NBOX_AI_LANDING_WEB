@@ -160,7 +160,7 @@ export default function Home() {
         "With AI, generate hundreds of variations in minutes from a single original image.",
         "This solution optimizes time and provides numerous high-quality options."
       ],
-      media: { type: 'image', url: "/products/pr4.webp" }
+      media: { type: 'image', url: "/products/pr7.webp" }
     },
     {
       id: 4,
@@ -205,7 +205,7 @@ export default function Home() {
         "AI automatically adds furniture, decor, and context from a single empty room photo.",
         "Easily test multiple styles without actual construction costs."
       ],
-      media: { type: 'image', url: "/products/pr7.webp" }
+      media: { type: 'image', url: "/products/pr4.webp" }
     },
     {
       id: 9,
