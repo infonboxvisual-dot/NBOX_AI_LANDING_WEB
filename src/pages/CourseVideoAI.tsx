@@ -1,12 +1,21 @@
 import { useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 import { getLenis } from '../motion/lenisStore';
 import { MaterialIcon } from '../components/MaterialIcon';
 
 export default function CourseVideoAI() {
   const navigate = useNavigate();
   const { language, t } = useLanguage();
+
+  useSEO({
+    title: language === 'vi' ? 'Khóa Học Làm Phim AI Kiến Trúc | NBOX Academy' : 'Architectural AI Film Course | NBOX Academy',
+    description: language === 'vi'
+      ? 'Chi tiết khóa học làm phim video AI kiến trúc chuyên sâu. Tạo video diễn họa 3D chuyển động mượt mà từ phối cảnh tĩnh bằng AI.'
+      : 'Detail of deep architectural AI filmmaking course. Create smooth 3D motion visualization videos from static perspectives using AI.',
+    canonicalPath: '/courses/course-video-ai'
+  });
 
   useLayoutEffect(() => {
     const lenis = getLenis();

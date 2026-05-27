@@ -35,6 +35,7 @@ const GROUPS = [
       'kitchen',
       'tool-render',
       'tool-video',
+      'render-sync',
       'course-render',
       'course-video',
     ],

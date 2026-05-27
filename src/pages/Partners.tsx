@@ -2,10 +2,19 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useState } from 'react';
+import { useSEO } from '../hooks/useSEO';
 import { MaterialIcon } from '../components/MaterialIcon';
 
 export default function Partners() {
   const { t, language } = useLanguage();
+
+  useSEO({
+    title: language === 'vi' ? 'Ứng dụng Doanh nghiệp - Đối tác Chiến lược' : 'Enterprise App - Strategic Partners',
+    description: language === 'vi'
+      ? 'Triển khai giải pháp AI thiết kế & render may đo riêng cho doanh nghiệp, công ty kiến trúc và văn phòng thiết kế nội thất.'
+      : 'Deploy tailor-made design and rendering AI solutions for enterprises, architectural firms, and interior design studios.',
+    canonicalPath: '/enterprise'
+  });
   
   const partners = [
     'PENTA', 'ANHOUSES', 'ĐẢO NGỌC PLUS', 'HOMETALK', 'HOME DESIGN',

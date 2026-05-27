@@ -20,6 +20,8 @@ const CourseVideoAI = lazy(() => import('./pages/CourseVideoAI'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const CookiePolicy = lazy(() => import('./pages/CookiePolicy'));
+const BlogList = lazy(() => import('./pages/BlogList'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
 
 export default function App() {
   return (
@@ -86,6 +88,8 @@ function AppShell() {
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
                 <Route path="/cookies" element={<CookiePolicy />} />
+                <Route path="/blog" element={<BlogList />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
                 <Route path="/landing" element={<Navigate to="/" replace />} />
                 <Route path="/home/academy/course-render-ai" element={<Navigate to="/courses/course-render-ai" replace />} />
                 <Route path="/home/academy/course-video-ai" element={<Navigate to="/courses/course-video-ai" replace />} />

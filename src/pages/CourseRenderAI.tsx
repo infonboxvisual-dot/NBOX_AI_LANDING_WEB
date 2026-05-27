@@ -1,12 +1,21 @@
 import { useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 import { getLenis } from '../motion/lenisStore';
 import { MaterialIcon } from '../components/MaterialIcon';
 
 export default function CourseRenderAI() {
   const navigate = useNavigate();
   const { language, t } = useLanguage();
+
+  useSEO({
+    title: language === 'vi' ? 'Khóa Học Render AI Thực Chiến | NBOX Academy' : 'Practical AI Render Course | NBOX Academy',
+    description: language === 'vi'
+      ? 'Chi tiết khóa học AI Render thực chiến tại NBOX Academy. Học cách chuyển từ bản vẽ phác thảo thành phối cảnh 3D chân thực bằng trí tuệ nhân tạo.'
+      : 'Detail of practical AI Render course at NBOX Academy. Learn how to transform sketches into realistic 3D renderings using artificial intelligence.',
+    canonicalPath: '/courses/course-render-ai'
+  });
 
   useLayoutEffect(() => {
     const lenis = getLenis();
