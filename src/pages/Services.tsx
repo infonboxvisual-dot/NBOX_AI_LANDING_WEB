@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 import { MaterialIcon } from '../components/MaterialIcon';
 
 interface ServiceDetail {
@@ -244,6 +245,15 @@ const ServiceDetailsModal = ({ service, onClose, t }: { service: Service | null;
 
 const Services = () => {
   const { t, language } = useLanguage();
+
+  useSEO({
+    title: language === 'vi' ? 'Dịch vụ AI Kiến trúc & Bất động sản' : 'Architectural & Real Estate AI Services',
+    description: language === 'vi'
+      ? 'NBOX AI cung cấp các dịch vụ AI chuyên biệt: Dựng phối cảnh 3D nhanh, cải tạo nâng cấp render 4K, làm phim diễn họa kiến trúc 3D chuyên nghiệp.'
+      : 'NBOX AI provides specialized AI services: Quick 3D perspective rendering, 4K render enhancement, and professional 3D architectural film rendering.',
+    canonicalPath: '/services'
+  });
+
   const [selectedServiceId, setSelectedServiceId] = useState<number | null>(null);
 
   const services: Service[] = [

@@ -2,6 +2,7 @@ import { useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 import { getLenis } from '../motion/lenisStore';
 
 const LAST_UPDATED = '12/05/2026';
@@ -323,6 +324,14 @@ const COPY: Record<'vi' | 'en', Copy> = {
 export default function TermsOfService() {
   const { language } = useLanguage();
   const copy = COPY[language];
+
+  useSEO({
+    title: language === 'vi' ? 'Điều khoản dịch vụ | NBOX AI' : 'Terms of Service | NBOX AI',
+    description: language === 'vi'
+      ? 'Các điều khoản và điều kiện sử dụng ứng dụng, dịch vụ thuộc hệ sinh thái NBOX AI.'
+      : 'Terms and conditions for using apps and services in the NBOX AI ecosystem.',
+    canonicalPath: '/terms'
+  });
 
   useLayoutEffect(() => {
     const lenis = getLenis();

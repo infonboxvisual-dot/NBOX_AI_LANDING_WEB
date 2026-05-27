@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { Menu, X, ChevronRight } from 'lucide-react';
 import { getLenis } from '../motion/lenisStore';
+import { fetchBlogPosts } from '../lib/blogApi';
 
 function isMobileLike(): boolean {
   if (typeof window === 'undefined') return false;
@@ -25,11 +26,11 @@ export default function Header() {
   const [mobileLike, setMobileLike] = useState(() => isMobileLike());
 
   const navItems: NavItem[] = [
-    { name: t('nav.home'), path: '/' },
     { name: t('nav.academy'), path: '/courses' },
     { name: t('nav.workspace'), path: '/workspace' },
     { name: t('nav.partners'), path: '/enterprise' },
     { name: t('nav.services'), path: '/services' },
+    { name: t('nav.blog'), path: '/blog' },
     { name: t('nav.contact'), path: '/contact' },
   ];
 
@@ -72,6 +73,12 @@ export default function Header() {
     navigate(path);
   };
 
+  const handlePrefetch = (path: string) => {
+    if (path === '/blog') {
+      fetchBlogPosts(language, { limit: 30 }).catch(() => {});
+    }
+  };
+
   return (
     <header
       className="site-header fixed inset-x-0 top-0 z-50 h-16 w-full border-b border-primary/10 bg-background/72 backdrop-blur-2xl shadow-[0_0_30px_rgba(0,0,0,0.24)] md:h-[76px]"
@@ -81,7 +88,7 @@ export default function Header() {
           <button
             type="button"
             onClick={() => goNav('/')}
-            className="group flex items-center gap-3 font-headline text-xl font-black uppercase tracking-[0.22em] text-on-surface md:text-2xl"
+            className="group flex items-center gap-3 font-headline text-xl font-black uppercase tracking-[0.22em] text-on-surface md:text-2xl cursor-pointer"
           >
             <span>NBOX AI</span>
           </button>
@@ -95,7 +102,8 @@ export default function Header() {
                 key={item.path}
                 type="button"
                 onClick={() => goNav(item.path)}
-                className={`rounded-full px-4 py-2 font-headline text-xs font-black uppercase tracking-[0.22em] transition-colors duration-300 ${
+                onMouseEnter={() => handlePrefetch(item.path)}
+                className={`rounded-full px-4 py-2 font-headline text-xs font-black uppercase tracking-[0.22em] transition-colors duration-300 cursor-pointer ${
                   active ? 'bg-primary text-on-primary' : 'text-on-surface/80 hover:bg-primary/15 hover:text-on-surface'
                 }`}
               >
@@ -108,7 +116,7 @@ export default function Header() {
         <div className="flex items-center space-x-3 md:space-x-4">
           <button
             onClick={toggleLanguage}
-            className="group flex h-10 min-w-[2.75rem] items-center justify-center rounded-full bg-on-surface/5 px-3 font-headline text-xs font-black text-on-surface transition-all hover:text-primary active:scale-90"
+            className="group flex h-10 min-w-[2.75rem] items-center justify-center rounded-full bg-on-surface/5 px-3 font-headline text-xs font-black text-on-surface transition-all hover:text-primary active:scale-90 cursor-pointer"
             title={language === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
           >
             <span className="relative transition-transform group-hover:scale-110">
@@ -121,7 +129,7 @@ export default function Header() {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label={isMenuOpen ? (language === 'vi' ? 'Đóng menu' : 'Close menu') : (language === 'vi' ? 'Mở menu' : 'Open menu')}
             aria-expanded={isMenuOpen}
-            className="text-on-surface transition-colors hover:text-primary md:hidden"
+            className="text-on-surface transition-colors hover:text-primary md:hidden cursor-pointer"
           >
             {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
@@ -145,7 +153,8 @@ export default function Header() {
                     key={item.path}
                     type="button"
                     onClick={() => goNav(item.path)}
-                    className={`flex items-center justify-between border-b border-on-surface/5 py-3 font-headline text-sm font-black uppercase tracking-[0.24em] transition-colors ${
+                    onMouseEnter={() => handlePrefetch(item.path)}
+                    className={`flex items-center justify-between border-b border-on-surface/5 py-3 font-headline text-sm font-black uppercase tracking-[0.24em] transition-colors cursor-pointer ${
                       active ? 'text-primary' : 'text-on-surface/70'
                     }`}
                   >

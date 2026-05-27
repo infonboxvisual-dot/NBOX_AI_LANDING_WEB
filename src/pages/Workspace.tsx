@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 import { MaterialIcon } from '../components/MaterialIcon';
 import { BlurImage } from '../components/BlurImage';
 
@@ -34,8 +35,17 @@ const DEFAULT_SIGNUP = 'https://forms.gle/zSRaodPnrnv5Si7X7';
 
 export default function Workspace() {
   const { t, language } = useLanguage();
+
+  useSEO({
+    title: language === 'vi' ? 'NBOX AI App - Danh sách ứng dụng AI kiến trúc' : 'NBOX AI App - AI Architectural App Catalog',
+    description: language === 'vi'
+      ? 'Truy cập hệ thống ứng dụng AI kiến trúc chuyên dụng của NBOX AI: NBOX Rendering, NBOX Video, NBOX Visual, NBOX Texturelab, NBOX Virtual Staging,...'
+      : 'Access NBOX AI\'s specialized architectural AI applications: NBOX Rendering, NBOX Video, NBOX Visual, NBOX Texturelab, NBOX Virtual Staging,...',
+    canonicalPath: '/workspace'
+  });
   const [activeTab, setActiveTab] = useState<'catalog' | 'pro'>('catalog');
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [showSoonVideo, setShowSoonVideo] = useState(false);
 
   const apps: AppItem[] = [
     { kind: 'app', id: 'app1', title: 'NBOX RENDERING', descKey: 'workspace.app1.desc', icon: 'architecture', image: '/app/render.webp', youtubeUrl: 'https://www.youtube.com/watch?v=RpS66NWqj8I', accessUrl: 'https://render.nboxai.io' },
@@ -47,6 +57,7 @@ export default function Workspace() {
     { kind: 'app', id: 'app7', title: 'NBOX PROMPT', descKey: 'workspace.app7.desc', icon: 'integration_instructions', image: '/app/prompt.webp', youtubeUrl: 'https://www.youtube.com/watch?v=FVD83vRLnqg', accessUrl: 'https://prompt.nboxai.io' },
     { kind: 'app', id: 'app8', title: 'NBOX PHOTO ENHANCER', descKey: 'workspace.app8.desc', icon: 'photo_filter', image: '/app/photo-enhancer.webp', youtubeUrl: 'https://www.youtube.com/watch?v=BC6dbWfG9T4', accessUrl: 'https://render-enhancer.nboxai.io' },
     { kind: 'app', id: 'app9', title: 'NBOX KITCHEN DESIGN', descKey: 'workspace.app9.desc', icon: 'kitchen', image: '/app/kitchen.webp', youtubeUrl: 'https://www.youtube.com/watch?v=SibPfsk2G_c', accessUrl: 'https://kitchen-cabinet.nboxai.io' },
+    { kind: 'app', id: 'app10', title: 'NBOX RENDERING SYNC', descKey: 'workspace.app10.desc', icon: 'sync', image: '/app/render-sync.webp', youtubeUrl: 'https://www.youtube.com/watch?v=RpS66NWqj8I', accessUrl: 'https://render-sync.nboxai.io/' },
   ];
 
   const tools: ToolItem[] = [
@@ -209,8 +220,14 @@ export default function Workspace() {
                     <h4 className="text-primary font-headline font-black uppercase text-xs md:text-sm tracking-widest">{t('workspace.modal.guide')}</h4>
                     <a
                       href={selectedItem?.youtubeUrl}
-                      target="_blank"
+                      target={selectedItem?.id === 'app10' ? undefined : '_blank'}
                       rel="noreferrer"
+                      onClick={(e) => {
+                        if (selectedItem?.id === 'app10') {
+                          e.preventDefault();
+                          setShowSoonVideo(true);
+                        }
+                      }}
                       className="flex items-center gap-4 glass-card p-4 md:p-5 rounded-xl border border-on-surface/10 hover:border-primary/50 hover:bg-primary/5 transition-all group"
                     >
                       <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-red-600/15 border border-red-600/30 flex items-center justify-center shrink-0 group-hover:bg-red-600 transition-colors">
@@ -261,6 +278,58 @@ export default function Workspace() {
           )}
         </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+        {showSoonVideo && (
+          <motion.div
+            key="soon-video-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 px-6 py-10 backdrop-blur-md"
+            onClick={() => setShowSoonVideo(false)}
+            role="dialog"
+            aria-modal="true"
+          >
+            <motion.div
+              key="soon-video-card"
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.28, ease: 'easeOut' }}
+              onClick={(e) => e.stopPropagation()}
+              className="glass-card relative max-w-md w-full rounded-3xl border border-primary/30 p-8 text-center shadow-[0_30px_60px_rgba(0,0,0,0.5)] md:p-10"
+            >
+              <button
+                type="button"
+                onClick={() => setShowSoonVideo(false)}
+                aria-label={language === 'vi' ? 'Đóng' : 'Close'}
+                className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-on-surface/5 text-on-surface-variant transition-colors hover:bg-on-surface/10 hover:text-on-surface"
+              >
+                <MaterialIcon name="close" className="size-5" strokeWidth={2} />
+              </button>
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/15 border border-primary/30">
+                <MaterialIcon name="smart_display" className="size-9 text-primary" strokeWidth={2} />
+              </div>
+              <h3 className="mb-3 font-headline text-2xl font-black uppercase tracking-tighter text-on-surface md:text-3xl">
+                {language === 'vi' ? 'HƯỚNG DẪN SỬ DỤNG' : 'VIDEO TUTORIAL'}
+              </h3>
+              <p className="text-sm leading-relaxed text-on-surface-variant md:text-base">
+                {language === 'vi'
+                  ? 'Video hướng dẫn sử dụng cho ứng dụng này sẽ sớm được cập nhật.'
+                  : 'The instructional video for this application will be updated soon.'}
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowSoonVideo(false)}
+                className="mt-8 w-full rounded-xl bg-primary py-3 font-headline text-xs font-black uppercase tracking-[0.2em] text-on-primary shadow-[0_0_30px_rgba(164,88,42,0.35)] transition-transform hover:scale-[1.01] active:scale-95 md:text-sm"
+              >
+                {language === 'vi' ? 'ĐÓNG' : 'CLOSE'}
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

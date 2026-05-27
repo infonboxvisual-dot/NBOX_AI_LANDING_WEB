@@ -1,10 +1,20 @@
 import { motion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 import Academy from './Academy';
 import { useNavigate } from 'react-router-dom';
 
 export default function Courses() {
   const { language } = useLanguage();
+
+  useSEO({
+    title: language === 'vi' ? 'NBOX Academy - Khóa học AI Kiến trúc thực chiến' : 'NBOX Academy - Practical Architectural AI Courses',
+    description: language === 'vi'
+      ? 'Khóa học AI thực chiến dành cho kiến trúc sư, nhà thiết kế và môi giới bất động sản. Làm chủ quy trình AI Render và AI Video tăng x5 hiệu suất.'
+      : 'Practical AI courses for architects, designers, and real estate agents. Master AI Render and AI Video workflows to boost performance by 5X.',
+    canonicalPath: '/courses'
+  });
+
   const navigate = useNavigate();
 
   return (

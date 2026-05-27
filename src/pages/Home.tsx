@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 import { getLenis } from '../motion/lenisStore';
 import VillaSketchHero from '../components/VillaSketchHero';
 import { MaterialIcon } from '../components/MaterialIcon';
@@ -10,6 +11,14 @@ export default function Home() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t, language } = useLanguage();
+
+  useSEO({
+    title: language === 'vi' ? 'Hệ sinh thái AI kiến trúc & bất động sản' : 'Architectural AI Ecosystem',
+    description: language === 'vi'
+      ? 'NBOX AI — hệ sinh thái AI cho kiến trúc và bất động sản: render, video, học viện và công cụ thiết kế. Khám phá giải pháp AI thực chiến cho nhà thiết kế và doanh nghiệp.'
+      : 'NBOX AI — architectural AI ecosystem: render, video, academy and design tools. Discover practical AI solutions for designers and enterprises.',
+    canonicalPath: '/'
+  });
   const heroSectionRef = useRef<HTMLElement | null>(null);
   const heroCopyRef = useRef<HTMLDivElement | null>(null);
   const heroVisualRef = useRef<HTMLDivElement | null>(null);

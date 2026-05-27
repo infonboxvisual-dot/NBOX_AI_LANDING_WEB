@@ -349,3 +349,89 @@ html.has-orchestrated-cursor [role='button'] {
   background: #a85f2f;
 }
 
+/* Blog article typography (used by BlogPost.tsx + ReactMarkdown). */
+.prose-blog {
+  line-height: 1.78;
+  font-size: 1rem;
+}
+.prose-blog h1,
+.prose-blog h2,
+.prose-blog h3,
+.prose-blog h4 {
+  font-family: var(--font-headline);
+  color: var(--on-surface);
+  letter-spacing: 0.005em;
+}
+.prose-blog h1 { font-size: 2rem; margin: 2.2rem 0 1rem; font-weight: 700; }
+.prose-blog h2 { font-size: 1.6rem; margin: 2rem 0 0.8rem; font-weight: 700; }
+.prose-blog h3 { font-size: 1.25rem; margin: 1.6rem 0 0.6rem; font-weight: 600; }
+.prose-blog h4 { font-size: 1.1rem; margin: 1.4rem 0 0.5rem; font-weight: 600; }
+.prose-blog p { margin: 0.9rem 0; color: var(--on-surface); }
+.prose-blog a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-blog a:hover { color: var(--color-secondary); }
+.prose-blog strong { color: var(--on-surface); font-weight: 600; }
+.prose-blog ul, .prose-blog ol { margin: 0.9rem 0; padding-left: 1.4rem; }
+.prose-blog ul { list-style: disc; }
+.prose-blog ol { list-style: decimal; }
+.prose-blog li { margin: 0.3rem 0; }
+.prose-blog blockquote {
+  margin: 1.2rem 0;
+  padding: 0.6rem 1rem;
+  border-left: 3px solid var(--color-primary);
+  background: rgba(164, 88, 42, 0.06);
+  color: var(--on-surface-variant);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+.prose-blog code {
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.92em;
+}
+.prose-blog pre {
+  font-family: var(--font-mono);
+  background: #0a0a0a;
+  padding: 1rem 1.2rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  margin: 1.2rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.prose-blog pre code {
+  background: transparent;
+  padding: 0;
+}
+.prose-blog img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.4rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.prose-blog hr {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 2rem 0;
+}
+.prose-blog table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2rem 0;
+  font-size: 0.95em;
+}
+.prose-blog th,
+.prose-blog td {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 0.8rem;
+  text-align: left;
+}
+.prose-blog th {
+  background: rgba(255, 255, 255, 0.04);
+  font-weight: 600;
+}
+

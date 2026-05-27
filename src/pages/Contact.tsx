@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 import { MaterialIcon } from '../components/MaterialIcon';
 
 type ContactCopy = {
@@ -9,6 +10,8 @@ type ContactCopy = {
   name: string;
   email: string;
   phone: string;
+  topicLabel: string;
+  topics: string[];
   message: string;
   placeholders: {
     name: string;
@@ -79,6 +82,14 @@ function pushHistory(): number[] {
 export default function Contact() {
   const { language, t } = useLanguage();
 
+  useSEO({
+    title: language === 'vi' ? 'Liên hệ NBOX AI | Giải đáp & Hợp tác' : 'Contact NBOX AI | Support & AI Collaboration',
+    description: language === 'vi'
+      ? 'Kết nối với đội ngũ NBOX AI để được tư vấn dịch vụ, khóa học, ứng dụng doanh nghiệp hoặc tham gia phòng thí nghiệm AI Lab.'
+      : 'Connect with the NBOX AI team for consulting on services, courses, enterprise apps, or joining the AI Lab.',
+    canonicalPath: '/contact'
+  });
+
   const copy = useMemo<ContactCopy>(() => {
     if (language === 'vi') {
       return {
@@ -87,6 +98,13 @@ export default function Contact() {
         name: 'Họ và tên',
         email: 'Email',
         phone: 'Số điện thoại',
+        topicLabel: 'Chủ đề liên hệ',
+        topics: [
+          'Liên hệ về ứng dụng AI NBOX',
+          'Liên hệ về ứng dụng doanh nghiệp',
+          'Liên hệ về dịch vụ AI',
+          'Khác'
+        ],
         message: 'Nội dung liên hệ',
         placeholders: {
           name: 'Nhập họ và tên',
@@ -118,6 +136,13 @@ export default function Contact() {
       name: 'Full name',
       email: 'Email',
       phone: 'Phone number',
+      topicLabel: 'Inquiry Topic',
+      topics: [
+        'Inquiry about AI NBOX App',
+        'Inquiry about Enterprise App',
+        'Inquiry about AI Services',
+        'Other'
+      ],
       message: 'Message',
       placeholders: {
         name: 'Your full name',
@@ -146,13 +171,27 @@ export default function Contact() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [message, setMessage] = useState('');
+  const [topicIndex, setTopicIndex] = useState(0);
+  const [customMessage, setCustomMessage] = useState('');
   const [hp, setHp] = useState(''); // honeypot
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [showThanks, setShowThanks] = useState(false);
   const [cooldownSec, setCooldownSecState] = useState(0);
   const mountedAtRef = useRef<number>(Date.now());
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     setCooldownSecState(loadCooldown());
@@ -176,7 +215,9 @@ export default function Contact() {
     e.preventDefault();
     if (submitDisabled) return;
 
-    if (!name.trim() || !email.trim() || !message.trim()) {
+    const finalMessage = topicIndex === 3 ? customMessage.trim() : copy.topics[topicIndex];
+
+    if (!name.trim() || !email.trim() || !finalMessage) {
       setStatus('error');
       setErrorMsg(copy.errors.missing);
       return;
@@ -207,7 +248,7 @@ export default function Contact() {
           name: name.trim(),
           email: email.trim(),
           phone: phone.trim(),
-          message: message.trim(),
+          message: finalMessage,
           hp,
           ts: mountedAtRef.current,
         }),
@@ -224,7 +265,8 @@ export default function Contact() {
         setName('');
         setEmail('');
         setPhone('');
-        setMessage('');
+        setCustomMessage('');
+        setTopicIndex(0);
         mountedAtRef.current = Date.now();
         return;
       }
@@ -269,7 +311,7 @@ export default function Contact() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
-          className="mx-auto mb-10 max-w-4xl glass-card rounded-2xl border border-on-surface/10 p-6 shadow-2xl md:mb-14 md:rounded-3xl md:p-10"
+          className="mx-auto mb-24 max-w-4xl glass-card rounded-2xl border border-on-surface/10 p-6 shadow-2xl md:mb-36 md:rounded-3xl md:p-10"
         >
           <h2 className="mb-8 font-headline text-lg font-bold uppercase tracking-wide text-on-surface md:text-xl">
             {copy.sectionTitle}
@@ -325,20 +367,87 @@ export default function Contact() {
               />
             </div>
 
-            <div className="space-y-2">
-              <label htmlFor="contact-message" className={labelClass}>{copy.message}</label>
-              <textarea
-                id="contact-message"
-                name="message"
-                rows={4}
-                required
+            <div className="space-y-2 relative" ref={dropdownRef}>
+              <label className={labelClass}>{copy.topicLabel}</label>
+              
+              {/* Dropdown Trigger */}
+              <button
+                type="button"
                 disabled={status === 'loading'}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder={copy.placeholders.message}
-                className="min-h-[120px] w-full resize-y rounded-xl border border-outline-variant/25 bg-surface-variant/40 p-4 font-sans text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none md:p-4 md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
-              />
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
+                className={`${fieldClass} flex items-center justify-between text-left focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer`}
+              >
+                <span>{copy.topics[topicIndex]}</span>
+                <MaterialIcon
+                  name="expand_more"
+                  className={`size-5 text-on-surface-variant/70 transition-transform duration-300 ${
+                    isDropdownOpen ? 'rotate-180 text-primary' : ''
+                  }`}
+                  strokeWidth={2}
+                />
+              </button>
+
+              {/* Dropdown Options */}
+              <AnimatePresence>
+                {isDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                    transition={{ duration: 0.15, ease: 'easeOut' }}
+                    className="absolute left-0 right-0 z-30 mt-2 max-h-60 overflow-y-auto rounded-xl border border-primary/20 bg-[#161617]/95 p-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.6)] backdrop-blur-xl custom-scrollbar"
+                  >
+                    {copy.topics.map((t, idx) => {
+                      const isSelected = topicIndex === idx;
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => {
+                            setTopicIndex(idx);
+                            setIsDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-200 flex items-center justify-between cursor-pointer ${
+                            isSelected
+                              ? 'bg-primary text-on-primary font-bold shadow-[0_4px_12px_rgba(203,123,62,0.25)]'
+                              : 'text-on-surface/80 hover:bg-white/5 hover:text-on-surface'
+                          }`}
+                        >
+                          <span>{t}</span>
+                          {isSelected && (
+                            <MaterialIcon name="check" className="size-4 shrink-0 text-on-primary" strokeWidth={2.5} />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
+
+            <AnimatePresence>
+              {topicIndex === 3 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-2 overflow-hidden"
+                >
+                  <label htmlFor="contact-message" className={labelClass}>{copy.message}</label>
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    rows={4}
+                    required
+                    disabled={status === 'loading'}
+                    value={customMessage}
+                    onChange={(e) => setCustomMessage(e.target.value)}
+                    placeholder={copy.placeholders.message}
+                    className="min-h-[120px] w-full resize-y rounded-xl border border-outline-variant/25 bg-surface-variant/40 p-4 font-sans text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none md:p-4 md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Honeypot — hidden from humans, bots will fill it. */}
             <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden" tabIndex={-1}>

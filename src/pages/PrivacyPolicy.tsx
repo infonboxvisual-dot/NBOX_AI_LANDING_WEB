@@ -2,6 +2,7 @@ import { useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
+import { useSEO } from '../hooks/useSEO';
 import { getLenis } from '../motion/lenisStore';
 
 const LAST_UPDATED = '12/05/2026';
@@ -325,6 +326,14 @@ const COPY: Record<'vi' | 'en', Copy> = {
 export default function PrivacyPolicy() {
   const { language } = useLanguage();
   const copy = COPY[language];
+
+  useSEO({
+    title: language === 'vi' ? 'Chính sách bảo mật | NBOX AI' : 'Privacy Policy | NBOX AI',
+    description: language === 'vi'
+      ? 'Chính sách bảo mật thông tin người dùng và dữ liệu tại hệ sinh thái NBOX AI.'
+      : 'User privacy and data protection policy at NBOX AI ecosystem.',
+    canonicalPath: '/privacy'
+  });
 
   useLayoutEffect(() => {
     const lenis = getLenis();
