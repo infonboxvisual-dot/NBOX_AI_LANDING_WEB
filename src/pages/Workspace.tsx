@@ -137,13 +137,13 @@ export default function Workspace() {
 
                 {activeTab === 'catalog' && (
                   <a
-                    href="https://forms.gle/rffaxc8a7MvUDbUe7"
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSfwEtB-cDTLsUBS_ylH35JKU2tvetbklf64Ke03OUweWzi_kA/viewform"
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 md:gap-3 bg-primary text-on-primary px-6 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl font-headline font-black uppercase text-xs md:text-sm tracking-widest shadow-[0_0_30px_rgba(255,122,47,0.35)] hover:scale-[1.03] active:scale-95 transition-all"
                   >
                     <MaterialIcon name="how_to_reg" className="size-4 md:size-5" strokeWidth={2.5} />
-                    {language === 'vi' ? 'ĐĂNG KÝ MUA ỨNG DỤNG' : 'REGISTER TO BUY APP'}
+                    {language === 'vi' ? 'ĐĂNG KÝ THUÊ ỨNG DỤNG' : 'REGISTER TO RENT APP'}
                   </a>
                 )}
               </div>
