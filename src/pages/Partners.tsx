@@ -76,11 +76,11 @@ export default function Partners() {
            <h2 className="text-4xl md:text-6xl font-headline font-black uppercase tracking-tighter mb-4 text-on-surface">
              {language === 'vi' ? (
                <>
-                 <span className="text-primary">30+</span> GIẢI PHÁP ĐÃ TRIỂN KHAI
+                 <span className="text-primary">40+</span> GIẢI PHÁP ĐÃ TRIỂN KHAI
                </>
              ) : (
                <>
-                 DEPLOYED <span className="text-primary">30+</span> SOLUTIONS
+                 DEPLOYED <span className="text-primary">40+</span> SOLUTIONS
                </>
              )}
            </h2>

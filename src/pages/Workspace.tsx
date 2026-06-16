@@ -57,7 +57,9 @@ export default function Workspace() {
     { kind: 'app', id: 'app7', title: 'NBOX PROMPT', descKey: 'workspace.app7.desc', icon: 'integration_instructions', image: '/app/prompt.webp', youtubeUrl: 'https://www.youtube.com/watch?v=FVD83vRLnqg', accessUrl: 'https://prompt.nboxai.io' },
     { kind: 'app', id: 'app8', title: 'NBOX PHOTO ENHANCER', descKey: 'workspace.app8.desc', icon: 'photo_filter', image: '/app/photo-enhancer.webp', youtubeUrl: 'https://www.youtube.com/watch?v=BC6dbWfG9T4', accessUrl: 'https://render-enhancer.nboxai.io' },
     { kind: 'app', id: 'app9', title: 'NBOX KITCHEN DESIGN', descKey: 'workspace.app9.desc', icon: 'kitchen', image: '/app/kitchen.webp', youtubeUrl: 'https://www.youtube.com/watch?v=SibPfsk2G_c', accessUrl: 'https://kitchen-cabinet.nboxai.io' },
-    { kind: 'app', id: 'app10', title: 'NBOX RENDERING SYNC', descKey: 'workspace.app10.desc', icon: 'sync', image: '/app/render-sync.webp', youtubeUrl: 'https://www.youtube.com/watch?v=RpS66NWqj8I', accessUrl: 'https://render-sync.nboxai.io/' },
+    { kind: 'app', id: 'app10', title: 'NBOX RENDERING SYNC', descKey: 'workspace.app10.desc', icon: 'sync', image: '/app/render-sync.webp', youtubeUrl: '', accessUrl: 'https://render-sync.nboxai.io/' },
+    { kind: 'app', id: 'app11', title: 'NBOX UPSCALE', descKey: 'workspace.app11.desc', icon: 'zoom_in', image: '/app/upscale.webp', youtubeUrl: '', accessUrl: 'https://upscale.nboxai.io/' },
+    { kind: 'app', id: 'app12', title: 'NBOX MATERIAL', descKey: 'workspace.app12.desc', icon: 'grid_view', image: '/app/material.webp', youtubeUrl: '', accessUrl: 'https://material.nboxai.io/' },
   ];
 
   const tools: ToolItem[] = [
@@ -135,6 +137,7 @@ export default function Workspace() {
                   </button>
                 </div>
 
+                {/* Tạm ẩn nút đăng ký thuê ứng dụng (bật lại khi cần)
                 {activeTab === 'catalog' && (
                   <a
                     href="https://docs.google.com/forms/d/e/1FAIpQLSfwEtB-cDTLsUBS_ylH35JKU2tvetbklf64Ke03OUweWzi_kA/viewform"
@@ -146,6 +149,7 @@ export default function Workspace() {
                     {language === 'vi' ? 'ĐĂNG KÝ THUÊ ỨNG DỤNG' : 'REGISTER TO RENT APP'}
                   </a>
                 )}
+                */}
               </div>
 
               <motion.div
@@ -219,11 +223,11 @@ export default function Workspace() {
                   <div className="space-y-4 md:space-y-6">
                     <h4 className="text-primary font-headline font-black uppercase text-xs md:text-sm tracking-widest">{t('workspace.modal.guide')}</h4>
                     <a
-                      href={selectedItem?.youtubeUrl}
-                      target={selectedItem?.id === 'app10' ? undefined : '_blank'}
+                      href={selectedItem?.youtubeUrl || undefined}
+                      target={selectedItem?.youtubeUrl ? '_blank' : undefined}
                       rel="noreferrer"
                       onClick={(e) => {
-                        if (selectedItem?.id === 'app10') {
+                        if (!selectedItem?.youtubeUrl) {
                           e.preventDefault();
                           setShowSoonVideo(true);
                         }
