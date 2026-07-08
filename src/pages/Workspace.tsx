@@ -155,7 +155,7 @@ export default function Workspace() {
                 className={
                   activeTab === 'pro'
                     ? 'grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto'
-                    : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center'
+                    : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center'
                 }
               >
                 {(activeTab === 'catalog' ? apps : tools).map((item, i) => (
@@ -168,7 +168,7 @@ export default function Workspace() {
                       <BlurImage
                         src={item.image}
                         alt={item.title}
-                        eager={i < 3}
+                        eager={i < 4}
                         imgClassName="transition-transform duration-700 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-60 pointer-events-none"></div>
