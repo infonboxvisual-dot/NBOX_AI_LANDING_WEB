@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
 import { useSEO } from '../hooks/useSEO';
@@ -103,6 +104,7 @@ export default function Contact() {
           'Liên hệ về ứng dụng AI NBOX',
           'Liên hệ về ứng dụng doanh nghiệp',
           'Liên hệ về dịch vụ AI',
+          'Liên hệ về Tool Flow',
           'Khác'
         ],
         message: 'Nội dung liên hệ',
@@ -141,6 +143,7 @@ export default function Contact() {
         'Inquiry about AI NBOX App',
         'Inquiry about Enterprise App',
         'Inquiry about AI Services',
+        'Inquiry about Tool Flow',
         'Other'
       ],
       message: 'Message',
@@ -183,6 +186,14 @@ export default function Contact() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const [searchParams] = useSearchParams();
+  // Preselect the "Tool Flow" topic (index 3) when arriving from the Tool Flow download button.
+  useEffect(() => {
+    if (searchParams.get('topic') === 'toolflow') {
+      setTopicIndex(3);
+    }
+  }, [searchParams]);
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -215,7 +226,7 @@ export default function Contact() {
     e.preventDefault();
     if (submitDisabled) return;
 
-    const finalMessage = topicIndex === 3 ? customMessage.trim() : copy.topics[topicIndex];
+    const finalMessage = topicIndex === copy.topics.length - 1 ? customMessage.trim() : copy.topics[topicIndex];
 
     if (!name.trim() || !email.trim() || !finalMessage) {
       setStatus('error');
@@ -426,7 +437,7 @@ export default function Contact() {
             </div>
 
             <AnimatePresence>
-              {topicIndex === 3 && (
+              {topicIndex === copy.topics.length - 1 && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}

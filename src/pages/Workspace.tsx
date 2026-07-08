@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useSEO } from '../hooks/useSEO';
 import { MaterialIcon } from '../components/MaterialIcon';
@@ -24,13 +25,11 @@ interface ToolItem {
   icon: string;
   image: string;
   youtubeUrl: string;
-  downloadUrl: string;
   signupUrl: string;
 }
 
 type WorkspaceItem = AppItem | ToolItem;
 
-const DEFAULT_DOWNLOAD = 'https://drive.google.com/file/d/1GbqJ6yPbUEKUs-RUbkTul6QiMSHfnyOT/view?usp=drive_link';
 const DEFAULT_SIGNUP = 'https://forms.gle/zSRaodPnrnv5Si7X7';
 
 export default function Workspace() {
@@ -71,7 +70,6 @@ export default function Workspace() {
        icon: 'flowsheet',
        image: '/app/tool-render.webp',
        youtubeUrl: 'https://www.youtube.com/watch?v=s-eICQbZhiE',
-       downloadUrl: DEFAULT_DOWNLOAD,
        signupUrl: DEFAULT_SIGNUP,
     },
     {
@@ -82,7 +80,6 @@ export default function Workspace() {
        icon: 'movie_edit',
        image: '/app/tool-video.webp',
        youtubeUrl: 'https://www.youtube.com/watch?v=xGObmRoBaOU',
-       downloadUrl: DEFAULT_DOWNLOAD,
        signupUrl: DEFAULT_SIGNUP,
     }
   ];
@@ -244,15 +241,12 @@ export default function Workspace() {
                 <div className="mt-12 md:mt-16 pt-8 border-t border-on-surface/5">
                   {selectedItem?.kind === 'tool' ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                      <a
-                        href={selectedItem.downloadUrl}
-                        target="_blank"
-                        rel="noreferrer"
+                      <Link
+                        to="/contact?topic=toolflow"
                         className="w-full flex items-center justify-center gap-2 bg-primary py-4 md:py-5 rounded-xl md:rounded-2xl text-on-primary font-headline font-black uppercase tracking-widest text-sm md:text-base text-center shadow-[0_0_40px_rgba(255,122,47,0.4)] hover:scale-[1.02] active:scale-95 transition-all"
                       >
-                        <MaterialIcon name="download" className="size-4 md:size-5" strokeWidth={2.5} />
                         {t('workspace.modal.download')}
-                      </a>
+                      </Link>
                       <a
                         href={selectedItem.signupUrl}
                         target="_blank"
