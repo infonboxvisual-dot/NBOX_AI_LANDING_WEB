@@ -136,7 +136,7 @@ export default function Workspace() {
 
                 {activeTab === 'catalog' && (
                   <a
-                    href="https://youtu.be/VRKtMSm6nj4?si=M1DEqu5PA0Z92SjR"
+                    href="https://www.youtube.com/watch?v=D1G3pPSxiX0"
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 md:gap-3 bg-primary text-on-primary px-6 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl font-headline font-black uppercase text-xs md:text-sm tracking-widest shadow-[0_0_30px_rgba(255,122,47,0.35)] hover:scale-[1.03] active:scale-95 transition-all"
