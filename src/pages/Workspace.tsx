@@ -59,6 +59,7 @@ export default function Workspace() {
     { kind: 'app', id: 'app10', title: 'NBOX RENDERING SYNC', descKey: 'workspace.app10.desc', icon: 'sync', image: '/app/render-sync.webp', youtubeUrl: '', accessUrl: 'https://render-sync.nboxai.io/' },
     { kind: 'app', id: 'app11', title: 'NBOX UPSCALE', descKey: 'workspace.app11.desc', icon: 'zoom_in', image: '/app/upscale.webp', youtubeUrl: '', accessUrl: 'https://upscale.nboxai.io/' },
     { kind: 'app', id: 'app12', title: 'NBOX MATERIAL', descKey: 'workspace.app12.desc', icon: 'grid_view', image: '/app/material.webp', youtubeUrl: '', accessUrl: 'https://material.nboxai.io/' },
+    { kind: 'app', id: 'app13', title: 'NBOX 3D', descKey: 'workspace.app13.desc', icon: 'deployed_code', image: '/app/image-to-3d.webp', youtubeUrl: '', accessUrl: 'https://image-to-3d.nboxai.io/' },
   ];
 
   const tools: ToolItem[] = [
