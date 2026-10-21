@@ -41,6 +41,8 @@ const GROUPS = [
       'image-to-3d',
       'course-render',
       'course-video',
+      'course-ai-agent',
+      'course-ai-video',
     ],
   },
   {

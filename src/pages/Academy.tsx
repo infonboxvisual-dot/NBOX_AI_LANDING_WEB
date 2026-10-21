@@ -3,13 +3,15 @@ import { useLanguage } from '../context/LanguageContext';
 import { MaterialIcon } from '../components/MaterialIcon';
 import { BlurImage } from '../components/BlurImage';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 export default function Academy() {
   const { t, language } = useLanguage();
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  const registerLink = 'https://forms.gle/6WF3Z9x6gpd7LimC6';
+  const agentLink = 'https://academy.nboxvietnam.vn/course/khoa-hoc-ai-agent';
+  const videoLink = 'https://academy.nboxvietnam.vn/course/khoa-hoc-archviz-ai-video';
+  const comboLink = 'https://academy.nboxvietnam.vn/combo/combo-ai-agents-archviz-ai-video';
+  const trialLink = encodeURI('/app/HƯỚNG DẪN HỌC THỬ AI AGENT.pdf');
   const renderVnd = (value: string) => {
     if (value.endsWith('đ')) {
       return (
@@ -24,52 +26,43 @@ export default function Academy() {
 
   const courses: Array<{
     title: string;
-    tools: string;
     format: string;
     content: string[];
     image: string;
     link: string;
-    detailLink?: string;
-    gift?: string;
     price?: { old: string; now: string };
   }> = [
     {
-      title: language === 'vi' ? 'Khóa Render AI THỰC CHIẾN' : 'Hands-on AI Render Course',
-      tools: 'RunningHub, NBOX Render, Flow, Highfield, Freepik',
+      title: 'AI Agents for Architect',
       format: language === 'vi' ? 'Video Online' : 'Online Video',
-      gift: language === 'vi' ? 'QUÀ TẶNG: ỨNG DỤNG NBOX RENDER' : 'BONUS: NBOX RENDER APP',
-      price: language === 'vi' ? { old: '4.000.000đ', now: '3.600.000đ' } : { old: '4,000,000 VND', now: '3,600,000 VND' },
+      price: language === 'vi' ? { old: '6.000.000đ', now: '5.000.000đ' } : { old: '6,000,000 VND', now: '5,000,000 VND' },
       content: language === 'vi' ? [
-        'Render nội/ngoại thất',
-        'Đồng bộ góc nhìn',
-        'Cách cải thiện, upscale hình ảnh đúng cách'
+        'Ứng dụng AI Agent vào quy trình thiết kế kiến trúc',
+        'Tự động hóa công việc lặp lại cho kiến trúc sư',
+        'Xây dựng trợ lý AI riêng cho dự án'
       ] : [
-        'Interior/Exterior Rendering',
-        'Camera View Synchronization',
-        'Pro image enhancement & upscaling'
+        'Applying AI Agents to the architectural design workflow',
+        'Automating repetitive tasks for architects',
+        'Building your own AI assistant for projects'
       ],
-      image: '/app/course-render.webp',
-      link: registerLink,
-      detailLink: '/courses/course-render-ai'
+      image: '/app/course-ai-agent.webp',
+      link: agentLink
     },
     {
-      title: language === 'vi' ? 'Khóa Video AI THỰC CHIẾN' : 'Hands-on AI Video Course',
-      tools: 'Kling AI, VEO 3, Capcut',
+      title: 'Archviz AI Video',
       format: language === 'vi' ? 'Video Online' : 'Online Video',
-      gift: language === 'vi' ? 'QUÀ TẶNG: ỨNG DỤNG NBOX VIDEO' : 'BONUS: NBOX VIDEO APP',
-      price: language === 'vi' ? { old: '2.000.000đ', now: '1.600.000đ' } : { old: '2,000,000 VND', now: '1,600,000 VND' },
+      price: language === 'vi' ? { old: '2.500.000đ', now: '1.999.000đ' } : { old: '2,500,000 VND', now: '1,999,000 VND' },
       content: language === 'vi' ? [
-        'Tạo video kiến trúc',
+        'Tạo video kiến trúc, nội thất bằng AI',
         'Công thức tạo prompt chuẩn',
-        'Tạo video thay đổi áo quần, phim hoạt hình, tvc giới thiệu sản phẩm,...'
+        'Làm video với công cụ Flow'
       ] : [
-        'Architectural Video Creation',
+        'Architectural & interior video creation with AI',
         'Standardized Prompt Formulas',
-        'Clothes swap, animation, product TVCs,...'
+        'Making videos with the Flow tool'
       ],
-      image: '/app/course-video.webp',
-      link: registerLink,
-      detailLink: '/courses/course-video-ai'
+      image: '/app/course-ai-video.webp',
+      link: videoLink
     }
   ];
 
@@ -179,6 +172,15 @@ export default function Academy() {
               <>AVAILABLE <span className="italic">COURSES</span></>
             )}
           </h1>
+          <a
+            href={trialLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative inline-flex items-center justify-center gap-2 rounded-xl border-2 border-primary bg-primary/15 px-8 py-3 md:px-10 md:py-4 font-headline font-black uppercase tracking-widest text-sm md:text-base text-primary shadow-[0_0_40px_rgba(203,123,62,0.45)] transition-all hover:bg-primary hover:text-on-primary hover:scale-[1.03]"
+          >
+            <span className="absolute inset-0 rounded-xl border-2 border-primary animate-ping opacity-30 pointer-events-none"></span>
+            {language === 'vi' ? 'HỌC THỬ MIỄN PHÍ' : 'FREE TRIAL'}
+          </a>
         </motion.div>
       </div>
 
@@ -193,18 +195,12 @@ export default function Academy() {
               viewport={{ once: true }}
               className="glass-card rounded-2xl md:rounded-[1.5rem] overflow-hidden border border-on-surface/10 hover:border-primary/30 transition-all flex flex-col"
             >
-              <div className="h-48 md:h-60 relative overflow-hidden">
+              <div className="aspect-video relative overflow-hidden">
                  <BlurImage src={course.image} alt={course.title} eager />
-                 <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 bg-gradient-to-t from-background to-transparent pointer-events-none">
-                    <h3 className="text-xl md:text-2xl font-headline font-black uppercase text-on-surface tracking-tight">{course.title}</h3>
-                 </div>
               </div>
               <div className="p-6 md:p-8 space-y-6 flex-grow flex flex-col justify-between">
                 <div className="space-y-4 text-on-surface-variant">
-                   <div className="flex flex-col gap-1">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-primary">{t('academy.card.tools')}:</span>
-                      <p className="text-on-surface text-xs md:text-sm font-medium">{course.tools}</p>
-                   </div>
+                   <h3 className="text-xl md:text-2xl font-headline font-black uppercase text-on-surface tracking-tight">{course.title}</h3>
                    <div className="flex flex-col gap-1">
                       <span className="text-[9px] font-black uppercase tracking-widest text-primary">{t('academy.card.format')}:</span>
                       <p className="text-on-surface text-xs md:text-sm font-medium">{course.format}</p>
@@ -220,13 +216,6 @@ export default function Academy() {
                       </ul>
                    </div>
 
-                   {course.gift && (
-                     <div className="flex flex-col gap-1">
-                       <span className="text-[9px] font-black uppercase tracking-widest text-yellow-400">QUÀ TẶNG:</span>
-                       <p className="text-on-surface text-xs md:text-sm font-medium">{course.gift.replace(/^QUÀ TẶNG:\s*/i, '')}</p>
-                     </div>
-                   )}
-
                    {course.price && (
                      <div className="rounded-2xl border border-primary/20 bg-primary/10 p-4">
                        <div className="flex items-baseline justify-between gap-3">
@@ -241,20 +230,23 @@ export default function Academy() {
                          <span className="text-3xl md:text-4xl font-black tracking-widest text-on-surface">
                            {language === 'vi' ? renderVnd(course.price.now) : course.price.now}
                          </span>
+                         <p className="mt-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                           {language === 'vi' ? 'Áp dụng tới 25/10' : 'Valid until Oct 25'}
+                         </p>
                        </div>
                      </div>
                    )}
                 </div>
                 
                 <div className="space-y-3">
-                  {course.detailLink && (
-                    <Link 
-                      to={course.detailLink}
-                      className="block w-full py-3 md:py-4 rounded-lg border border-primary/30 text-primary font-headline font-black uppercase tracking-[0.1em] text-xs md:text-sm text-center hover:bg-primary/5 transition-colors"
-                    >
-                      {t('course.render.details')}
-                    </Link>
-                  )}
+                  <a
+                    href={course.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full py-3 md:py-4 rounded-lg border border-primary/30 text-primary font-headline font-black uppercase tracking-[0.1em] text-xs md:text-sm text-center hover:bg-primary/5 transition-colors"
+                  >
+                    {t('course.render.details')}
+                  </a>
                   <a 
                     href={course.link}
                     target="_blank"
@@ -277,16 +269,17 @@ export default function Academy() {
                   {language === 'vi' ? 'COMBO' : 'COMBO'}
                 </p>
                 <h3 className="mt-2 text-2xl font-headline font-black uppercase tracking-tight text-on-surface">
-                  {language === 'vi' ? <>2 KHOÁ: {renderVnd('4.200.000đ')}</> : '2 COURSES: 4,200,000 VND'}
+                  {language === 'vi' ? <>2 KHOÁ: {renderVnd('5.999.000đ')}</> : '2 COURSES: 5,999,000 VND'}
                 </h3>
-                <p className="mt-2 text-sm text-on-surface-variant">
-                  {language === 'vi'
-                    ? 'RENDER AI THỰC CHIẾN + VIDEO AI THỰC CHIẾN, TẶNG KÈM 2 ỨNG DỤNG NBOX.'
-                    : 'Hands-on AI Render + Hands-on AI Video, includes both NBOX apps.'}
+                <span className="mt-3 inline-block rounded-full bg-primary/15 px-4 py-1 text-[11px] font-black uppercase tracking-widest text-primary">
+                  {language === 'vi' ? 'Tiết kiệm 70%' : 'Save 70%'}
+                </span>
+                <p className="mt-3 text-sm text-on-surface-variant">
+                  AI AGENTS FOR ARCHITECT + ARCHVIZ AI VIDEO
                 </p>
               </div>
               <a
-                href={registerLink}
+                href={comboLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-xl bg-primary px-10 py-4 text-center font-headline font-extrabold uppercase tracking-widest text-on-primary shadow-[0_0_40px_rgba(203,123,62,0.28)] transition-transform hover:scale-[1.01]"
