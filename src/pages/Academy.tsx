@@ -11,7 +11,24 @@ export default function Academy() {
   const agentLink = 'https://academy.nboxvietnam.vn/course/khoa-hoc-ai-agent';
   const videoLink = 'https://academy.nboxvietnam.vn/course/khoa-hoc-archviz-ai-video';
   const comboLink = 'https://academy.nboxvietnam.vn/combo/combo-ai-agents-archviz-ai-video';
-  const trialLink = encodeURI('/app/HƯỚNG DẪN HỌC THỬ AI AGENT.pdf');
+  const trialLink = 'https://drive.google.com/drive/folders/1BpgYreZ22JVlrRvumBftILWDlYlTpcqH?usp=sharing';
+  const TrialArrow = ({ flip = false }: { flip?: boolean }) => (
+    <motion.svg
+      viewBox="0 0 64 16"
+      className="w-10 md:w-16 h-4 text-primary shrink-0"
+      style={{ rotate: flip ? 180 : 0 }}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      animate={{ x: flip ? [0, -6, 0] : [0, 6, 0] }}
+      transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+      aria-hidden="true"
+    >
+      <path d="M2 8h58M52 2l8 6-8 6" />
+    </motion.svg>
+  );
   const renderVnd = (value: string) => {
     if (value.endsWith('đ')) {
       return (
@@ -172,15 +189,17 @@ export default function Academy() {
               <>AVAILABLE <span className="italic">COURSES</span></>
             )}
           </h1>
-          <a
-            href={trialLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="relative inline-flex items-center justify-center gap-2 rounded-xl border-2 border-primary bg-primary/15 px-8 py-3 md:px-10 md:py-4 font-headline font-black uppercase tracking-widest text-sm md:text-base text-primary shadow-[0_0_40px_rgba(203,123,62,0.45)] transition-all hover:bg-primary hover:text-on-primary hover:scale-[1.03]"
-          >
-            <span className="absolute inset-0 rounded-xl border-2 border-primary animate-ping opacity-30 pointer-events-none"></span>
-            {language === 'vi' ? 'HỌC THỬ MIỄN PHÍ' : 'FREE TRIAL'}
-          </a>
+          <div className="flex items-center justify-center gap-3 md:gap-5">
+            <TrialArrow />
+            <a
+              href={trialLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative inline-flex items-center justify-center rounded-2xl bg-primary px-8 py-3 md:px-10 md:py-4 font-headline font-black uppercase tracking-widest text-sm md:text-base text-white shadow-[0_0_40px_rgba(203,123,62,0.45)] transition-transform hover:scale-[1.03]"
+            >              {language === 'vi' ? 'HỌC THỬ MIỄN PHÍ' : 'FREE TRIAL'}
+            </a>
+            <TrialArrow flip />
+          </div>
         </motion.div>
       </div>
 
