@@ -3,6 +3,8 @@ import { useLanguage } from '../context/LanguageContext';
 import { MaterialIcon } from '../components/MaterialIcon';
 import { BlurImage } from '../components/BlurImage';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Gift } from 'lucide-react';
 
 export default function Academy() {
   const { t, language } = useLanguage();
@@ -48,6 +50,7 @@ export default function Academy() {
     image: string;
     link: string;
     price?: { old: string; now: string };
+    hasGift?: boolean;
   }> = [
     {
       title: 'AI Agents for Architect',
@@ -63,7 +66,8 @@ export default function Academy() {
         'Building your own AI assistant for projects'
       ],
       image: '/app/course-ai-agent.webp',
-      link: agentLink
+      link: agentLink,
+      hasGift: true
     },
     {
       title: 'Archviz AI Video',
@@ -266,7 +270,16 @@ export default function Academy() {
                   >
                     {t('course.render.details')}
                   </a>
-                  <a 
+                  {course.hasGift && (
+                    <Link
+                      to="/qua-tang-uu-dai"
+                      className="flex w-full items-center justify-center gap-2 py-3 md:py-4 rounded-lg border border-dashed border-primary-container/50 bg-primary-container/10 text-primary-container font-headline font-black uppercase tracking-[0.1em] text-xs md:text-sm text-center hover:bg-primary-container/20 transition-colors"
+                    >
+                      <Gift className="size-4" />
+                      {language === 'vi' ? 'QUÀ TẶNG ƯU ĐÃI' : 'GIFTS & OFFERS'}
+                    </Link>
+                  )}
+                  <a
                     href={course.link}
                     target="_blank"
                     rel="noopener noreferrer"

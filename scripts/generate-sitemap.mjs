@@ -57,6 +57,7 @@ const STATIC_URLS = [
   { loc: "/courses", priority: "0.9", changefreq: "weekly" },
   { loc: "/courses/course-render-ai", priority: "0.7", changefreq: "monthly" },
   { loc: "/courses/course-video-ai", priority: "0.7", changefreq: "monthly" },
+  { loc: "/qua-tang-uu-dai", priority: "0.6", changefreq: "monthly" },
   { loc: "/enterprise", priority: "0.8", changefreq: "monthly" },
   { loc: "/contact", priority: "0.6", changefreq: "monthly" },
   { loc: "/blog", priority: "0.8", changefreq: "daily" },
