@@ -17,6 +17,7 @@ const Services = lazy(() => import('./pages/Services'));
 const Contact = lazy(() => import('./pages/Contact'));
 const CourseRenderAI = lazy(() => import('./pages/CourseRenderAI'));
 const CourseVideoAI = lazy(() => import('./pages/CourseVideoAI'));
+const GiftGuide = lazy(() => import('./pages/GiftGuide'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const CookiePolicy = lazy(() => import('./pages/CookiePolicy'));
@@ -85,6 +86,7 @@ function AppShell() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/courses/course-render-ai" element={<CourseRenderAI />} />
                 <Route path="/courses/course-video-ai" element={<CourseVideoAI />} />
+                <Route path="/qua-tang-uu-dai" element={<GiftGuide />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
                 <Route path="/cookies" element={<CookiePolicy />} />
