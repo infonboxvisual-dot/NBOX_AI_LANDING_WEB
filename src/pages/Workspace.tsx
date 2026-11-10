@@ -60,6 +60,7 @@ export default function Workspace() {
     { kind: 'app', id: 'app11', title: 'NBOX UPSCALE', descKey: 'workspace.app11.desc', icon: 'zoom_in', image: '/app/upscale.webp', youtubeUrl: '', accessUrl: 'https://upscale.nboxai.io/' },
     { kind: 'app', id: 'app12', title: 'NBOX MATERIAL', descKey: 'workspace.app12.desc', icon: 'grid_view', image: '/app/material.webp', youtubeUrl: '', accessUrl: 'https://material.nboxai.io/' },
     { kind: 'app', id: 'app13', title: 'NBOX IMAGE TO 3D', descKey: 'workspace.app13.desc', icon: 'deployed_code', image: '/app/image-to-3d.webp', youtubeUrl: '', accessUrl: 'https://image-to-3d.nboxai.io/' },
+    { kind: 'app', id: 'app14', title: 'NBOX REMOVE WATERMARK', descKey: 'workspace.app14.desc', icon: 'auto_fix_high', image: '/app/remove-watermark.webp', youtubeUrl: '', accessUrl: 'https://remove-watermark.nboxai.io/' },
   ];
 
   const tools: ToolItem[] = [
