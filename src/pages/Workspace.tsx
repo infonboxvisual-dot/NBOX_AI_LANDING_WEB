@@ -15,6 +15,8 @@ interface AppItem {
   image: string;
   youtubeUrl: string;
   accessUrl: string;
+  /** Ẩn mục "Hướng dẫn sử dụng" (video YouTube) trong cửa sổ chi tiết. */
+  hideGuide?: boolean;
 }
 
 interface ToolItem {
@@ -60,7 +62,7 @@ export default function Workspace() {
     { kind: 'app', id: 'app11', title: 'NBOX UPSCALE', descKey: 'workspace.app11.desc', icon: 'zoom_in', image: '/app/upscale.webp', youtubeUrl: '', accessUrl: 'https://upscale.nboxai.io/' },
     { kind: 'app', id: 'app12', title: 'NBOX MATERIAL', descKey: 'workspace.app12.desc', icon: 'grid_view', image: '/app/material.webp', youtubeUrl: '', accessUrl: 'https://material.nboxai.io/' },
     { kind: 'app', id: 'app13', title: 'NBOX IMAGE TO 3D', descKey: 'workspace.app13.desc', icon: 'deployed_code', image: '/app/image-to-3d.webp', youtubeUrl: '', accessUrl: 'https://image-to-3d.nboxai.io/' },
-    { kind: 'app', id: 'app14', title: 'NBOX REMOVE WATERMARK', descKey: 'workspace.app14.desc', icon: 'auto_fix_high', image: '/app/remove-watermark.webp', youtubeUrl: '', accessUrl: 'https://remove-watermark.nboxai.io/' },
+    { kind: 'app', id: 'app14', title: 'NBOX REMOVE WATERMARK', descKey: 'workspace.app14.desc', icon: 'auto_awesome', image: '/app/remove-watermark.webp', youtubeUrl: '', accessUrl: 'https://remove-watermark.nboxai.io/', hideGuide: true },
   ];
 
   const tools: ToolItem[] = [
@@ -217,6 +219,7 @@ export default function Workspace() {
                     <p className="text-on-surface-variant text-base md:text-xl leading-relaxed">{selectedItem ? t(selectedItem.descKey) : ''}</p>
                   </div>
 
+                  {!(selectedItem?.kind === 'app' && selectedItem.hideGuide) && (
                   <div className="space-y-4 md:space-y-6">
                     <h4 className="text-primary font-headline font-black uppercase text-xs md:text-sm tracking-widest">{t('workspace.modal.guide')}</h4>
                     <a
@@ -238,6 +241,7 @@ export default function Workspace() {
                       <MaterialIcon name="open_in_new" className="size-4 md:size-5 text-on-surface-variant shrink-0" strokeWidth={2} />
                     </a>
                   </div>
+                  )}
                 </div>
 
                 <div className="mt-12 md:mt-16 pt-8 border-t border-on-surface/5">
