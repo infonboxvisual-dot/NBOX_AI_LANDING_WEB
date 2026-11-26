@@ -1,0 +1,40 @@
+{
+    "generated_at":  "2026-11-26T10:29:28+07:00",
+    "hub":  {
+                "version":  "1.0.0",
+                "url":  "https://nboxai.io/plugins/nbox-plugin-all/NBOX-Plugin-All-SketchUp-V1.0.0.rbz",
+                "sha256":  "d90ced61b735ae91c7a205236184770929676fdc5b161e1bbcc39f50d4ae0c2b"
+            },
+    "plugins":  {
+                    "render":  {
+                                   "version":  "1.0.3",
+                                   "url":  "https://nboxai.io/plugins/nbox-plugin-all/render-V1.0.3.rbz",
+                                   "sha256":  "ba94781eebddcc670f8ca870480cdc43cc89c75db6916dbbc6cb2b88e3ca8484"
+                               },
+                    "astra3d":  {
+                                    "version":  "2.0.0",
+                                    "url":  "https://nboxai.io/plugins/nbox-plugin-all/astra3d-V2.0.0.rbz",
+                                    "sha256":  "b5895db864b0bfd8bd2a2b2a521ab39b40e54e6f6a1a0fff401d0c09f587f815"
+                                },
+                    "aimap":  {
+                                  "version":  "1.0.0",
+                                  "url":  "https://nboxai.io/plugins/nbox-plugin-all/aimap-V1.0.0.rbz",
+                                  "sha256":  "bb6a97e84dbfb5e5022ceb51a1c8e8bce034c3094e4b8bd0715bd5574601cbf9"
+                              },
+                    "mcp":  {
+                                "version":  "1.0.0",
+                                "url":  "https://nboxai.io/plugins/nbox-plugin-all/mcp-V1.0.0.rbz",
+                                "sha256":  "198f5ab825548481362cec6519e271a5457c154c355256f26841b2ef526f17e6"
+                            },
+                    "light":  {
+                                  "version":  "0.1.0",
+                                  "url":  "https://nboxai.io/plugins/nbox-plugin-all/light-V0.1.0.rbz",
+                                  "sha256":  "bd5a645b47fc12db414143061ca07cb5eacc651bc243b70433fe161f2f71c1c2"
+                              },
+                    "batch":  {
+                                  "version":  "1.0.0",
+                                  "url":  "https://nboxai.io/plugins/nbox-plugin-all/batch-V1.0.0.rbz",
+                                  "sha256":  "47cb9b6cba4e1508db5ff417229208586d01d01d40dcee1d5cc8b26680b9ad74"
+                              }
+                }
+}
